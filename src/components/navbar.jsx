@@ -1,21 +1,12 @@
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import BadgeIcon from "@mui/icons-material/Badge";
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import HomeIcon from "@mui/icons-material/Home";
 import Inventory2Icon from "@mui/icons-material/Inventory2";
 import MenuIcon from "@mui/icons-material/Menu";
 import ShowChartIcon from "@mui/icons-material/ShowChart";
-import { AppBar, Box, Drawer, Toolbar, Typography } from "@mui/material";
-import Divider from "@mui/material/Divider";
-import IconButton from "@mui/material/IconButton";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
-import { styled, useTheme } from "@mui/material/styles";
+import { AppBar, Box, CssBaseline, IconButton, Toolbar, Typography, useScrollTrigger } from "@mui/material";
+import { styled } from "@mui/material/styles";
 import React from "react";
 import { useNavigate } from "react-router";
 
@@ -63,7 +54,6 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 }));
 
 const Navbar = ({ isOpen, onToggle }) => {
-  const theme = useTheme();
   const navigate = useNavigate();
   const handleRoutes = (route) => {
     navigate(route);
@@ -72,39 +62,47 @@ const Navbar = ({ isOpen, onToggle }) => {
     onToggle();
   };
 
+  const trigger = useScrollTrigger({ threshold: 100 });
+
   return (
-    <Box sx={{ display: "flex" }}>
-      <AppBarStyled
-        position="fixed"
-        open={isOpen}
-        sx={{ backgroundColor: "white" }}
-      >
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            onClick={handleDrawerClose}
-            edge="start"
-            sx={{ mr: 2, ...(isOpen && { display: "none" }) }}
-          >
-            
-          </IconButton>
-          <Typography
-            variant="h6"
-            noWrap
-            component="div"
-            sx={{
-              fontFamily: "Lobster",
-              fontSize: "1.5rem",
-              color: "black",
-            }}
-          >
-            VogueManic
-          </Typography>
-        </Toolbar>
-      </AppBarStyled>
-    
-    </Box>
+    <React.Fragment>
+      <CssBaseline />
+      <Box sx={{ display: "flex" }}>
+        <AppBarStyled
+          position="fixed"
+          open={isOpen}
+          sx={{
+            backgroundColor: "white",
+            transform: trigger ? "translateY(-100%)" : "translateY(0)",
+            transition: "transform 0.3s ease",
+          }}
+        >
+          <Toolbar>
+            <IconButton
+              color="inherit"
+              aria-label="open drawer"
+              onClick={handleDrawerClose}
+              edge="start"
+              sx={{ mr: 2, ...(isOpen && { display: "none" }) }}
+            >
+              <MenuIcon />
+            </IconButton>
+            <Typography
+              variant="h6"
+              noWrap
+              component="div"
+              sx={{
+                fontFamily: "Lobster",
+                fontSize: "1.5rem",
+                color: "black",
+              }}
+            >
+              VogueManic
+            </Typography>
+          </Toolbar>
+        </AppBarStyled>
+      </Box>
+    </React.Fragment>
   );
 };
 
