@@ -1,5 +1,5 @@
 import { Box, Typography } from "@mui/material";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import resale from "../../assets/Resale.jpeg";
 import discounts from "../../assets/discount.jpeg";
 import rent from "../../assets/rent.jpeg";
@@ -10,7 +10,6 @@ import "./home.css";
 
 function Home() {
   const imageRef = useRef(null);
-  const [showText, setShowText] = useState(false);
   useEffect(() => {
     const handleScroll = () => {
       const scrollPosition = window.scrollY;
@@ -18,9 +17,7 @@ function Home() {
         imageRef.current.offsetTop + imageRef.current.offsetHeight;
 
       if (scrollPosition >= imageBottomPosition) {
-        setShowText(true);
-      } else {
-        setShowText(false);
+        console.log("Reached image bottom");
       }
     };
 
@@ -98,6 +95,4 @@ function Home() {
 }
 
 export default Home;
-
-
 // reference https://www.pexels.com/ --for all the stock images
