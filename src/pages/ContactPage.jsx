@@ -1,9 +1,9 @@
 import EmailIcon from "@mui/icons-material/Email";
 import HomeIcon from "@mui/icons-material/Home";
 import PhoneIcon from "@mui/icons-material/Phone";
-import { Box, Grid, IconButton, Paper, Typography, useTheme } from "@mui/material";
+import { Box, Grid, IconButton, Paper, TextField, Typography, useTheme, Button } from "@mui/material";
 import { styled } from "@mui/system";
-import React from "react";
+import React, { useState } from "react";
 import Footer from "../components/footer";
 import Navbar from "../components/navbar";
 
@@ -35,6 +35,71 @@ const ContactItem = ({ icon: Icon, title, children }) => {
   );
 };
 
+const ContactForm = () => {
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
+  const [emailError, setEmailError] = useState(false);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (!validateEmail(email)) {
+      setEmailError(true);
+      return;
+    }
+
+    console.log("Email:", email);
+    console.log("Message:", message);
+
+    setEmail("");
+    setMessage("");
+    setEmailError(false);
+  };
+
+  const handleEmailChange = (e) => {
+    setEmail(e.target.value);
+    setEmailError(false);
+  };
+
+  const handleMessageChange = (e) => {
+    setMessage(e.target.value);
+  };
+
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <TextField
+        label="Email"
+        value={email}
+        onChange={handleEmailChange}
+        error={emailError}
+        helperText={emailError ? "Invalid email" : ""}
+        fullWidth
+        margin="normal"
+        required
+      />
+      <TextField
+        label="Message"
+        value={message}
+        onChange={handleMessageChange}
+        multiline
+        fullWidth
+        margin="normal"
+        required
+      />
+      <Box sx={{ display: "flex", justifyContent: "center", marginTop: "2rem" }}>
+        <Button variant="contained" type="submit">
+          Send Message
+        </Button>
+      </Box>
+    </form>
+  );
+};
+
 const ContactPage = () => {
   return (
     <>
@@ -59,6 +124,9 @@ const ContactPage = () => {
                 Dalhousie University, 6299 South St, Halifax, NS B3H 4R2
               </ContactItem>
             </Grid>
+            <Box sx={{ marginTop: '2rem' }}>
+              <ContactForm />
+            </Box>
           </Paper>
         </ContainerStyled>
         <Footer sx={{ flexShrink: 0 }} />
