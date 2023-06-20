@@ -6,6 +6,7 @@ import rent from "../../assets/rent.jpeg";
 import collections from "../../assets/resized image 1.jpeg";
 import Navbar from "../../components/navbar";
 import "./home.css";
+import Footer from "../../components/footer";
 
 function Home() {
   const imageRef = useRef(null);
@@ -33,6 +34,7 @@ function Home() {
 
   return (
     <>
+    <Box>
       <Box sx={{ marginBottom: "2rem" }}>
         <Navbar />
       </Box>
@@ -88,6 +90,10 @@ function Home() {
           <Typography variant="h4" sx={{ fontSize: "28px", fontWeight: "bold", letterSpacing: "-0.8px" }}>Exclusive Discounts!</Typography>
         </Box>
       </Box>
+      <Box>
+        <Footer />
+      </Box>
+    </Box>
     </>
   );
 }
