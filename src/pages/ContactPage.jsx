@@ -1,11 +1,11 @@
-import React from "react";
-import Navbar from "../components/navbar";
-import Footer from "../components/footer";
-import { Box, Grid, Typography, IconButton, Paper, useTheme } from "@mui/material";
-import { styled } from "@mui/system";
-import PhoneIcon from "@mui/icons-material/Phone";
 import EmailIcon from "@mui/icons-material/Email";
 import HomeIcon from "@mui/icons-material/Home";
+import PhoneIcon from "@mui/icons-material/Phone";
+import { Box, Grid, IconButton, Paper, Typography, useTheme } from "@mui/material";
+import { styled } from "@mui/system";
+import React from "react";
+import Footer from "../components/footer";
+import Navbar from "../components/navbar";
 
 const ContainerStyled = styled(Box)(({ theme }) => ({
   display: "flex",
@@ -24,9 +24,9 @@ const ContactItem = ({ icon: Icon, title, children }) => {
       <Typography variant="h6" gutterBottom>{title}</Typography>
       <IconButton
         aria-label={title}
-        color="primary" 
+        color="primary"
         component="a"
-        href={title === "CALL US" ? "tel:+11234567890" : ""} 
+        href={title === "CALL US" ? "tel:+11234567890" : ""}
       >
         <Icon />
       </IconButton>
