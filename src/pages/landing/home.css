@@ -1,0 +1,33 @@
+.image-container {
+  position: relative;
+}
+
+.full-screen-image {
+  width: 100%;
+  height: auto;
+}
+
+.overlay-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: white;
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+  z-index: 1;
+}
+
+.overlay-text.show {
+  opacity: 1;
+}
+
+.overlay-text h1 {
+  font-size: 4rem;
+}
+.container {
+  margin-top: 2rem;
+  margin: 2rem;
+  padding-top: 70px; 
+}
