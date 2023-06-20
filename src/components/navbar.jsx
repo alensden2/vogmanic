@@ -27,9 +27,7 @@ const AppBarStyled = styled(AppBar, {
 
 const Navbar = ({ isOpen, onToggle }) => {
   const navigate = useNavigate();
-  const handleRoutes = (route) => {
-    navigate(route);
-  };
+
   const handleDrawerClose = () => {
     onToggle();
   };
