@@ -1,11 +1,21 @@
 import MenuIcon from "@mui/icons-material/Menu";
-import { AppBar, Box, CssBaseline, IconButton, Toolbar, Typography, useScrollTrigger } from "@mui/material";
+import {
+  AppBar,
+  Box,
+  CssBaseline,
+  Drawer,
+  Hidden,
+  IconButton,
+  Stack,
+  Toolbar,
+  Typography,
+  useScrollTrigger,
+} from "@mui/material";
 import { styled } from "@mui/material/styles";
-import React from "react";
-import { useNavigate } from "react-router";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const drawerWidth = 240;
-
 
 const AppBarStyled = styled(AppBar, {
   shouldForwardProp: (prop) => prop !== "open",
@@ -24,15 +34,28 @@ const AppBarStyled = styled(AppBar, {
   }),
 }));
 
-
 const Navbar = ({ isOpen, onToggle }) => {
   const navigate = useNavigate();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const handleDrawerClose = () => {
     onToggle();
   };
 
+  const handleMobileMenuOpen = () => {
+    setMobileMenuOpen(true);
+  };
+
+  const handleMobileMenuClose = () => {
+    setMobileMenuOpen(false);
+  };
+
   const trigger = useScrollTrigger({ threshold: 100 });
+
+  const handleNavigation = (path) => {
+    navigate(path);
+    handleMobileMenuClose(); 
+  };
 
   return (
     <React.Fragment>
@@ -65,12 +88,133 @@ const Navbar = ({ isOpen, onToggle }) => {
                 fontFamily: "Lobster",
                 fontSize: "1.5rem",
                 color: "black",
+                flexGrow: 1,
+                cursor: "pointer",
               }}
+              onClick={() => handleNavigation("/")}
             >
               VogueManic
             </Typography>
+            <Hidden mdDown>
+              <Stack direction="row" spacing={2}>
+                <IconButton
+                  color="inherit"
+                  onClick={() => handleNavigation("/contact")}
+                >
+                  <Typography
+                    variant="body1"
+                    sx={{
+                      cursor: "pointer",
+                      color: "black",
+                      fontWeight: 500,
+                    }}
+                  >
+                    Contact Us
+                  </Typography>
+                </IconButton>
+                <IconButton
+                  color="inherit"
+                  onClick={() => handleNavigation("/faq")}
+                >
+                  <Typography
+                    variant="body1"
+                    sx={{
+                      cursor: "pointer",
+                      color: "black",
+                      fontWeight: 500,
+                    }}
+                  >
+                    FAQs
+                  </Typography>
+                </IconButton>
+                <IconButton
+                  color="inherit"
+                  onClick={() => handleNavigation("/store")}
+                >
+                  <Typography
+                    variant="body1"
+                    sx={{
+                      cursor: "pointer",
+                      color: "black",
+                      fontWeight: 500,
+                    }}
+                  >
+                    Store
+                  </Typography>
+                </IconButton>
+              </Stack>
+            </Hidden>
+            <Hidden lgUp>
+              <IconButton
+                color="inherit"
+                aria-label="open mobile menu"
+                onClick={handleMobileMenuOpen}
+                sx={{ ml: "auto", color: "black" }}
+              >
+                <MenuIcon />
+              </IconButton>
+            </Hidden>
           </Toolbar>
         </AppBarStyled>
+        <Hidden lgUp>
+          <Drawer
+            anchor="right"
+            open={mobileMenuOpen}
+            onClose={handleMobileMenuClose}
+          >
+            <Stack
+              direction="column"
+              sx={{ width: drawerWidth, p: 2 }}
+              spacing={2}
+            >
+              <IconButton
+                color="inherit"
+                onClick={() => handleNavigation("/contact")}
+              >
+                <Typography
+                  variant="body1"
+                  sx={{
+                    cursor: "pointer",
+                    color: "black",
+                    fontWeight: 500,
+                  }}
+                >
+                  Contact Us
+                </Typography>
+              </IconButton>
+              <IconButton
+                color="inherit"
+                onClick={() => handleNavigation("/faq")}
+              >
+                <Typography
+                  variant="body1"
+                  sx={{
+                    cursor: "pointer",
+                    color: "black",
+                    fontWeight: 500,
+                  }}
+                >
+                  FAQs
+                </Typography>
+              </IconButton>
+              <IconButton
+                color="inherit"
+                onClick={() => handleNavigation("/store")}
+              >
+                <Typography
+                  variant="body1"
+                  sx={{
+                    cursor: "pointer",
+                    color: "black",
+                    fontWeight: 500,
+                  }}
+                >
+                  Store
+                </Typography>
+              </IconButton>
+            </Stack>
+          </Drawer>
+        </Hidden>
       </Box>
     </React.Fragment>
   );
