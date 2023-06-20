@@ -99,3 +99,6 @@ function Home() {
 }
 
 export default Home;
+
+
+// reference https://www.pexels.com/ --for all the stock images
