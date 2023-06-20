@@ -1,58 +1,41 @@
-import { AppBar, Box, CssBaseline, IconButton, Toolbar, Typography } from "@mui/material";
-import { styled } from "@mui/material/styles";
 import React from "react";
+import { Box, Typography, IconButton } from "@mui/material";
+import { styled } from "@mui/system";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import TwitterIcon from "@mui/icons-material/Twitter";
 
-const AppBarStyled = styled(AppBar, {
-  shouldForwardProp: (prop) => prop !== "open",
-})(({ theme, open }) => ({
-  transition: theme.transitions.create(["margin", "width"], {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
+const FooterStyled = styled(Box)(({ theme }) => ({
+  width: '100%',
+  padding: theme.spacing(2),
+  backgroundColor: "white",
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  marginTop: 'auto'
 }));
 
 const Footer = () => {
   return (
-    <React.Fragment>
-      <CssBaseline />
-      <Box sx={{ display: "flex", justifyContent: "center", marginTop: "auto" }}>
-        <AppBarStyled
-          position="static"
-          color="default"
-          sx={{ 
-            backgroundColor: "white",
-          }}
-        >
-          <Toolbar sx={{ justifyContent: "space-between" }}>
-            <Typography
-              variant="body1"
-              color="textPrimary"
-              sx={{
-                fontFamily: "Lobster",
-                fontSize: "1rem",
-                color: "black",
-              }}
-            >
-              © 2023 VogueManic. All rights reserved.
-            </Typography>
-            <Box sx={{ display: "flex", gap: 2 }}>
-              <IconButton color="inherit" aria-label="LinkedIn">
-                <LinkedInIcon />
-              </IconButton>
-              <IconButton color="inherit" aria-label="Facebook">
-                <FacebookIcon />
-              </IconButton>
-              <IconButton color="inherit" aria-label="Twitter">
-                <TwitterIcon />
-              </IconButton>
-            </Box>
-          </Toolbar>
-        </AppBarStyled>
+    <FooterStyled>
+      <Typography variant="h6" gutterBottom>
+        Follow us on social media
+      </Typography>
+      <Box sx={{ display: "flex", gap: 2 }}>
+        <IconButton color="inherit" aria-label="LinkedIn">
+          <LinkedInIcon />
+        </IconButton>
+        <IconButton color="inherit" aria-label="Facebook">
+          <FacebookIcon />
+        </IconButton>
+        <IconButton color="inherit" aria-label="Twitter">
+          <TwitterIcon />
+        </IconButton>
       </Box>
-    </React.Fragment>
+      <Typography variant="body2" color="text.secondary" align="center" style={{marginTop: '15px'}}>
+        © 2023 VogueManic, All rights reserved.
+      </Typography>
+    </FooterStyled>
   );
 };
 
