@@ -1,9 +1,9 @@
-import EmailIcon from "@mui/icons-material/Email";
-import HomeIcon from "@mui/icons-material/Home";
-import PhoneIcon from "@mui/icons-material/Phone";
 import { Box, Grid, IconButton, Paper, TextField, Typography, useTheme, Button } from "@mui/material";
 import { styled } from "@mui/system";
 import React, { useState } from "react";
+import EmailIcon from "@mui/icons-material/Email";
+import HomeIcon from "@mui/icons-material/Home";
+import PhoneIcon from "@mui/icons-material/Phone";
 import Footer from "../components/footer";
 import Navbar from "../components/navbar";
 
@@ -50,6 +50,7 @@ const ContactForm = () => {
 
     console.log("Email:", email);
     console.log("Message:", message);
+    alert("Email Sent!")
 
     setEmail("");
     setMessage("");
@@ -136,3 +137,5 @@ const ContactPage = () => {
 };
 
 export default ContactPage;
+
+// reference mui text field https://mui.com/material-ui/react-text-field/

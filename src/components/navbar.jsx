@@ -225,3 +225,4 @@ export default Navbar;
 // referene navbar - https://mui.com/material-ui/react-app-bar/
 // reference side bar - https://mui.com/material-ui/react-drawer/
 // font reference -<link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
+// Navbar from - https://git.cs.dal.ca/alen/csci-5709-individual-b00930528-alen-john/-/blob/main/Assignments/assignment1/src/components/Navbar/navbar.jsx
