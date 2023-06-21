@@ -1,92 +1,465 @@
+<!--- The following README.md sample file was adapted from https://gist.github.com/PurpleBooth/109311bb0361f32d87a2#file-readme-template-md by Gabriella Mosquera for academic use ---> 
+
 # CSCI 5709 Grp-11
 
+Vogmanic aspires to be a niche platform that targets a smaller audience base while giving the impression that the application was handcrafted specifically to meet their needs. To make our users feel special, we aim to make fashion simple, affordable, and appealing. We would like to reduce the carbon footprint by allowing users to rent and resell their fashion wardrobe, giving them the impression that they are helping to improve the planet and environment. 
+
+* *Date Created*: 19 Jun 2023
+* *Last Modification Date*: 20 Jun 2023
+* *Deployed app*: <https://vogmanic.netlify.app/>
+* *Git URL (main)*: <https://git.cs.dal.ca/dhruvilp/csci-5709-grp-11>   
+
+## Authors
+* [Alen John](al283652@dal.ca) - *(Role)*
+* [Dhruvil Patel](dh828824@dal.ca) - *(Role)*
+* [Krishna Modi](kr733081@dal.ca) - *(Role)*
+* [Srishti Jain](sr381365@dal.ca) - *(Role)*
+* [Taksh Doria](tk517822@dal.ca) - *(Role)*
+
+## Deployment 
+
+### `git clone <repo_name>`
+
+This clones the repository from GitLab to GitHub. create a repository on GitHub/Bitbucket/GitLab (gitlab.com).
+This step is essential to deploy to netlify.
+
+### `git push <new_repo_name>`
+
+This pushes the code to the newly created repository. Using this repository this app can be deployed to netlify. This app is currently deployed at https://vogmanic.netlify.app/.
+
+## Local Testing 
 
 
-## Getting started
+### `git clone <repo_name>`
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+This clones the repository from GitLab to the local machine.
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+### `npm install`
+After navigating to the directory of the cloned project, Run this command to install all dependencies.
 
-## Add your files
+### `npm start`
+Run the app using this command and navigate to http://localhost:3000.
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
+## Built With
+
+* [Node.js](https://nodejs.org/en/docs) - The JavaScript backend
+* [React.js](https://react.dev/learn) - The JavaScript frontend
+* [Netlify](https://docs.netlify.com/) - The Deployment enviroment
+* [NPX](https://docs.npmjs.com/cli/v7/commands/npx) - Node Package Execute, used to generate react app (npx create-react-app <app-name>)
+* [Mui](https://mui.com/material-ui/getting-started/overview/) - Material UI components for all the ui components
+* [React-router-dom](https://reactrouter.com/en/main) - React router for the routing between pages
+* [google-fonts-api](https://developers.google.com/fonts/docs/developer_api) - Used for the logo font
+* [Pexels](https://www.pexels.com/) - The copyright free stock images used for this website
+
+## Sources Used
+
+1) Used Google fonts for the logo - https://developers.google.com/fonts/docs/developer_api
+2) Used the open source pictures from - https://www.pexels.com/
+
+### navbar.js
+*Lines 64 - 158*
 
 ```
-cd existing_repo
-git remote add origin https://git.cs.dal.ca/dhruvilp/csci-5709-grp-11.git
-git branch -M main
-git push -uf origin main
+<AppBarStyled
+          position="fixed"
+          open={isOpen}
+          sx={{
+            backgroundColor: "white",
+            transform: trigger ? "translateY(-100%)" : "translateY(0)",
+            transition: "transform 0.3s ease",
+          }}
+        >
+          <Toolbar>
+            <IconButton
+              color="inherit"
+              aria-label="open drawer"
+              onClick={handleDrawerClose}
+              edge="start"
+              sx={{ mr: 2, ...(isOpen && { display: "none" }) }}
+            >
+              <MenuIcon />
+            </IconButton>
+            <Typography
+              variant="h6"
+              noWrap
+              component="div"
+              sx={{
+                fontFamily: "Lobster",
+                fontSize: "1.5rem",
+                color: "black",
+                flexGrow: 1,
+                cursor: "pointer",
+              }}
+              onClick={() => handleNavigation("/")}
+            >
+              VogueManic
+            </Typography>
+            <Hidden mdDown>
+              <Stack direction="row" spacing={2}>
+                <IconButton
+                  color="inherit"
+                  onClick={() => handleNavigation("/contact")}
+                >
+                  <Typography
+                    variant="body1"
+                    sx={{
+                      cursor: "pointer",
+                      color: "black",
+                      fontWeight: 500,
+                    }}
+                  >
+                    Contact Us
+                  </Typography>
+                </IconButton>
+                <IconButton
+                  color="inherit"
+                  onClick={() => handleNavigation("/faq")}
+                >
+                  <Typography
+                    variant="body1"
+                    sx={{
+                      cursor: "pointer",
+                      color: "black",
+                      fontWeight: 500,
+                    }}
+                  >
+                    FAQs
+                  </Typography>
+                </IconButton>
+                <IconButton
+                  color="inherit"
+                  onClick={() => handleNavigation("/store")}
+                >
+                  <Typography
+                    variant="body1"
+                    sx={{
+                      cursor: "pointer",
+                      color: "black",
+                      fontWeight: 500,
+                    }}
+                  >
+                    Store
+                  </Typography>
+                </IconButton>
+              </Stack>
+            </Hidden>
+            <Hidden lgUp>
+              <IconButton
+                color="inherit"
+                aria-label="open mobile menu"
+                onClick={handleMobileMenuOpen}
+                sx={{ ml: "auto", color: "black" }}
+              >
+                <MenuIcon />
+              </IconButton>
+            </Hidden>
+          </Toolbar>
+        </AppBarStyled>
+
 ```
 
-## Integrate with your tools
+The code above was created by adapting the code in [MUI-Navbar](https://mui.com/material-ui/react-app-bar/) as shown below: 
 
-- [ ] [Set up project integrations](https://git.cs.dal.ca/dhruvilp/csci-5709-grp-11/-/settings/integrations)
 
-## Collaborate with your team
+```
+import * as React from 'react';
+import PropTypes from 'prop-types';
+import AppBar from '@mui/material/AppBar';
+import Box from '@mui/material/Box';
+import CssBaseline from '@mui/material/CssBaseline';
+import Divider from '@mui/material/Divider';
+import Drawer from '@mui/material/Drawer';
+import IconButton from '@mui/material/IconButton';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemText from '@mui/material/ListItemText';
+import MenuIcon from '@mui/icons-material/Menu';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Automatically merge when pipeline succeeds](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
+const drawerWidth = 240;
+const navItems = ['Home', 'About', 'Contact'];
 
-## Test and Deploy
+function DrawerAppBar(props) {
+  const { window } = props;
+  const [mobileOpen, setMobileOpen] = React.useState(false);
 
-Use the built-in continuous integration in GitLab.
+  const handleDrawerToggle = () => {
+    setMobileOpen((prevState) => !prevState);
+  };
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing(SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+  const drawer = (
+    <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center' }}>
+      <Typography variant="h6" sx={{ my: 2 }}>
+        MUI
+      </Typography>
+      <Divider />
+      <List>
+        {navItems.map((item) => (
+          <ListItem key={item} disablePadding>
+            <ListItemButton sx={{ textAlign: 'center' }}>
+              <ListItemText primary={item} />
+            </ListItemButton>
+          </ListItem>
+        ))}
+      </List>
+    </Box>
+  );
 
-***
+  const container = window !== undefined ? () => window().document.body : undefined;
 
-# Editing this README
+  return (
+    <Box sx={{ display: 'flex' }}>
+      <CssBaseline />
+      <AppBar component="nav">
+        <Toolbar>
+          <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            edge="start"
+            onClick={handleDrawerToggle}
+            sx={{ mr: 2, display: { sm: 'none' } }}
+          >
+            <MenuIcon />
+          </IconButton>
+          <Typography
+            variant="h6"
+            component="div"
+            sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
+          >
+            MUI
+          </Typography>
+          <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
+            {navItems.map((item) => (
+              <Button key={item} sx={{ color: '#fff' }}>
+                {item}
+              </Button>
+            ))}
+          </Box>
+        </Toolbar>
+      </AppBar>
+      <Box component="nav">
+        <Drawer
+          container={container}
+          variant="temporary"
+          open={mobileOpen}
+          onClose={handleDrawerToggle}
+          ModalProps={{
+            keepMounted: true, // Better open performance on mobile.
+          }}
+          sx={{
+            display: { xs: 'block', sm: 'none' },
+            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
+          }}
+        >
+          {drawer}
+        </Drawer>
+      </Box>
+      <Box component="main" sx={{ p: 3 }}>
+        <Toolbar />
+        <Typography>
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Similique unde
+          fugit veniam eius, perspiciatis sunt? Corporis qui ducimus quibusdam,
+          aliquam dolore excepturi quae. Distinctio enim at eligendi perferendis in
+          cum quibusdam sed quae, accusantium et aperiam? Quod itaque exercitationem,
+          at ab sequi qui modi delectus quia corrupti alias distinctio nostrum.
+          Minima ex dolor modi inventore sapiente necessitatibus aliquam fuga et. Sed
+          numquam quibusdam at officia sapiente porro maxime corrupti perspiciatis
+          asperiores, exercitationem eius nostrum consequuntur iure aliquam itaque,
+          assumenda et! Quibusdam temporibus beatae doloremque voluptatum doloribus
+          soluta accusamus porro reprehenderit eos inventore facere, fugit, molestiae
+          ab officiis illo voluptates recusandae. Vel dolor nobis eius, ratione atque
+          soluta, aliquam fugit qui iste architecto perspiciatis. Nobis, voluptatem!
+          Cumque, eligendi unde aliquid minus quis sit debitis obcaecati error,
+          delectus quo eius exercitationem tempore. Delectus sapiente, provident
+          corporis dolorum quibusdam aut beatae repellendus est labore quisquam
+          praesentium repudiandae non vel laboriosam quo ab perferendis velit ipsa
+          deleniti modi! Ipsam, illo quod. Nesciunt commodi nihil corrupti cum non
+          fugiat praesentium doloremque architecto laborum aliquid. Quae, maxime
+          recusandae? Eveniet dolore molestiae dicta blanditiis est expedita eius
+          debitis cupiditate porro sed aspernatur quidem, repellat nihil quasi
+          praesentium quia eos, quibusdam provident. Incidunt tempore vel placeat
+          voluptate iure labore, repellendus beatae quia unde est aliquid dolor
+          molestias libero. Reiciendis similique exercitationem consequatur, nobis
+          placeat illo laudantium! Enim perferendis nulla soluta magni error,
+          provident repellat similique cupiditate ipsam, et tempore cumque quod! Qui,
+          iure suscipit tempora unde rerum autem saepe nisi vel cupiditate iusto.
+          Illum, corrupti? Fugiat quidem accusantium nulla. Aliquid inventore commodi
+          reprehenderit rerum reiciendis! Quidem alias repudiandae eaque eveniet
+          cumque nihil aliquam in expedita, impedit quas ipsum nesciunt ipsa ullam
+          consequuntur dignissimos numquam at nisi porro a, quaerat rem repellendus.
+          Voluptates perspiciatis, in pariatur impedit, nam facilis libero dolorem
+          dolores sunt inventore perferendis, aut sapiente modi nesciunt.
+        </Typography>
+      </Box>
+    </Box>
+  );
+}
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thank you to [makeareadme.com](https://www.makeareadme.com/) for this template.
+DrawerAppBar.propTypes = {
+  /**
+   * Injected by the documentation to work in an iframe.
+   * You won't need it on your project.
+   */
+  window: PropTypes.func,
+};
 
-## Suggestions for a good README
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+export default DrawerAppBar;
 
-## Name
-Choose a self-explaining name for your project.
+```
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+- <!---How---> The code in [MUI-Navbar](https://mui.com/material-ui/react-app-bar/) was implemented by... material UI to render responsive navbars
+- <!---Why---> [MUI-Navbar](https://mui.com/material-ui/react-app-bar/)'s Code was used because... to achieve standard look and feel throughout the application. Material UI provides various readymade ui components for react. Developers can build on this for their application
+- <!---How---> [MUI-Navbar](https://mui.com/material-ui/react-app-bar/)'s Code was modified by... adding 'sx' that is modifiying padding, fonts, structure according to this application. I also changed the color to my design to improve the UI for my app
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+### faq.jsx
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+*Lines 170 - 190*
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+```
+<Paper
+                        component="form"
+                        sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            flex: 1,
+                            borderRadius: "999px",
+                            boxShadow: "0 2px 4px 0 rgba(0, 0, 0, 0.1)",
+                        }}
+                    >
+                        <IconButton sx={{ p: 1 }} aria-label="search">
+                            <SearchIcon />
+                        </IconButton>
+                        <InputBase
+                            placeholder="Search questions"
+                            inputProps={{ "aria-label": "search questions" }}
+                            sx={{ ml: 1, flex: 1 }}
+                            value={searchTerm}
+                            onChange={handleSearchChange}
+                        />
+                    </Paper>
+```
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+The code above was created by adapting the code in [MUI-Paper](https://mui.com/material-ui/react-paper/) as shown below: 
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+```
+<Paper elevation={0} />
+<Paper />
+<Paper elevation={3} />
+```
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+- <!---How---> The code in [MUI-Paper](https://mui.com/material-ui/react-paper/) was implemented by... material UI to render responsive layers
+- <!---Why---> [MUI-Paper](https://mui.com/material-ui/react-paper/)'s Code was used because... to achieve standard look and feel throughout the application. Material UI provides various readymade ui components for react. Developers can build on this for their application
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+- <!---How---> [MUI-Paper](https://mui.com/material-ui/react-paper/)'s Code was modified by... adding 'sx' that is modifiying padding, fonts, structure according to this application. I also changed the color to my design to improve the UI for my app
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
 
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+### ContactPage.jsx
 
-## License
-For open source projects, say how it is licensed.
+*Lines 76 - 93*
 
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+```
+<TextField
+        label="Email"
+        value={email}
+        onChange={handleEmailChange}
+        error={emailError}
+        helperText={emailError ? "Invalid email" : ""}
+        fullWidth
+        margin="normal"
+        required
+      />
+      <TextField
+        label="Message"
+        value={message}
+        onChange={handleMessageChange}
+        multiline
+        fullWidth
+        margin="normal"
+        required
+      />
+```
+
+The code above was created by adapting the code in [MUI-textfield](https://mui.com/material-ui/react-text-field/) as shown below: 
+
+```
+<TextField id="outlined-basic" label="Outlined" variant="outlined" />
+<TextField id="filled-basic" label="Filled" variant="filled" />
+<TextField id="standard-basic" label="Standard" variant="standard" />
+```
+
+- <!---How---> The code in [MUI-textfield](https://mui.com/material-ui/react-text-field/) was implemented by... material UI to render responsive text fields
+
+- <!---Why---> [MUI-textfield](https://mui.com/material-ui/react-text-field/)'s Code was used because... to achieve standard look and feel throughout the application. Material UI provides various readymade ui components for react. Developers can build on this for their application
+
+- <!---How---> [MUI-textfield](https://mui.com/material-ui/react-text-field/)'s Code was modified by... adding various event handler to handle the contact us form.
+
+
+### home.jsx
+
+*Lines 13 - 29*
+
+```
+useEffect(() => {
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY;
+      const imageBottomPosition =
+        imageRef.current.offsetTop + imageRef.current.offsetHeight;
+
+      if (scrollPosition >= imageBottomPosition) {
+        console.log("Reached image bottom");
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
+```
+
+The code above was created by adapting the code in [codesandbox](https://codesandbox.io/s/react-scroll-navbar-z76ig?file=/src/App.js:0-745) as shown below: 
+
+ 
+```
+const imgMyimageexample = require('../assets/imageexample.jpg');
+const divStyle = {
+  width: '88%',
+  height: '800px',
+  backgroundImage: `url(${imgMyimageexample})`,
+  backgroundSize: 'cover'   <---- This is important
+};
+
+export default class Mycomponent extends React.Component {
+  render() {
+    return (
+      <div className="cComponent" style={divStyle} >
+        <h1 align="center">Some header example</h1>
+      </div>
+    );
+  }
+}
+```
+
+- <!---How---> The code in [codesandbox](https://codesandbox.io/s/react-scroll-navbar-z76ig?file=/src/App.js:0-745) was implemented by... codesandbox to showcase how to colapse the navbar using scroll trigger 
+- <!---Why---> [codesandbox](https://codesandbox.io/s/react-scroll-navbar-z76ig?file=/src/App.js:0-745)'s Code was used because... to understand how to colapse navbar using scroll.
+- <!---How---> [codesandbox](https://codesandbox.io/s/react-scroll-navbar-z76ig?file=/src/App.js:0-745)'s Code was modified by... using my own implementation of the explained method, I used a use Effect trigger to trigger an event upon the scroll function.
+
+
+## Acknowledgments
+* Prof. Mosquera and all the TAs.
+* Netlify
+* CSCI5709 course material from Brightspace
+* Stackoverflow
+* GitHub
+* Gitlab
+* React
+* Node
+* codesandbox
+* Pexels
+
