@@ -10,11 +10,11 @@ Vogmanic aspires to be a niche platform that targets a smaller audience base whi
 * *Git URL (main)*: <https://git.cs.dal.ca/dhruvilp/csci-5709-grp-11>   
 
 ## Authors
-* [Alen John](al283652@dal.ca) - *(Role)*
-* [Dhruvil Patel](dh828824@dal.ca) - *(Role)*
-* [Krishna Modi](kr733081@dal.ca) - *(Role)*
-* [Srishti Jain](sr381365@dal.ca) - *(Role)*
-* [Taksh Doria](tk517822@dal.ca) - *(Role)*
+* [Alen John](al283652@dal.ca) - *Developer*
+* [Dhruvil Patel](dh828824@dal.ca) - *Developer*
+* [Krishna Modi](kr733081@dal.ca) - *Developer*
+* [Srishti Jain](sr381365@dal.ca) - *Developer*
+* [Taksh Doria](tk517822@dal.ca) - *Developer*
 
 ## Deployment 
 
