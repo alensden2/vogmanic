@@ -19,7 +19,9 @@ const theme = createTheme({
       main: "#ff4081", // Your secondary color here
       dark: "#c60055", // Your secondary dark color here (for hover effect)
     },
-    // Add more customizations as needed...
+    typography: {
+      fontFamily: "Roboto, sans-serif", // Use Roboto as the default font
+    },
   },
 });
 
@@ -151,7 +153,7 @@ const ProductListingPage = () => {
 
   const handleCategorySelect = (category) => {
     setSelectedCategory(category);
-    setSearchTerm('');
+    //setSearchTerm('');
     setIsDrawerOpen(false); // Reset the search term when a category is selected
   };
 
@@ -169,7 +171,9 @@ const ProductListingPage = () => {
         {/* Sidebar with categories */}
         <Box
           sx={{
-            marginTop: 'px', // Add margin to create space below the search bar
+            marginTop: 'px',
+            position: "absolute",
+            zIndex: 1000 // Add margin to create space below the search bar
           }}
         >
         <Drawer
@@ -223,21 +227,21 @@ const ProductListingPage = () => {
             }}
           />
         </Box>
-        <Grid container spacing={3} justifyContent="center" sx={{ paddingTop: '16px' }}>
+        <Grid container spacing={3} justifyContent="center" sx={{ paddingTop: '16px',minWidth:'900px'}}>
           {filteredProducts.map((product) => (
             <Grid item key={product._id} xs={12} sm={6} md={4}>
-              <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column', marginBottom: '16px', boxShadow: "0 2px 4px rgba(0,0,0,0.1)" }}>
+              <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column', marginBottom: '16px', boxShadow: "0 2px 4px rgba(0,0,0,0.1)"}}>
                 <CardMedia
                   component="img"
                   height="200"
                   image={product.image_url}
                   alt={product.name}
                   sx={{
-                    height: '200%',
+                    height: '400px',
                     objectFit: 'cover', // Use 'cover' to scale the image while preserving aspect ratio
                   }}
                 />
-                <CardContent>
+                <CardContent sx={{flex: '1'}}>
                   <Typography variant="h5">{product.name}</Typography>
                   <Typography variant="body1">{product.description}</Typography>
                   <Typography variant="body2">Price: ${product.price}</Typography>
@@ -248,7 +252,8 @@ const ProductListingPage = () => {
                     ))}
                   </Box>
                 </CardContent>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px' }}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px'}}>
+                            
                   <IconButton sx={{ backgroundColor: theme => theme.palette.primary.main, color: "#fff", "&:hover": { backgroundColor: theme => theme.palette.primary.dark } }} onClick={() => handleAddToCart(product._id)}>
                     <ShoppingCart />
                   </IconButton>

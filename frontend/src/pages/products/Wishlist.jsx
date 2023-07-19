@@ -78,7 +78,7 @@ const Wishlist = () => {
                     <CardMedia
                       component="img"
                       src={product.image_url}
-                      alt={product.productName}
+                      alt={product.name}
                       sx={{ width: '200px', height: '200px', objectFit: 'cover',display: 'flex',flexDirection: 'column', margin: '16px', boxShadow: "0 2px 4px rgba(0,0,0,0.1)" }}
                     />
                     <CardContent sx={{ flexGrow: 1, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>

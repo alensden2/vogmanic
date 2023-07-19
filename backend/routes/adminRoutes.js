@@ -8,5 +8,7 @@ const adminProductController = require('../controllers/Admin/AdminProductControl
 router.get("/test", adminProductController.testAdminProductsController)
 /** Get all products */
 router.get("/products", adminProductController.getAllProducts) /**Insert Auth MiddleWare */
+/** Post a new product */
+router.post("/addProduct", adminProductController.addProduct)
 
 module.exports = router;
