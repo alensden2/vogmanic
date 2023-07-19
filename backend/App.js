@@ -4,8 +4,9 @@ const cors = require('cors');
 const http = require('http');
 const socketIO = require('socket.io');
 const app = express();
-const  productsRoutes  = require('./routes/productsRoutes');
+const productsRoutes = require('./routes/productsRoutes');
 const adminRoutes = require('./routes/adminRoutes.js')
+const mongoose = require('mongoose')
 
 app.use(cors()); // Enable CORS for all routes
 app.use(express.json());
@@ -69,9 +70,18 @@ io.on('connection', socket => {
 // connection made to DB
 
 
-const serverPort = 6001;
-server.listen(serverPort, () => {
-    console.log(`Server listening on port ${serverPort}`);
-});
+const serverPort = process.env.PORT || 6001;
+
+mongoose.connect("mongodb+srv://admin:admin%40123@cluster0.htrbjdo.mongodb.net/VogueManiac?retryWrites=true&w=majority", {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+}).then(() => {
+    server.listen(serverPort, () => {
+        console.log(`Connected to MongoDB, Server listening on port ${serverPort}`);
+    });
+}).catch((error) => {
+    console.log(`error is ${error}`)
+})
+
 
 module.exports = app;
