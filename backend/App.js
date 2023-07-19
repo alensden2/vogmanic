@@ -3,10 +3,13 @@ const express = require('express');
 const cors = require('cors');
 const http = require('http');
 const socketIO = require('socket.io');
+const helmet = require('helmet');
 const app = express();
 const  productsRoutes  = require('./routes/productsRoutes');
+const adminRoutes = require('./routes/adminRoutes.js')
 
 app.use(cors()); // Enable CORS for all routes
+app.use(helmet()); // Ensures secue http calls
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
@@ -21,6 +24,8 @@ app.use(function (req, res, next) {
     next(createError(404));
 });
 
+// admin routes
+app.use('/admin', adminRoutes);
 
 // error handler
 app.use(function (err, req, res) {
