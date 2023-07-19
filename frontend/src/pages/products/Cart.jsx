@@ -1,17 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState} from 'react';
 import { useLocation } from 'react-router-dom';
 import { Box, Typography, Button, Container, Grid, Card, CardMedia, CardContent, IconButton, Divider, Select, MenuItem } from "@mui/material";
 import { Add as AddIcon, Remove as RemoveIcon } from "@mui/icons-material";
 import Footer from "../../components/footer";
 import Navbar from "../../components/navbar";
 import { TableContainer, Table, TableBody, TableRow, TableCell, Paper } from '@mui/material';
-
-
+import { useNavigate } from "react-router-dom";
 
 const Cart = () => {
   const location = useLocation();
   const { productName, price } = location.state || {};
   const [cartProducts, setCartProducts] = useState([]);
+  const navigate = useNavigate();
   
   const totalPrice = cartProducts.reduce((total, product) => total + product.price * product.count, 0);
   const shippingCost = 3.5;
@@ -94,6 +94,19 @@ const Cart = () => {
         console.error('Error removing item from cart:', error);
       }
     };
+
+    const handleContinueShopping = () => {
+     navigate("/products")
+    };
+  
+    const handleProceedToCheckout = () => {
+     console.log(cartProducts)
+      navigate("/checkout", {
+        state: {
+          cartProducts: cartProducts,
+        },
+      });
+    };
   
 
   return (
@@ -117,7 +130,7 @@ const Cart = () => {
                     />
                     <CardContent sx={{ flexGrow: 1, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                       <Box sx={{ flexGrow: 1 }}>
-                        <Typography variant="h6">Name: {product.productName}</Typography>
+                        <Typography variant="h6">Name: {product.name}</Typography>
                         <Typography variant="body1">Price: ${product.price}</Typography>
                       </Box>
                       <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -154,7 +167,7 @@ const Cart = () => {
           </Box> */}
           <br/>
           <Box sx={{ display: 'flex', marginTop: 'auto', marginBottom: '0px' }}>
-              <Button variant="contained" color="primary" size="large">
+              <Button variant="contained" color="primary" size="large" onClick={() => handleContinueShopping()}>
                 Continue Shopping
               </Button>
             </Box>
@@ -179,7 +192,7 @@ const Cart = () => {
           {/* ... continue shopping button */}
          <br/>
             <Box sx={{ display: 'flex', justifyContent: 'flex-end', marginBottom : '32px' }}>
-              <Button variant="contained" color="primary" size="large">
+              <Button variant="contained" color="primary" size="large" onClick={() => handleProceedToCheckout()}>
                 Proceed to checkout
               </Button>
             </Box>
