@@ -1,6 +1,7 @@
 const { MongoClient, ServerApiVersion } = require('mongodb');
 const Product = require('../../models/Product')
 const ConfirmedOrders = require('../../models/ConfirmedOrders');
+const Employee = require('../../models/Employee')
 // To be replaced with env vars for creds, all hard coded strings will be kept in JSON "resources.json"
 
 /**
@@ -116,23 +117,23 @@ const getAllConfirmedorders = async (req, res) => {
 // Calculate the total cost for a single order
 const calculateTotalCost = (order) => {
     const totalCost = order.items.reduce((acc, item) => {
-      return acc + item.price + item.shipping_cost;
+        return acc + item.price + item.shipping_cost;
     }, 0);
-  
+
     return totalCost;
-  };
-  
-  // Calculate total cost for each order
-  const calculateTotalCostPerOrder = (orders) => {
+};
+
+// Calculate total cost for each order
+const calculateTotalCostPerOrder = (orders) => {
     const totalCostPerOrder = orders.map((order) => {
-      return {
-        orderId: order.orderId,
-        totalCost: calculateTotalCost(order),
-      };
+        return {
+            orderId: order.orderId,
+            totalCost: calculateTotalCost(order),
+        };
     });
-  
+
     return totalCostPerOrder;
-  }; 
+};
 
 /**
  * Total cost each order
@@ -183,10 +184,136 @@ const getTotalCostPerOrder = async (req, res) => {
     };
 }
 
+/**
+ * Gets total orders 
+ * 
+ * @param {request} req 
+ * @param {response} res 
+ */
+const countTotalOrders = async (req, res) => {
+    try {
+        // Find all the confirmed orders
+        const orders = await ConfirmedOrders.find();
+        // Return the total number of orders
+        return res.status(200).json({"TotalOrders" : orders.length}) 
+    } catch (error) {
+        // Handle any errors that occur during the process
+        console.error(error);
+        res.status(400).json({
+            message: error.message
+        });
+    }
+};
+
+/**
+ * Gets total items sold 
+ * 
+ * @param {request} req 
+ * @param {response} res 
+ */
+const calculateTotalItemsSold = async (req, res) => {
+    try {
+        // Find all the confirmed orders
+        const orders = await ConfirmedOrders.find();
+
+        // Calculate the total items sold by summing the quantity of each item in all orders
+        let totalItemsSold = 0;
+        orders.forEach((order) => {
+            totalItemsSold += order.items.length;
+        });
+        return res.status(200).json({ totalItemsSold : totalItemsSold}) 
+    } catch (error) {
+        res.status(400).json({
+            message: error.message
+        });
+    }
+};
+
+/**
+ * Gets all the employees
+ * 
+ * @param {request} req 
+ * @param {response} res 
+ */
+const getAllEmployees = async (req, res) => {
+    try {
+        // finds all the employees
+        const employees = await Employee.find();
+        res.status(200).json(employees);
+    } catch (error) {
+        res.status(400).json({
+            message: error.message
+        });
+    };
+}
+
+/**
+ * Add a new employees
+ * 
+ * @param {request} req 
+ * @param {response} res 
+ */
+const addEmployee = async (req, res) => {
+    try {
+        // extract employee data
+        const {
+            firstName,
+            lastName,
+            address,
+            email,
+            phone,
+            employeeId
+        } = req.body;
+
+        // create a new employee
+        const newEmployee = new Employee({
+            firstName,
+            lastName,
+            address,
+            email,
+            phone,
+            employeeId
+        });
+
+        // save to database
+        await newEmployee.save();
+
+        res.status(200).json({
+            message: "Employee added successfully"
+        })
+    } catch (error) {
+        res.status(400).json({
+            message: error.message,
+        })
+    }
+}
+
+/**
+ * Delete a employee
+ * 
+ * @param {request} req 
+ * @param {response} res 
+ */
+const deleteEmployee = async (req, res) => {
+    try {
+        const employeeId = req.params.id;
+        // Find the employee by its ID and delete it
+        const deletedEmployee = await Employee.findByIdAndDelete(employeeId);
+
+        if (!deletedEmployee) {
+            return res.status(404).json({ message: "Employee not found" });
+        }
+
+        res.status(200).json({ message: "Employee deleted successfully" });
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+}
+
 const testAdminProductsController = async (req, res) => {
     res.status(200).json({
         status: "Works Admin Controller"
     })
 }
 
-module.exports = { getAllProducts, testAdminProductsController, addProduct, deleteProduct, getAllConfirmedorders, getTotalCostEachOrder, getTotalCostPerOrder }
+module.exports = { getAllProducts, testAdminProductsController, addProduct, deleteProduct, getAllConfirmedorders, getTotalCostEachOrder, getTotalCostPerOrder, getAllEmployees, deleteEmployee, addEmployee, calculateAverage, calculateTotalItemsSold, countTotalOrders }

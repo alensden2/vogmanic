@@ -14,9 +14,16 @@ router.post("/addProduct", adminProductController.addProduct)
 router.delete("/deleteProduct/:id", adminProductController.deleteProduct);
 /** Get all confirmed orders */
 router.get('/confirmedOrders', adminProductController.getAllConfirmedorders)
+/** Get Total orders */
+router.get('/totalOrders', adminProductController.countTotalOrders)
+/** Get Total Items Sold */
+router.get('/totalItemsSold', adminProductController.calculateTotalItemsSold)
 /** Get total sale of all confirmed orders */
 router.get('/totalSalePerOrders', adminProductController.getTotalCostEachOrder)
 /** Get total sale of all confirmed orders */
 router.get('/totalSaleAllOrders', adminProductController.getTotalCostPerOrder)
-
+/** Get all the employees */
+router.get('/employees', adminProductController.getAllEmployees)
+/** Post a new employee */
+router.post('/addEmployee', adminProductController.addEmployee)
 module.exports = router;
