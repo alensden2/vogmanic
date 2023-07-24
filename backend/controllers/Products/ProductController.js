@@ -1,4 +1,7 @@
 const { MongoClient, ServerApiVersion } = require('mongodb');
+const Product = require('../../models/Product')
+const ConfirmedOrders = require('../../models/ConfirmedOrders');
+
 const uri = "mongodb+srv://admin:admin%40123@cluster0.htrbjdo.mongodb.net/Cluster0?retryWrites=true&w=majority";
 const dbName = "VogueManiac"
 const collectionName = "products"
@@ -11,22 +14,16 @@ const client = new MongoClient(uri, {
       deprecationErrors: true,
     }
   });
+
   async function fetchProducts(req,res) {
     try {
-        await client.connect();
-        const db = client.db(dbName);
-        const collection = db.collection(collectionName);
-    
-        const products = await collection.find().toArray();
-        res.send(products);
+      const products = await Product.find();    
+      res.send(products);
 
       } catch (error) {
         console.error('Error fetching products:', error);
         res.send("Error")
       }
-    //    finally {
-    //     await client.close();
-    //   }
   }
 
   async function saveCartDetailsToDB(req,res) {
@@ -128,16 +125,8 @@ async function updateCartQuantity(req,res) {
         console.log('Product not found in the cart.');
         res.status(404).json({ error: 'Product not found in the cart.' });
       }
-    // }
-    // catch (error) {
-    //     console.error("Failed to delete from Cart', error",error);
-    //     res.status(500).json({ message: 'Failed to delete from Cart' });
-    //   }
     }
 
-// 
-// 
-// 
 async function saveWishlistDetailsToDB(req,res) {
   try{
       await client.connect();  
