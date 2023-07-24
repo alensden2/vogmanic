@@ -316,4 +316,4 @@ const testAdminProductsController = async (req, res) => {
     })
 }
 
-module.exports = { getAllProducts, testAdminProductsController, addProduct, deleteProduct, getAllConfirmedorders, getTotalCostEachOrder, getTotalCostPerOrder, getAllEmployees, deleteEmployee, addEmployee, calculateAverage, calculateTotalItemsSold, countTotalOrders }
+module.exports = { getAllProducts, testAdminProductsController, addProduct, deleteProduct, getAllConfirmedorders, getTotalCostEachOrder, getTotalCostPerOrder, getAllEmployees, deleteEmployee, addEmployee, calculateTotalItemsSold, countTotalOrders }
