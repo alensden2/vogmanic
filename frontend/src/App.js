@@ -12,6 +12,7 @@ import AdminHomePage from "./pages/Admin/AdminHomePage";
 import Employees from "./pages/Admin/Employees";
 import { Inventory } from "@mui/icons-material";
 import InventoryPage from "./pages/Admin/Inventory";
+import SalesPage from "./pages/Admin/SalesPage";
 
 function App() {
 
@@ -34,6 +35,7 @@ function App() {
         <Route path="/home" element={<AdminHomePage />} />
         <Route path="/employees" element={<Employees />} />
         <Route path="/inventory" element={<InventoryPage />} />
+        <Route path="/sales" element={<SalesPage />} />
       </Routes>
     </BrowserRouter>
   );
