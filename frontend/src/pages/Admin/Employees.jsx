@@ -1,86 +1,92 @@
-import React, { useState } from "react";
-import AdminBar from "../../components/adminbar";
+import { Add as AddIcon, Delete as DeleteIcon } from "@mui/icons-material";
 import {
   Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  IconButton,
+  Paper,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
-  Paper,
-  IconButton,
-  Typography,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
   TextField,
+  Typography,
 } from "@mui/material";
-import { Delete as DeleteIcon, Add as AddIcon } from "@mui/icons-material";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import AdminBar from "../../components/adminbar";
 import Footer from "../../components/footer";
 
-const sampleEmployees = [
-  {
-    "_id": "64b8a036f57ecaaeee634fa1",
-    "firstName": "Jane",
-    "lastName": "Smith",
-    "address": "456 Elm Street",
-    "email": "jane.smith@example.com",
-    "phone": "987-654-3210",
-    "employeeId": "EMP002",
-    "createdAt": "2023-07-20T02:47:18.994Z",
-    "updatedAt": "2023-07-20T02:47:18.994Z",
-    "__v": 0
-  },
-  {
-    "_id": "64b8a05bf57ecaaeee634fa4",
-    "firstName": "John",
-    "lastName": "Doe",
-    "address": "123 Main Street",
-    "email": "john.doe@example.com",
-    "phone": "123-456-7890",
-    "employeeId": "EMP001",
-    "createdAt": "2023-07-20T02:47:55.933Z",
-    "updatedAt": "2023-07-20T02:47:55.933Z",
-    "__v": 0
-  },
-  {
-    "_id": "64b8a063f57ecaaeee634fa6",
-    "firstName": "Michael",
-    "lastName": "Johnson",
-    "address": "789 Oak Avenue",
-    "email": "michael.johnson@example.com",
-    "phone": "555-123-4567",
-    "employeeId": "EMP003",
-    "createdAt": "2023-07-20T02:48:03.042Z",
-    "updatedAt": "2023-07-20T02:48:03.042Z",
-    "__v": 0
-  },
-  {
-    "_id": "64b8a069f57ecaaeee634fa8",
-    "firstName": "Emily",
-    "lastName": "Williams",
-    "address": "321 Maple Lane",
-    "email": "emily.williams@example.com",
-    "phone": "888-999-7777",
-    "employeeId": "EMP004",
-    "createdAt": "2023-07-20T02:48:09.843Z",
-    "updatedAt": "2023-07-20T02:48:09.843Z",
-    "__v": 0
-  }
-];
+const DialogBox = ({ isOpen, onClose, title, content }) => {
+  return (
+    <Dialog open={isOpen} onClose={onClose}>
+      <DialogTitle>{title}</DialogTitle>
+      <DialogContent>{content}</DialogContent>
+      <DialogActions>
+        <Button onClick={onClose}>OK</Button>
+      </DialogActions>
+    </Dialog>
+  );
+};
+
+const SuccessDeleteDialogBox = ({ isOpen, onClose, employeeName }) => {
+  return (
+    <Dialog open={isOpen} onClose={onClose}>
+      <DialogTitle>{`Employee ${employeeName} is successfully deleted`}</DialogTitle>
+      <DialogContent></DialogContent>
+      <DialogActions>
+        <Button onClick={onClose}>OK</Button>
+      </DialogActions>
+    </Dialog>
+  );
+};
 
 const Employees = () => {
   const [isNavbarOpen, setIsNavbarOpen] = useState(false);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [newEmployee, setNewEmployee] = useState({
+    employeeNo: "",
     firstName: "",
     lastName: "",
     email: "",
     phone: "",
     address: "",
   });
+  const [employees, setEmployees] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isEmailErrorOpen, setIsEmailErrorOpen] = useState(false);
+  const [isPhoneErrorOpen, setIsPhoneErrorOpen] = useState(false);
+  const [isSuccessOpen, setIsSuccessOpen] = useState(false);
+  const [isFailureOpen, setIsFailureOpen] = useState(false);
+  const [isSuccessDeleteOpen, setIsSuccessDeleteOpen] = useState(false);
+  const [deletedEmployeeName, setDeletedEmployeeName] = useState("");
+
+  const isValidEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const isValidPhoneNumber = (phone) => {
+    const phoneRegex = /^\d{3}[-.\s]?\d{3}[-.\s]?\d{4}$/;
+    return phoneRegex.test(phone);
+  };
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:6001/admin/employees")
+      .then((response) => {
+        setEmployees(response.data);
+        setIsLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching employees:", error);
+        setIsLoading(false);
+      });
+  }, []);
 
   const handleNavbarToggle = () => {
     setIsNavbarOpen(!isNavbarOpen);
@@ -93,6 +99,7 @@ const Employees = () => {
   const handleDialogClose = () => {
     setIsAddDialogOpen(false);
     setNewEmployee({
+      employeeNo: "",
       firstName: "",
       lastName: "",
       email: "",
@@ -110,63 +117,177 @@ const Employees = () => {
   };
 
   const handleAddEmployee = () => {
-    console.log("Adding employee:", newEmployee);
-    handleDialogClose();
+    if (
+      !newEmployee.employeeNo ||
+      !newEmployee.firstName ||
+      !newEmployee.lastName ||
+      !newEmployee.email ||
+      !newEmployee.phone ||
+      !newEmployee.address
+    ) {
+      alert("Please fill in all required fields.");
+      return;
+    }
+
+    if (!isValidEmail(newEmployee.email)) {
+      setIsEmailErrorOpen(true);
+      return;
+    }
+
+    if (!isValidPhoneNumber(newEmployee.phone)) {
+      setIsPhoneErrorOpen(true);
+      return;
+    }
+
+    const employeeData = {
+      employeeId: newEmployee.employeeNo,
+      firstName: newEmployee.firstName,
+      lastName: newEmployee.lastName,
+      email: newEmployee.email,
+      phone: newEmployee.phone,
+      address: newEmployee.address,
+    };
+
+    axios
+      .post("http://localhost:6001/admin/addEmployee", employeeData)
+      .then((response) => {
+        console.log("Employee added successfully:", response.data);
+        axios
+          .get("http://localhost:6001/admin/employees")
+          .then((response) => {
+            setEmployees(response.data);
+            setIsSuccessOpen(true);
+            setIsAddDialogOpen(false);
+          })
+          .catch((error) => {
+            console.error("Error fetching employees:", error);
+          });
+      })
+      .catch((error) => {
+        console.error("Error adding employee:", error);
+        setIsFailureOpen(true);
+      });
   };
 
   const handleDeleteEmployee = (employeeId) => {
+    axios
+      .delete(`http://localhost:6001/admin/deleteEmployee/${employeeId}`)
+      .then((response) => {
+        setEmployees((prevEmployees) =>
+          prevEmployees.filter((employee) => employee._id !== employeeId)
+        );
+
+        const deletedEmployee = employees.find((employee) => employee._id === employeeId);
+        if (deletedEmployee) {
+          setDeletedEmployeeName(`${deletedEmployee.firstName} ${deletedEmployee.lastName}`);
+          setIsSuccessDeleteOpen(true);
+        }
+      })
+      .catch((error) => {
+        console.error("Error deleting employee:", error);
+      });
   };
 
   return (
     <div style={{ marginTop: "70px" }}>
       <AdminBar isOpen={isNavbarOpen} onToggle={handleNavbarToggle} />
+
+      <DialogBox
+        isOpen={isEmailErrorOpen}
+        onClose={() => setIsEmailErrorOpen(false)}
+        title="Invalid Email"
+        content="Please enter a valid email address."
+      />
+      <DialogBox
+        isOpen={isPhoneErrorOpen}
+        onClose={() => setIsPhoneErrorOpen(false)}
+        title="Invalid Phone Number"
+        content="Please enter a valid phone number in the format XXX-XXX-XXXX."
+      />
+      <DialogBox
+        isOpen={isSuccessOpen}
+        onClose={() => setIsSuccessOpen(false)}
+        title={`Employee ${newEmployee.firstName} is successfully added`}
+        content=""
+      />
+      <DialogBox
+        isOpen={isFailureOpen}
+        onClose={() => setIsFailureOpen(false)}
+        title={`Employee ${newEmployee.firstName} couldn't be added`}
+        content=""
+      />
+      <SuccessDeleteDialogBox
+        isOpen={isSuccessDeleteOpen}
+        onClose={() => setIsSuccessDeleteOpen(false)}
+        employeeName={deletedEmployeeName}
+      />
       <div style={{ padding: "20px" }}>
-        <IconButton color="primary" aria-label="add employee" onClick={handleAddClick} style={{ float: "right" }}>
+        <IconButton
+          color="primary"
+          aria-label="add employee"
+          onClick={handleAddClick}
+          style={{ float: "right" }}
+        >
           <AddIcon />
         </IconButton>
 
-        <Typography sx={{ padding: '5px' }} variant="h5" gutterBottom>
+        <Typography sx={{ padding: "5px" }} variant="h5" gutterBottom>
           Employee List
         </Typography>
-        <TableContainer component={Paper}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>First Name</TableCell>
-                <TableCell>Last Name</TableCell>
-                <TableCell>Email</TableCell>
-                <TableCell>Phone</TableCell>
-                <TableCell>Address</TableCell>
-                <TableCell>Action</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {sampleEmployees.map((employee) => (
-                <TableRow key={employee._id}>
-                  <TableCell>{employee.firstName}</TableCell>
-                  <TableCell>{employee.lastName}</TableCell>
-                  <TableCell>{employee.email}</TableCell>
-                  <TableCell>{employee.phone}</TableCell>
-                  <TableCell>{employee.address}</TableCell>
-                  <TableCell>
-                    <IconButton
-                      color="secondary"
-                      aria-label="delete employee"
-                      onClick={() => handleDeleteEmployee(employee._id)}
-                    >
-                      <DeleteIcon />
-                    </IconButton>
-                  </TableCell>
+
+        {isLoading ? (
+          <div>Loading...</div>
+        ) : (
+          <TableContainer component={Paper}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Employee No</TableCell>
+                  <TableCell>First Name</TableCell>
+                  <TableCell>Last Name</TableCell>
+                  <TableCell>Email</TableCell>
+                  <TableCell>Phone</TableCell>
+                  <TableCell>Address</TableCell>
+                  <TableCell>Action</TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+              </TableHead>
+              <TableBody>
+                {employees.map((employee) => (
+                  <TableRow key={employee._id}>
+                    <TableCell>{employee.employeeId}</TableCell>
+                    <TableCell>{employee.firstName}</TableCell>
+                    <TableCell>{employee.lastName}</TableCell>
+                    <TableCell>{employee.email}</TableCell>
+                    <TableCell>{employee.phone}</TableCell>
+                    <TableCell>{employee.address}</TableCell>
+                    <TableCell>
+                      <IconButton
+                        color="secondary"
+                        aria-label="delete employee"
+                        onClick={() => handleDeleteEmployee(employee._id)}
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        )}
       </div>
 
       <Dialog open={isAddDialogOpen} onClose={handleDialogClose}>
         <DialogTitle>Add Employee</DialogTitle>
         <DialogContent>
+          <TextField
+            fullWidth
+            label="Employee No"
+            name="employeeNo"
+            value={newEmployee.employeeNo}
+            onChange={handleInputChange}
+            margin="normal"
+          />
           <TextField
             fullWidth
             label="First Name"
@@ -188,6 +309,7 @@ const Employees = () => {
             label="Email"
             name="email"
             value={newEmployee.email}
+            placeholder="test@test.com"
             onChange={handleInputChange}
             margin="normal"
           />
@@ -195,6 +317,7 @@ const Employees = () => {
             fullWidth
             label="Phone"
             name="phone"
+            placeholder="XXX-XXX-XXXX or XXX.XXX.XXXX or XXX XXX XXXX"
             value={newEmployee.phone}
             onChange={handleInputChange}
             margin="normal"

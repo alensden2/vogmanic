@@ -26,4 +26,6 @@ router.get('/totalSaleAllOrders', adminProductController.getTotalCostPerOrder)
 router.get('/employees', adminProductController.getAllEmployees)
 /** Post a new employee */
 router.post('/addEmployee', adminProductController.addEmployee)
+/** Delete an employee */
+router.delete('/deleteEmployee/:id', adminProductController.deleteEmployee)
 module.exports = router;
