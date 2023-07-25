@@ -1,5 +1,4 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-
 import "./App.css";
 import AdminHomePage from "./pages/Admin/AdminHomePage";
 import Employees from "./pages/Admin/Employees";
@@ -13,11 +12,18 @@ import Faq from "./pages/landing/faq";
 import Home from "./pages/landing/home";
 import Cart from "./pages/products/Cart";
 import ProductListingPage from "./pages/products/ProductListingPage";
+<<<<<<< HEAD
 import Wishlist from "./pages/products/Wishlist";
 import Store from "./pages/store";
+=======
+import Cart from "./pages/products/Cart"
+import Wishlist from "./pages/products/Wishlist"
+import Checkout from "./pages/checkout/Checkout";
+>>>>>>> 8c6710572 (checkout bacic ui and paypal integration)
 
 function App() {
 
+  console.log("app");
 
   return (
     <BrowserRouter>
@@ -34,6 +40,7 @@ function App() {
         <Route path="/wishlist" element={<Wishlist />} />
         <Route path="/fetch_wishlist_db" element={<Wishlist />} />
         <Route path="/delete_wishlist_item" element={<Wishlist/>} />
+<<<<<<< HEAD
         <Route path="/home" element={<AdminHomePage />} />
         <Route path="/employees" element={<Employees />} />
         <Route path="/inventory" element={<InventoryPage />} />
@@ -41,6 +48,9 @@ function App() {
         <Route path="/order" element={<OrdersPage />} />
         <Route path="/order/:orderId" element={<OrderDetails />} />
         <Route path="/order/:orderId/cancel" element={<OrderCancellation />} />
+=======
+        <Route path="/checkout" element={<Checkout/>}/>
+>>>>>>> 8c6710572 (checkout bacic ui and paypal integration)
       </Routes>
     </BrowserRouter>
   );

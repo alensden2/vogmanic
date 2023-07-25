@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@material-ui/icons": "^4.11.3",
+<<<<<<< HEAD
     "@mui/icons-material": "^5.14.0",
     "@mui/material": "^5.13.5",
     "@mui/styles": "^5.14.0",
@@ -17,9 +17,20 @@
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.13.0",
     "react-scripts": "5.0.1",
+=======
+    "@mui/icons-material": "^5.14.1",
+    "@mui/material": "^5.14.2",
+    "@mui/styles": "^5.14.1",
+    "@paypal/react-paypal-js": "^8.1.0",
+    "@testing-library/jest-dom": "^5.17.0",
+    "react": "latest",
+    "react-dom": "latest",
+    "react-router-dom": "^6.14.2",
+    "react-scripts": "^5.0.1",
+>>>>>>> 8c6710572 (checkout bacic ui and paypal integration)
     "react-scroll": "^1.8.9",
     "react-scrollama": "^2.3.2",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^3.4.0"
   },
   "scripts": {
     "start": "react-scripts start",
