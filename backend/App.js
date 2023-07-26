@@ -5,7 +5,8 @@ const http = require('http');
 const socketIO = require('socket.io');
 const app = express();
 const productsRoutes = require('./routes/productsRoutes');
-const adminRoutes = require('./routes/adminRoutes.js')
+const adminRoutes = require('./routes/adminRoutes.js');
+const orderRoutes = require('./routes/orderRoutes');
 const mongoose = require('mongoose')
 
 app.use(cors()); // Enable CORS for all routes
@@ -22,6 +23,10 @@ app.use('/', productsRoutes);
 
 // admin routes
 app.use('/admin', adminRoutes);
+
+// Order Routes
+app.use('/order', orderRoutes);
+
 app.use(function (req, res, next) {
     next(createError(404));
 });

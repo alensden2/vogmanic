@@ -13,6 +13,9 @@ import Employees from "./pages/Admin/Employees";
 import { Inventory } from "@mui/icons-material";
 import InventoryPage from "./pages/Admin/Inventory";
 import SalesPage from "./pages/Admin/SalesPage";
+import OrdersPage from "./pages/Order/OrdersPage";
+import OrderDetails from "./pages/Order/OrderDetails";
+import OrderCancellation from "./pages/Order/OrderCancellation";
 
 function App() {
 
@@ -36,6 +39,9 @@ function App() {
         <Route path="/employees" element={<Employees />} />
         <Route path="/inventory" element={<InventoryPage />} />
         <Route path="/sales" element={<SalesPage />} />
+        <Route path="/order" element={<OrdersPage />} />
+        <Route path="/order/:orderId" element={<OrderDetails />} />
+        <Route path="/order/:orderId/cancel" element={<OrderCancellation />} />
       </Routes>
     </BrowserRouter>
   );
