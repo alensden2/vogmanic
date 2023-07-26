@@ -5,29 +5,28 @@ import "./checkout.css";
 import { TextField, Button, Grid } from "@mui/material";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import Footer from "../../components/footer";
-import { useLocation } from "react-router";
-import { useTheme } from "@mui/material/styles";
+import { useLocation, useNavigate } from "react-router";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
-import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
-import SkipPreviousIcon from "@mui/icons-material/SkipPrevious";
-import PlayArrowIcon from "@mui/icons-material/PlayArrow";
-import SkipNextIcon from "@mui/icons-material/SkipNext";
-import { element } from "prop-types";
+import { HOSTED_BASE_URL } from "../../constants";
 
 function Checkout() {
   const location = useLocation();
+  const navigate =useNavigate();
   const products = location.state.cartProducts;
   console.log(products);
 
-  const calculateTotalAmount = () => {
-    return products.reduce((total, element) => total + element.price * element.count, 0);
-  };
-
   const [payment,setPayment]=useState(false);
+  const calculateTotalAmount = () => {
+  
+    return products.reduce(
+      (total, element) => total + element.price * element.count,
+      0
+    );
+  };
 
   const [formData, setFormData] = useState({
     firstName: "",
@@ -50,7 +49,7 @@ function Checkout() {
     // Check for required fields
     Object.keys(formData).forEach((key) => {
       if (!formData[key]) {
-        errors[key] = 'This field is required';
+        errors[key] = "This field is required";
       }
     });
     setFormErrors(errors);
@@ -64,21 +63,37 @@ function Checkout() {
     console.log(payment);
     if (isFormValid && payment) {
       // Submit form logic here
-      console.log('Form submitted successfully');
+      console.log("Form submitted successfully");
       //make post request to backend to add order to mongodb
-      const order={
-        "orderId":"temp",
-        'items':products,
-        "paymentStatus":"complete"
-      }
-
-      fetch();
+      const order = {
+        orderId:"order123",
+        items: products,
+        shippingAddress: "abc"
+      };
+      console.log(order);
+      const response = fetch(HOSTED_BASE_URL + "/order/place", {
+        method: "POST",
+        body: JSON.stringify(order),
+        headers: {
+          "content-type": "application/json",
+        },
+      })
+      .then(res => res.json())
+      .then((res) => {
+        console.log(res);
+        if(res.message=="Order placed successfully")
+        {
+            //update inventory
+            navigate("/");
+            console.log("order placed");
+        }
+      })
     }
   };
 
-  const [disabled,setDisabled]=useState(false);
+  const [disabled, setDisabled] = useState(false);
 
-  const totalAmount=calculateTotalAmount();
+  const totalAmount = calculateTotalAmount();
 
   return (
     <div className="body">
@@ -167,7 +182,7 @@ function Checkout() {
                   options={{
                     "client-id":
                       "Afr-hvcMCINThspozufK6vkPjUnGanXsucXrxjgbbwzqHcbvSE-eGQkCJq6tqmq4l1pFX4C6lT_6v3_b",
-                    "currency":"CAD"  
+                    currency: "CAD",
                   }}
                 >
                   <PayPalButtons
@@ -176,7 +191,7 @@ function Checkout() {
                         purchase_units: [
                           {
                             amount: {
-                              value: parseInt(totalAmount)
+                              value: parseInt(totalAmount),
                             },
                           },
                         ],
@@ -192,9 +207,8 @@ function Checkout() {
                         }
                       });
                     }}
-
                     disabled={disabled}
-                  />
+                    />
                 </PayPalScriptProvider>
               </div>
               <Grid item xs={12}>
@@ -209,7 +223,11 @@ function Checkout() {
           <h2>Order Review</h2>
           {products.map((element) => {
             return (
-              <Card sx={{ display: "flex","height":'120px' }} className="product_item" key={element._id}>
+              <Card
+                sx={{ display: "flex", height: "120px" }}
+                className="product_item"
+                key={element._id}
+              >
                 <CardMedia
                   component="img"
                   sx={{ width: 151 }}

@@ -1,20 +1,33 @@
-import React, { useEffect, useState} from 'react';
-import { useLocation } from 'react-router-dom';
-import { Box, Typography, Button, Container, Grid, Card, CardMedia, CardContent, IconButton, Divider, Select, MenuItem } from "@mui/material";
 import { Add as AddIcon, Remove as RemoveIcon } from "@mui/icons-material";
+import { Box, Button, Card, CardContent, CardMedia, Container, Divider, Grid, IconButton, MenuItem, Paper, Select, TableContainer, Typography } from "@mui/material";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Footer from "../../components/footer";
 import Navbar from "../../components/navbar";
-import { TableContainer, Table, TableBody, TableRow, TableCell, Paper } from '@mui/material';
-import { useNavigate } from "react-router-dom";
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: "#000000", 
+    },
+    secondary: {
+      main: "#ff4081", 
+    },
+    // Other theme configurations...
+  },
+  typography: {
+    fontFamily: "Arial, sans-serif", 
+  },
+});
 
 const Cart = () => {
-  const location = useLocation();
-  const { productName, price } = location.state || {};
+
   const [cartProducts, setCartProducts] = useState([]);
   const navigate = useNavigate();
   
   const totalPrice = cartProducts.reduce((total, product) => total + product.price * product.count, 0);
-  const shippingCost = 3.5;
+  const shippingCost = cartProducts.reduce((total, product) => total + (product.shipping_cost || 0) * product.count, 0);
   const totalCost = totalPrice + shippingCost;
 
   useEffect(() => {
@@ -110,89 +123,96 @@ const Cart = () => {
   
 
   return (
-<Box>
+    <ThemeProvider theme={theme}>
+    <Box>
       <Navbar />
       <Container maxWidth="lg" sx={{ paddingTop: '82px', paddingBottom: '32px' }}>
-        <Typography variant="h4" gutterBottom>Shopping Cart</Typography>
+        <Typography variant="h4" gutterBottom sx={{ fontFamily: theme.typography, fontWeight: "bold", fontSize: "40px"}}>Shopping Cart</Typography>
         {cartProducts.length === 0 ? (
           <Typography variant="body1">Your cart is empty.</Typography>
         ) : (
           <>
+          <br/>
+          <br/>
             <Grid container spacing={2}>
               {cartProducts.map((product) => (
                 <Grid item xs={12} key={product._id}>
-                  <Card sx={{ display: 'flex', alignItems: 'center' }}>
+                  <Card sx={{ display: 'flex', alignItems: 'center', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
                     <CardMedia
                       component="img"
                       src={product.image_url}
                       alt={product.productName}
-                      sx={{ width: '200px', height: '200px', objectFit: 'cover',display: 'flex',flexDirection: 'column', margin: '16px', boxShadow: "0 2px 4px rgba(0,0,0,0.1)" }}
+                      sx={{ width: '150px', height: '150px', objectFit: 'contain', borderRadius: '8px 0 0 8px' }}
                     />
-                    <CardContent sx={{ flexGrow: 1, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <CardContent sx={{ flexGrow: 1, display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px' }}>
                       <Box sx={{ flexGrow: 1 }}>
-                        <Typography variant="h6">Name: {product.name}</Typography>
+                        <Typography variant="h6" sx={{ fontWeight: 'bold' }}>Name: {product.name}</Typography>
                         <Typography variant="body1">Price: ${product.price}</Typography>
                       </Box>
                       <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                      <Typography variant="body2">Quantity:</Typography>
-                      <Select
-                        value={product.count}
-                        onChange={(e) => handleQuantityChange(product._id, parseInt(e.target.value))}
-                        variant="outlined"
-                        style={{ marginLeft: '8px' }}
-                        MenuProps={{ disablePortal: true }} // Prevents menu from being cut off by overflow
-                      >
-                        {Array.from({ length: 10 }, (_, i) => i + 1).map((quantity) => (
-                          <MenuItem key={quantity} value={quantity}>
-                            {quantity}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                      <Button
-                        variant="contained"
-                        color="secondary"
-                        onClick={() => handleRemoveFromCart(product._id)}
-                        style={{ marginLeft: '8px' }}
-                      >
-                        Remove
-                      </Button>
+                        <Typography variant="body2" sx={{ fontWeight: 'bold', marginRight: '8px' }}>Quantity:</Typography>
+                        <Select
+                          value={product.count}
+                          onChange={(e) => handleQuantityChange(product._id, parseInt(e.target.value))}
+                          variant="outlined"
+                          style={{ marginRight: '8px',color: theme.palette.primary }}
+                          MenuProps={{ disablePortal: true }} // Prevents menu from being cut off by overflow
+                        >
+                          {Array.from({ length: 10 }, (_, i) => i + 1).map((quantity) => (
+                            <MenuItem key={quantity} value={quantity}>
+                              {quantity}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                        <IconButton onClick={() => handleRemoveFromCart(product._id)}>
+                          <RemoveIcon />
+                        </IconButton>
+                        <IconButton  onClick={() => handleQuantityChange(product._id, product.count + 1)}>
+                          <AddIcon />
+                        </IconButton>
                       </Box>
                     </CardContent>
                   </Card>
                 </Grid>
               ))}
             </Grid>
-            {/* <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'right', marginBottom: '8px' }}>
-            <Typography variant="h6">Total Price: ${totalPrice}</Typography>
-          </Box> */}
-          <br/>
-          <Box sx={{ display: 'flex', marginTop: 'auto', marginBottom: '0px' }}>
-              <Button variant="contained" color="primary" size="large" onClick={() => handleContinueShopping()}>
+            <br/>
+            <Grid container sx={{ marginBottom: "16px" }}>
+              <Grid item xs={12} sm={6}>
+                <Typography variant="h6">Total Price:</Typography>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <Typography variant="h6" align="right">${totalPrice.toFixed(2)}</Typography>
+              </Grid>
+            </Grid>
+            <Grid container sx={{ marginBottom: "16px" }}>
+              <Grid item xs={12} sm={6}>
+                <Typography variant="h6">Shipping Cost:</Typography>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <Typography variant="h6" align="right">${shippingCost.toFixed(2)}</Typography>
+              </Grid>
+            </Grid>
+            <Divider sx={{ marginBottom: "16px" }} />
+            <Grid container sx={{ marginBottom: "32px" }}>
+              <Grid item xs={12} sm={6}>
+                <Typography variant="h5" sx={{ fontWeight: 'bold' }}>Total Cost (including shipping):</Typography>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <Typography variant="h5" align="right" sx={{ fontWeight: 'bold' }}>${totalCost.toFixed(2)}</Typography>
+              </Grid>
+            </Grid>
+            <Box sx={{ display: 'flex', marginTop: 'auto', marginBottom: '0px' }}>
+              <Button variant="contained"  size="large" onClick={() => handleContinueShopping()} sx={{ fontWeight: 'bold' }}>
                 Continue Shopping
               </Button>
             </Box>
-          <TableContainer component={Paper} sx={{ marginLeft: 'auto', width: '30%'}}>
-            <Table>
-              <TableBody>
-              <TableRow>  
-                  <TableCell align="right" component="th" scope="row">Total Price:</TableCell>
-                  <TableCell align="right">${totalPrice}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell  align="right" component="th" scope="row">Shipping Cost:</TableCell>
-                  <TableCell align="right">${shippingCost}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell  align="right" component="th" scope="row">Total Cost (including shipping):</TableCell>
-                  <TableCell align="right">${totalCost}</TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-          </TableContainer>
-          {/* ... continue shopping button */}
-         <br/>
+            <TableContainer component={Paper} sx={{ marginLeft: 'auto', width: '30%', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+              {/* ... (Table and TableRow code) */}
+            </TableContainer>
+            <br/>
             <Box sx={{ display: 'flex', justifyContent: 'flex-end', marginBottom : '32px' }}>
-              <Button variant="contained" color="primary" size="large" onClick={() => handleProceedToCheckout()}>
+              <Button variant="contained"  size="large" onClick={() => handleProceedToCheckout()} sx={{ fontWeight: 'bold' }}>
                 Proceed to checkout
               </Button>
             </Box>
@@ -201,6 +221,7 @@ const Cart = () => {
       </Container>
       <Footer sx={{ flexShrink: 0 }} />
     </Box>
+    </ThemeProvider>
   );
 };
 

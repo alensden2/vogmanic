@@ -1,8 +1,7 @@
-import { Box, Typography, Card, CardContent, CardMedia, Grid, IconButton, TextField, Drawer, List, ListItem, ListItemIcon, ListItemText } from "@mui/material";
-import { Star, ShoppingCart, Favorite, Search} from "@mui/icons-material";
+import { ChevronLeft as ChevronLeftIcon, ChevronRight as ChevronRightIcon, Favorite, FavoriteBorder, Search, ShoppingCart, Star } from "@mui/icons-material";
+import { Box, Card, CardContent, CardMedia, Drawer, Grid, IconButton, List, ListItem, ListItemText, TextField, Typography } from "@mui/material";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
 import React, { useEffect, useState } from 'react';
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { ChevronLeft as ChevronLeftIcon, ChevronRight as ChevronRightIcon } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import Footer from "../../components/footer";
 import Navbar from "../../components/navbar";
@@ -12,16 +11,15 @@ const drawerWidth = 240;
 const theme = createTheme({
   palette: {
     primary: {
-      main: "#007bff", // Your primary color here
-      dark: "#0056b3", // Your primary dark color here (for hover effect)
+      main: "#000000", 
     },
     secondary: {
-      main: "#ff4081", // Your secondary color here
-      dark: "#c60055", // Your secondary dark color here (for hover effect)
+      main: "#ff4081", 
     },
-    typography: {
-      fontFamily: "Roboto, sans-serif", // Use Roboto as the default font
-    },
+
+  },
+  typography: {
+    fontFamily: "Neue-Helvetica,Helvetica,Arial,sans-serif"
   },
 });
 
@@ -31,14 +29,15 @@ const ProductListingPage = () => {
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('');
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [cartItems, setCartItems] = useState([]);
+  const [cartItems,setCartItems] = useState([]);
   const [wishlistItems, setWishlistItems] = useState([]);
   const navigate = useNavigate();
+  const cartItemCount = cartItems.length;
  
   useEffect(() => {
     // Function to fetch products from the backend
     const fetchProducts = async () => {
-      try {
+      // try {
         const response = await fetch('http://localhost:6001/products', {
           method: 'POST',
           headers: {
@@ -51,17 +50,11 @@ const ProductListingPage = () => {
         }
 
         const productsData = await response.json();
-        // console.log(data)
-        // const productsData = data.products;
         setProducts(productsData);
 
         const uniqueCategories = [...new Set(productsData.map(product => product.category))];
         console.log(uniqueCategories)
         setCategories(uniqueCategories);
-
-      } catch (error) {
-        console.error('Error fetching products:', error);
-      }
     };
 
     // Call the fetchProducts function to retrieve products
@@ -71,6 +64,7 @@ const ProductListingPage = () => {
   const handleAddToCart = async (productId) => {
     // Implement logic to add the product to the cart
     const productToAdd = products.find((product) => product._id === productId);
+
 
     if (productToAdd) {
       setCartItems((prevCartItems) => [...prevCartItems, productToAdd]);  
@@ -102,6 +96,18 @@ const ProductListingPage = () => {
   };
 
   const handleAddToWishlist = async (productId) => {
+    const productInList = wishlistItems.find((product) => product._id === productId);
+
+    console.log("Product In: ",productInList);
+
+    if(productInList){
+      const filteredArray = wishlistItems.filter(item => item._id !== productId);
+      console.log("Filtered Items:", filteredArray);
+      setWishlistItems(filteredArray);  
+      return;
+    }
+
+
     // Implement logic to add the product to the wishlist
     const productToAdd = products.find((product) => product._id === productId);
 
@@ -120,16 +126,9 @@ const ProductListingPage = () => {
           throw new Error('Failed to add cart details to MongoDB');
         }    
       console.log(productToAdd)
-      navigate("/wishlist", {
-        state: {
-          productId: productToAdd._id,
-          productName: productToAdd.name,
-          price: productToAdd.price,
-        },
-      });
     }
     catch (error) {
-      console.error('Error adding wishlist details to MongoDB:', error);
+      console.error('Error adding wishlist details to MongoDB:',cartItemCount, error);
     }
   }
   };
@@ -160,6 +159,15 @@ const ProductListingPage = () => {
   const handleDrawerToggle = () => {
     setIsDrawerOpen((prev) => !prev);
   };
+  const handleDrawerClose = () => {
+    setIsDrawerOpen(false);
+  };
+  const isInWishlist = (productId) => {
+    const productToAdd = wishlistItems.find((product) => product._id === productId);
+    wishlistItems.includes(productToAdd);
+    return productToAdd;
+  }
+
 
   return (
 
@@ -172,8 +180,11 @@ const ProductListingPage = () => {
         <Box
           sx={{
             marginTop: 'px',
-            position: "absolute",
-            zIndex: 1000 // Add margin to create space below the search bar
+              position: "absolute",
+              zIndex: 1000,
+              width: drawerWidth, // Set the width of the drawer
+              backgroundColor: "#f9f9f9", // Zara's drawer background color
+              boxShadow: "0 2px 4px rgba(0,0,0,0.1)", // Add a box shadow
           }}
         >
         <Drawer
@@ -193,7 +204,11 @@ const ProductListingPage = () => {
             padding: '16px', // Add some padding
             borderRight: '1px solid #ccc', // Add a border to separate categories from the content
           }}>
-          <Typography variant="h6" sx={{ paddingTop: '82px',marginBottom: '16px', fontWeight: 500 }}>
+          <Typography variant="h6" sx={{ paddingTop: '82px',marginBottom: '16px', fontWeight: 500,
+                color: theme.palette.primary.main,
+                fontSize: "24px",
+                fontFamily: theme.typography.fontFamily
+                 }}>
             Categories
           </Typography>  
           </Box> 
@@ -206,60 +221,165 @@ const ProductListingPage = () => {
                 selected={selectedCategory === category}
                 onClick={() => handleCategorySelect(category)}
               >
-                <ListItemText primary={category} />
-              </ListItem>
+            <ListItemText primary={<Typography variant="body1" sx={{ fontFamily: theme.typography.fontFamily}}>{category}</Typography>} />            
+            </ListItem>
             ))}
           </List>
         </Drawer>   
-        </Box> 
+        </Box>        
+        <Box sx={{ maxWidth: "1200px", margin: "0 auto", paddingTop: '82px', paddingX: '64px' }}>
+            <Box sx={{ display: "flex", alignItems: "center", marginBottom: "16px", backgroundColor: "#fff", padding: "8px", borderRadius: "4px", boxShadow: "0 2px 4px rgba(0,0,0,0.1)" }}>
+              {/* Search bar resembling Zara */}
+              <Search sx={{ marginRight: "8px", color: "#666", fontSize: "24px" }} />
+              <TextField
+                label="Search Products"
+                value={searchTerm}
+                onChange={handleSearchChange}
+                fullWidth
+                variant="standard"
+                InputProps={{
+                  sx: {
+                    backgroundColor: "#f9f9f9", // Zara's search bar background color
+                    borderRadius: "4px",
+                    padding: "2px 8px",
+                    boxShadow: "none",
+                    "& .MuiInputBase-input": {
+                      fontSize: "14px",
+                      color: "#000", // Zara's text color
+                      fontWeight: 500,
+                      fontFamily: theme.typography.fontFamily // Use a custom font similar to Zara's font
+                    },
+                    "& .MuiInputLabel-root": {
+                      fontSize: "14px",
+                      color: searchTerm ? "#777" : "#999", // Placeholder text color (gray when empty, light gray when focused)
+                    },
+                  },
+                }}
+                InputLabelProps={{
+                  shrink: true, // Keep the label from floating when focused
+                }}
+              />
+            </Box>
 
-      <Box sx={{ maxWidth: "1200px", margin: "0 auto", paddingTop: '82px', paddingX: '64px' }}>
-        <Box sx={{ display: "flex", alignItems: "center", marginBottom: "16px", backgroundColor: "#fff", padding: "8px", borderRadius: "4px", boxShadow: "0 2px 4px rgba(0,0,0,0.1)" }}>
-          <Search sx={{ marginRight: "8px", color: "#007bff", fontSize: "24px" }} />
-          <TextField
-            label="Search Products"
-            value={searchTerm}
-            onChange={handleSearchChange}
-            fullWidth
-            variant="standard"
-            InputProps={{
-              sx: { backgroundColor: "#fff", borderRadius: "4px", padding: "2px 8px", boxShadow: "none" }, // Set background color for the input field
-            }}
-          />
-        </Box>
-        <Grid container spacing={3} justifyContent="center" sx={{ paddingTop: '16px',minWidth:'900px'}}>
+          <Grid
+          container
+          spacing={3}
+          justifyContent="center"
+          sx={{ paddingTop: "16px", minWidth: "900px" }}
+        >
           {filteredProducts.map((product) => (
             <Grid item key={product._id} xs={12} sm={6} md={4}>
-              <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column', marginBottom: '16px', boxShadow: "0 2px 4px rgba(0,0,0,0.1)"}}>
+              <Card
+                sx={{
+                  height: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                  marginBottom: "16px",
+                  boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+                  borderRadius: "4px",
+                }}
+              >
+                <Box sx={{ position: "relative" }}>
                 <CardMedia
                   component="img"
                   height="200"
                   image={product.image_url}
                   alt={product.name}
                   sx={{
-                    height: '400px',
-                    objectFit: 'cover', // Use 'cover' to scale the image while preserving aspect ratio
+                    height: "300px",
+                    objectFit: "cover", // Use 'contain' to fit the image inside the card
+                    borderTopLeftRadius: "4px",
+                    borderTopRightRadius: "4px",
                   }}
                 />
-                <CardContent sx={{flex: '1'}}>
-                  <Typography variant="h5">{product.name}</Typography>
-                  <Typography variant="body1">{product.description}</Typography>
-                  <Typography variant="body2">Price: ${product.price}</Typography>
-                  <Typography variant="body2">Shipping Cost: ${product.shipping_cost}</Typography>
-                  <Box sx={{ display: 'flex', alignItems: 'center', marginTop: '8px' }}>
+                <IconButton
+                  sx={{
+                    position: "absolute",
+                    bottom: "8px",
+                    right: "8px",
+                    display: "flex",
+                    color: isInWishlist(product._id) ? "red" : theme.palette.primary.main.light,
+                  }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    e.nativeEvent.stopImmediatePropagation();
+                    handleAddToWishlist(product._id);
+                  }}
+                >
+                  {
+                    isInWishlist(product._id) ?
+                  <Favorite sx={{ fontSize: "35px" }} />
+:
+                  <FavoriteBorder sx={{ fontSize: "35px" }} />
+                  }
+                </IconButton>
+              </Box>
+                <CardContent sx={{ flex: "1", paddingBottom: "8px" }}>
+                  <Typography
+                    variant="body1"
+                    sx={{
+                      fontWeight: "bold",
+                      marginBottom: "8px",
+                      color: theme.palette.primary.main,
+                    }}
+                  >
+                    {product.name}
+                  </Typography>
+                  {/* <Typography variant="body2">{product.description}</Typography> */}
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      marginTop: "8px",
+                      color: theme.palette.secondary.main,
+                    }}
+                  >
                     {Array.from({ length: 5 }).map((_, index) => (
-                      <Star key={index} color={index < product.rating ? "primary" : "disabled"} />
+                      <Star
+                        key={index}
+                        color={index < product.rating ? "primary" : "disabled"}
+                      />
                     ))}
                   </Box>
                 </CardContent>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px'}}>
-                            
-                  <IconButton sx={{ backgroundColor: theme => theme.palette.primary.main, color: "#fff", "&:hover": { backgroundColor: theme => theme.palette.primary.dark } }} onClick={() => handleAddToCart(product._id)}>
-                    <ShoppingCart />
-                  </IconButton>
-                  <IconButton sx={{ backgroundColor: theme => theme.palette.secondary.main, color: "#fff", "&:hover": { backgroundColor: theme => theme.palette.secondary.dark } }} onClick={() => handleAddToWishlist(product._id)}>
-                    <Favorite />
-                  </IconButton>
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    padding: "5px",
+                  }}
+                >
+                  <Box>
+                    <Typography
+                      variant="body2"
+                      sx={{ display: "flex",
+                      alignItems: "center",
+                      marginTop: "16px",
+                      backgroundColor: theme.palette.secondary.light, // Background color for the price section
+                      color: "white", // Text color for the price section
+                      padding: "8px 12px", // Add some padding
+                      borderRadius: "4px", // Add border-radius for rounded corners
+                      fontSize: "20px", // Adjust font size
+                      fontWeight: "bold" }}
+                    >
+                      ${product.price}
+                    </Typography>
+                  </Box>
+                  <Box>
+                    <IconButton
+                      sx={{
+                        backgroundColor: theme.palette.primary.main,
+                        color: "#fff",
+                        "&:hover": {
+                          backgroundColor: theme.palette.primary,
+                        },
+                      }}
+                      onClick={() => handleAddToCart(product._id)}
+                    >
+                      <ShoppingCart />
+                    </IconButton>
+                  </Box>
                 </Box>
               </Card>
             </Grid>
@@ -267,17 +387,21 @@ const ProductListingPage = () => {
         </Grid>
       </Box>
       <IconButton
-          sx={{
-            position: 'fixed',
-            left: '0',
-            top: '50%',
-            transform: 'translateY(-50%)',
-            zIndex: 1,
-          }}
-          onClick={handleDrawerToggle}
-        >
-          {isDrawerOpen ? <ChevronLeftIcon /> : <ChevronRightIcon />}
-        </IconButton>
+        sx={{
+          position: 'fixed',
+          left: '0',
+          top: '50%',
+          transform: 'translateY(-50%)',
+          zIndex: 1,
+        }}
+        onClick={isDrawerOpen ? handleDrawerClose : handleDrawerToggle}
+      >
+        {isDrawerOpen ? (
+          <ChevronLeftIcon sx={{ fontSize: "32px" }} />
+        ) : (
+          <ChevronRightIcon sx={{ fontSize: "32px" }} />
+        )}
+      </IconButton>
       </Box>
     </ThemeProvider>
     <Footer sx={{ flexShrink: 0 }} />

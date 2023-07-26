@@ -1,15 +1,31 @@
+import { Remove as RemoveIcon } from "@mui/icons-material";
+import { Box, Button, Card, CardContent, CardMedia, Container, Grid, IconButton, Typography } from "@mui/material";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
 import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
-import { Box, Typography, Button, Container, Grid, Card, CardMedia, CardContent, IconButton, Divider, Select, MenuItem } from "@mui/material";
-import { Add as AddIcon, Remove as RemoveIcon } from "@mui/icons-material";
+import { useNavigate } from 'react-router-dom';
 import Footer from "../../components/footer";
 import Navbar from "../../components/navbar";
-import { TableContainer, Table, TableBody, TableRow, TableCell, Paper } from '@mui/material';
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: "#000000", 
+    },
+    secondary: {
+      main: "#ff4081", 
+    },
+    // Other theme configurations...
+  },
+  typography: {
+    fontFamily: "Arial, sans-serif", 
+  },
+});
 
 const Wishlist = () => {
-  const location = useLocation();
-  const { productName, price } = location.state || {};
+
   const [wishlistProducts, setWishlistProducts] = useState([]);
+  const [cartItems,setCartItems] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchWishlistProducts = async () => {
@@ -60,63 +76,93 @@ const Wishlist = () => {
             console.error('Error removing item from wishlist:', error);
           }
         };
-  
+
+  const handleAddToCart = async (productId) => {
+    
+    const productToAdd = wishlistProducts.find((product) => product._id === productId);
+    // console.log(product._id)
+    console.log(wishlistProducts)
+    console.log(productToAdd)
+
+    if (productToAdd) {
+      setCartItems((prevCartItems) => [...prevCartItems, productToAdd]);  
+      try {
+        const response = await fetch('http://localhost:6001/save_cart_db', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(productToAdd),
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to add cart details to MongoDB');
+        }    
+      console.log(productToAdd)
+      navigate("/cart", {
+        state: {
+          productId: productToAdd._id,
+          productName: productToAdd.name,
+          price: productToAdd.price,
+        },
+      });
+    }
+    catch (error) {
+      console.error('Error adding cart details to MongoDB:', error);
+    }
+  }
+  };
 
   return (
-    <Box>
-      <Navbar />
-      <Container maxWidth="lg" sx={{ paddingTop: '82px', paddingBottom: '32px' }}>
-        <Typography variant="h4" gutterBottom>Wishlist</Typography>
-        {wishlistProducts.length === 0 ? (
-          <Typography variant="body1">Your wishlist is empty.</Typography>
-        ) : (
-          <>
-            <Grid container spacing={2}>
-              {wishlistProducts.map((product) => (
-                <Grid item xs={12} key={product._id}>
-                  <Card sx={{ display: 'flex', alignItems: 'center' }}>
-                    <CardMedia
-                      component="img"
-                      src={product.image_url}
-                      alt={product.name}
-                      sx={{ width: '200px', height: '200px', objectFit: 'cover',display: 'flex',flexDirection: 'column', margin: '16px', boxShadow: "0 2px 4px rgba(0,0,0,0.1)" }}
-                    />
-                    <CardContent sx={{ flexGrow: 1, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <Box sx={{ flexGrow: 1 }}>
-                        <Typography variant="h6">Name: {product.productName}</Typography>
-                        <Typography variant="body1">Price: ${product.price}</Typography>
+    <ThemeProvider theme={theme}>
+      <Box>
+        <Navbar />
+        <Container maxWidth="lg" sx={{ paddingTop: '82px', paddingBottom: '32px' }}>
+          <Typography variant="h4" gutterBottom sx={{ fontFamily: theme.typography, fontWeight: "bold", fontSize: "40px"}}>Wishlist</Typography>
+          {wishlistProducts.length === 0 ? (
+            <Typography variant="body1">Your wishlist is empty.</Typography>
+          ) : (
+            <>
+            <br/>
+            <br/>
+              <Grid container spacing={2}>
+                {wishlistProducts.map((product) => (
+                  <Grid item xs={12} sm={6} md={4} key={product._id}>
+                    <Card>
+                      <CardMedia
+                        component="img"
+                        src={product.image_url}
+                        alt={product.name}
+                        sx={{ height: 300, objectFit: 'contain',fontFamily: theme.typography.fontFamily, fontWeight: "bold" }}
+                      />
+                      <CardContent >
+                        <Typography variant="h6" sx={{fontFamily: theme.typography.fontFamily}}>{product.name}</Typography>
+                        <Typography variant="body1"sx={{fontFamily: theme.typography.fontFamily, fontWeight: "bold"}}>Price: ${product.price}</Typography>
+                      </CardContent>
+                      <Box sx={{ display: 'flex', justifyContent: 'center', marginBottom: '16px' }}>
+                        <Button
+                          variant="contained"
+                          color="secondary"
+                          onClick={() => handleAddToCart(product._id)}
+                        >
+                          Add to cart
+                        </Button>
                       </Box>
-                      <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                      <Button
-                        variant="contained"
-                        color="secondary"
-                        onClick={() => handleRemoveFromWishlist(product._id)}
-                        style={{ marginLeft: '8px' }}
-                      >
-                        Remove
-                      </Button>
+                      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                        <IconButton onClick={() => handleRemoveFromWishlist(product._id)}>
+                          <RemoveIcon />
+                        </IconButton>
                       </Box>
-                    </CardContent>
-                  </Card>
-                </Grid>
-              ))}
-            </Grid>
-            {/* <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'right', marginBottom: '8px' }}>
-            <Typography variant="h6">Total Price: ${totalPrice}</Typography>
-          </Box> */}
-          <br/>
-          <Box sx={{ display: 'flex', marginTop: 'auto', marginBottom: '0px' }}>
-              <Button variant="contained" color="primary" size="large">
-                Continue Shopping
-              </Button>
-            </Box>
-          {/* ... continue shopping button */}
-         <br/>
-          </>
-        )}
-      </Container>
-      <Footer sx={{ flexShrink: 0 }} />
-    </Box>
+                    </Card>
+                  </Grid>
+                ))}
+              </Grid>
+            </>
+          )}
+        </Container>
+        <Footer sx={{ flexShrink: 0 }} />
+      </Box>
+    </ThemeProvider>
   );
 };
 

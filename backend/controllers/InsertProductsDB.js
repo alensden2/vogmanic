@@ -25,7 +25,7 @@ async function insertProducts() {
           name: "Ray Ban Sunglasses",
           description: "Not only do they look great, but they also provide excellent protection from the sun's harmful rays",
           price: 19.99,
-          shiiping_cost: 2.35,
+          shipping_cost: 2.35,
           rating: 3.5,
           category: "Sunglasses",
           image_url: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8ZmFzaGlvbnxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=800&q=60"
