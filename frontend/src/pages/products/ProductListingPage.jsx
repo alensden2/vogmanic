@@ -1,13 +1,10 @@
-import { Box, Typography, Card, CardContent, CardMedia, Grid, IconButton, TextField, Drawer, List, ListItem, ListItemIcon, ListItemText } from "@mui/material";
-import { Star, ShoppingCart, FavoriteBorder,Favorite, Search} from "@mui/icons-material";
+import { ChevronLeft as ChevronLeftIcon, ChevronRight as ChevronRightIcon, Favorite, FavoriteBorder, Search, ShoppingCart, Star } from "@mui/icons-material";
+import { Box, Card, CardContent, CardMedia, Drawer, Grid, IconButton, List, ListItem, ListItemText, TextField, Typography } from "@mui/material";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
 import React, { useEffect, useState } from 'react';
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { ChevronLeft as ChevronLeftIcon, ChevronRight as ChevronRightIcon } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import Footer from "../../components/footer";
 import Navbar from "../../components/navbar";
-// import { Card, Button, Container, Row, Col, InputGroup, FormControl } from "react-bootstrap";
-
 
 const drawerWidth = 240;
 
@@ -32,9 +29,10 @@ const ProductListingPage = () => {
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('');
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [cartItems, setCartItems] = useState([]);
+  const [cartItems,setCartItems] = useState([]);
   const [wishlistItems, setWishlistItems] = useState([]);
   const navigate = useNavigate();
+  const cartItemCount = cartItems.length;
  
   useEffect(() => {
     // Function to fetch products from the backend
@@ -52,17 +50,11 @@ const ProductListingPage = () => {
         }
 
         const productsData = await response.json();
-        // console.log(data)
-        // const productsData = data.products;
         setProducts(productsData);
 
         const uniqueCategories = [...new Set(productsData.map(product => product.category))];
         console.log(uniqueCategories)
         setCategories(uniqueCategories);
-
-      // } catch (error) {
-      //   console.error('Error fetching products', error);
-      // }
     };
 
     // Call the fetchProducts function to retrieve products
@@ -72,6 +64,7 @@ const ProductListingPage = () => {
   const handleAddToCart = async (productId) => {
     // Implement logic to add the product to the cart
     const productToAdd = products.find((product) => product._id === productId);
+
 
     if (productToAdd) {
       setCartItems((prevCartItems) => [...prevCartItems, productToAdd]);  
@@ -133,16 +126,9 @@ const ProductListingPage = () => {
           throw new Error('Failed to add cart details to MongoDB');
         }    
       console.log(productToAdd)
-      // navigate("/wishlist", {
-      //   state: {
-      //     productId: productToAdd._id,
-      //     productName: productToAdd.name,
-      //     price: productToAdd.price,
-      //   },
-      // });
     }
     catch (error) {
-      console.error('Error adding wishlist details to MongoDB:', error);
+      console.error('Error adding wishlist details to MongoDB:',cartItemCount, error);
     }
   }
   };
@@ -393,21 +379,6 @@ const ProductListingPage = () => {
                     >
                       <ShoppingCart />
                     </IconButton>
-                    {/* <IconButton
-                    sx={{
-                      color: "red",
-                    }}
-                    onClick={() => handleAddToWishlist(product._id)}
-                  >
-  
-                      <Favorite // Use Favorite icon here for filled heart
-                      sx={{ fontSize: "20px", marginRight: "4px" }}
-                      /> */}
-                    
-                    {/* <Typography variant="body2" sx={{ fontWeight: "bold" }}>
-                      ADD TO WISHLIST
-                    </Typography> */}
-                  {/* </IconButton> */}
                   </Box>
                 </Box>
               </Card>

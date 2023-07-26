@@ -1,12 +1,10 @@
-import React, { useEffect, useState} from 'react';
-import { useLocation } from 'react-router-dom';
-import { Box, Typography, Button, Container, Grid, Card, CardMedia, CardContent, IconButton, Divider, Select, MenuItem } from "@mui/material";
 import { Add as AddIcon, Remove as RemoveIcon } from "@mui/icons-material";
+import { Box, Button, Card, CardContent, CardMedia, Container, Divider, Grid, IconButton, MenuItem, Paper, Select, TableContainer, Typography } from "@mui/material";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Footer from "../../components/footer";
 import Navbar from "../../components/navbar";
-import { TableContainer, Table, TableBody, TableRow, TableCell, Paper } from '@mui/material';
-import { useNavigate } from "react-router-dom";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 const theme = createTheme({
   palette: {
@@ -24,8 +22,7 @@ const theme = createTheme({
 });
 
 const Cart = () => {
-  const location = useLocation();
-  const { productName, price } = location.state || {};
+
   const [cartProducts, setCartProducts] = useState([]);
   const navigate = useNavigate();
   
