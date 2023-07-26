@@ -81,6 +81,12 @@ function Login() {
 
         if (response.ok) {
           console.log('Login success!');
+
+          const data = await response.json();
+
+          localStorage.setItem('accessToken', data.token);
+
+          console.log(localStorage.getItem('accessToken'))
           // Show an alert for login success
           navigate("/dashboard")
           // You can also navigate to a different page on successful login using useNavigate()

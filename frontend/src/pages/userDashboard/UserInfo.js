@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { Typography, Card, CardContent, CardHeader, IconButton, Button, TextField } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 
@@ -45,15 +46,28 @@ const EditableText = ({ label, value, onSave }) => {
 };
 
 const UserInfo = () => {
-  // Replace these with actual user data
-  const [username, setUsername] = useState('JohnDoe');
-  const [bio, setBio] = useState(
-    'I love coding and traveling! I am a fashion enthusiast. I love dressing up. I have a lot of fashion interests'
-  );
-  const [email, setEmail] = useState('john.doe@example.com');
-  const [primaryAddress, setPrimaryAddress] = useState('123 Main St');
-  const [secondaryAddress, setSecondaryAddress] = useState('Apt 456');
-  const [otherAddresses, setOtherAddresses] = useState(['789 Side Rd', '987 Back St']);
+  const [username, setUsername] = useState('');
+  const [bio, setBio] = useState('');
+  const [email, setEmail] = useState('');
+  const [primaryAddress, setPrimaryAddress] = useState('');
+  const [secondaryAddress, setSecondaryAddress] = useState('');
+  const [otherAddresses, setOtherAddresses] = useState([]);
+
+  useEffect(() => {
+    axios.get('http://localhost:6001/dashboard') // Replace this URL with your backend URL
+      .then((response) => {
+        const { username, bio, email, primaryAddress, secondaryAddress, otherAddresses } = response.data;
+        setUsername(username);
+        setBio(bio);
+        setEmail(email);
+        setPrimaryAddress(primaryAddress);
+        setSecondaryAddress(secondaryAddress);
+        setOtherAddresses([...otherAddresses]);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
 
   const handleSaveUsername = (value) => {
     setUsername(value);
@@ -77,6 +91,25 @@ const UserInfo = () => {
 
   const handleSaveOtherAddresses = (values) => {
     setOtherAddresses(values);
+  };
+
+  const saveUserInfo = () => {
+    const userInfo = {
+      username,
+      bio,
+      email,
+      primaryAddress,
+      secondaryAddress,
+      otherAddresses,
+    };
+
+    axios.put('/api/user-dashboard', userInfo) // Replace this URL with your backend URL
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   };
 
   return (
@@ -112,6 +145,9 @@ const UserInfo = () => {
           ))}
         </CardContent>
       </Card>
+      <Button variant="contained" color="primary" onClick={saveUserInfo}>
+        Save All
+      </Button>
     </div>
   );
 };
