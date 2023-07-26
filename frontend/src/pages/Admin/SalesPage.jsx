@@ -1,28 +1,36 @@
-import React from 'react';
+import { LocalShipping } from '@mui/icons-material';
+import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
+import { Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material';
+import React, { useEffect, useState } from 'react';
 import AdminBar from '../../components/adminbar';
 import Footer from '../../components/footer';
-import { Typography, Grid, Table, TableHead, TableBody, TableRow, TableCell } from '@mui/material';
-import { Money, LocalShipping } from '@mui/icons-material';
-
-const samplePreorderSales = [
-  {
-    orderId: 'order123',
-    totalCost: 55.83,
-  },
-  {
-    orderId: 'order456',
-    totalCost: 16.49,
-  },
-];
 
 export default function SalesPage() {
-  const [isNavbarOpen, setIsNavbarOpen] = React.useState(false);
+  const [isNavbarOpen, setIsNavbarOpen] = useState(false);
+  const [totalSales, setTotalSales] = useState(null);
+  const [totalOrder, setTotalOrder] = useState(null);
+  const [orderDetails, setOrderDetails] = useState([]);
+
   const handleNavbarToggle = () => {
     setIsNavbarOpen(!isNavbarOpen);
   };
 
-  const totalOrder = samplePreorderSales.length;
-  const totalSales = samplePreorderSales.reduce((total, sale) => total + sale.totalCost, 0);
+  useEffect(() => {
+    fetch('http://localhost:6001/admin/totalSaleAllOrders')
+      .then((response) => response.json())
+      .then((data) => setTotalSales(parseFloat(data.totalSales).toFixed(2)))
+      .catch((error) => console.error('Error fetching total sales:', error));
+
+    fetch('http://localhost:6001/admin/totalOrders')
+      .then((response) => response.json())
+      .then((data) => setTotalOrder(data.TotalOrders))
+      .catch((error) => console.error('Error fetching total orders:', error));
+
+    fetch('http://localhost:6001/admin/totalSalePerOrders')
+      .then((response) => response.json())
+      .then((data) => setOrderDetails(data))
+      .catch((error) => console.error('Error fetching order details:', error));
+  }, []);
 
   return (
     <div>
@@ -31,7 +39,7 @@ export default function SalesPage() {
         <div style={{ width: '80%', maxWidth: '1200px' }}>
           <div style={{ padding: '20px', borderBottom: '1px solid #ccc' }}>
             <Typography variant="h4" gutterBottom>
-              Preorder Sales
+              Per Order Sales
             </Typography>
             <Table>
               <TableHead>
@@ -45,7 +53,7 @@ export default function SalesPage() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {samplePreorderSales.map((sale) => (
+                {orderDetails.map((sale) => (
                   <TableRow key={sale.orderId}>
                     <TableCell>
                       <Typography variant="body1">{sale.orderId}</Typography>
@@ -61,15 +69,14 @@ export default function SalesPage() {
 
           <div style={{ display: 'flex', justifyContent: 'space-between', padding: '20px', backgroundColor: '#f8f8f8' }}>
             <div>
-
               <div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
-                <Money style={{ marginRight: '10px', color: '#FF4081' }} />
+                <MonetizationOnIcon style={{ marginRight: '10px', color: '#FF4081' }} />
                 <Typography variant="h6" gutterBottom style={{ color: '#FF4081' }}>
                   Total Sales
                 </Typography>
               </div>
               <Typography variant="h5" gutterBottom style={{ color: '#FF4081' }}>
-                ${totalSales.toFixed(2)}
+                {totalSales === null ? 'Loading...' : `$${totalSales}`}
               </Typography>
             </div>
             <div>
@@ -80,7 +87,7 @@ export default function SalesPage() {
                 </Typography>
               </div>
               <Typography variant="h5" gutterBottom style={{ color: '#FF4081' }}>
-                {totalOrder}
+                {totalOrder === null ? 'Loading...' : totalOrder}
               </Typography>
             </div>
           </div>

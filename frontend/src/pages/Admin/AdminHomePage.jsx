@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import AdminBar from '../../components/adminbar';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
@@ -7,10 +7,45 @@ import Footer from '../../components/footer';
 
 export default function AdminHomePage() {
   const [isNavbarOpen, setIsNavbarOpen] = useState(false);
+  const [totalSales, setTotalSales] = useState(null);
+  const [totalItemsSold, setTotalItemsSold] = useState(null);
+  const [totalOrders, setTotalOrders] = useState(null);
+  const [averageSalePerOrder, setAverageSalePerOrder] = useState(null);
+  const [averageItemsPerOrder, setAverageItemsPerOrder] = useState(null);
+  const profit = 4500;
 
   const handleNavbarToggle = () => {
     setIsNavbarOpen(!isNavbarOpen);
   };
+
+  useEffect(() => {
+    fetch('http://localhost:6001/admin/totalSaleAllOrders')
+      .then((response) => response.json())
+      .then((data) => setTotalSales(data.totalSales))
+      .catch((error) => console.error('Error fetching total sales:', error));
+
+    fetch('http://localhost:6001/admin/totalItemsSold')
+      .then((response) => response.json())
+      .then((data) => setTotalItemsSold(data.totalItemsSold))
+      .catch((error) => console.error('Error fetching total items sold:', error));
+
+    fetch('http://localhost:6001/admin/totalOrders')
+      .then((response) => response.json())
+      .then((data) => setTotalOrders(data.TotalOrders))
+      .catch((error) => console.error('Error fetching total orders:', error));
+  }, []);
+
+  useEffect(() => {
+    if (totalSales !== null && totalOrders !== null) {
+      const avgSalePerOrder = totalSales / totalOrders;
+      setAverageSalePerOrder(avgSalePerOrder.toFixed(2));
+    }
+
+    if (totalItemsSold !== null && totalOrders !== null) {
+      const avgItemsPerOrder = totalItemsSold / totalOrders;
+      setAverageItemsPerOrder(avgItemsPerOrder.toFixed(2));
+    }
+  }, [totalSales, totalItemsSold, totalOrders]);
 
   return (
     <div>
@@ -19,30 +54,34 @@ export default function AdminHomePage() {
       <div style={styles.container}>
         <h2 style={styles.heading}>Overview</h2>
 
-        <div style={styles.box1}>
-          Welcome Admin!
-        </div>
+        <div style={styles.box1}>Welcome Admin!</div>
 
         <div style={styles.quicksightBox}>
           <div style={styles.quicksightText}>
-            <h5>Quicksight</h5> 
+            <h5>Quicksight</h5>
           </div>
         </div>
 
         <div style={styles.box2}>
           <div style={styles.iconWrapper}>
-            <MonetizationOnIcon style={{ fontSize: '66px' }} />
-            <div style={styles.iconLabel}>Total Sales:</div>
+            <MonetizationOnIcon style={{ fontSize: '4rem' }} />
+            <div style={styles.iconLabel}>
+              {totalSales === null ? 'Total Sales: Loading...' : `Total Sales: $${totalSales}`}
+            </div>
           </div>
 
           <div style={styles.iconWrapper}>
-            <ShoppingBagIcon style={{ fontSize: '66px' }} />
-            <div style={styles.iconLabel}>Items Sold</div>
+            <ShoppingBagIcon style={{ fontSize: '4rem' }} />
+            <div style={styles.iconLabel}>
+              {totalItemsSold === null ? 'Items Sold: Loading...' : `Items Sold: ${totalItemsSold}`}
+            </div>
           </div>
 
           <div style={styles.iconWrapper}>
-            <LocalShippingIcon style={{ fontSize: '66px' }} />
-            <div style={styles.iconLabel}>Total Orders</div>
+            <LocalShippingIcon style={{ fontSize: '4rem' }} />
+            <div style={styles.iconLabel}>
+              {totalOrders === null ? 'Total Orders: Loading...' : `Total Orders: ${totalOrders}`}
+            </div>
           </div>
         </div>
 
@@ -51,9 +90,21 @@ export default function AdminHomePage() {
             <h5>Sales Insights</h5>
           </div>
         </div>
-
-        <div style={styles.box3}>
-          Profit: +$4,500
+        <div style={styles.salesInsightsBox}>
+          <div style={styles.salesInsightsContent}>
+            <div style={styles.salesInsight}>
+              <div>Average Sale per Order:</div>
+              <div>{averageSalePerOrder === null ? 'Calculating...' : `$${averageSalePerOrder}`}</div>
+            </div>
+            <div style={styles.salesInsight}>
+              <div>Average Items per Order:</div>
+              <div>{averageItemsPerOrder === null ? 'Calculating...' : averageItemsPerOrder}</div>
+            </div>
+            <div style={styles.salesInsight}>
+              <div>Profit:</div>
+              <div>{`+$${profit}`}</div>
+            </div>
+          </div>
         </div>
       </div>
       <Footer />
@@ -126,24 +177,76 @@ const styles = {
     flexDirection: 'column',
     alignItems: 'center',
     flex: 1,
+    margin: '10px',
   },
   iconLabel: {
     marginTop: '10px',
     fontWeight: 'bold',
   },
-  box3: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: '90%',
+  salesInsightsBox: {
+    width: '1280px',
     maxWidth: '1400px',
-    height: '140px',
     border: '1px solid #ccc',
     borderRadius: '5px',
-    fontSize: '24px',
     backgroundColor: '#f0f0f0',
     boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
     marginTop: '20px',
-    padding: '2px',
+    padding: '10px',
+  },
+  salesInsightsContent: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+    gap: '8px',
+    textAlign: 'center',
+  },
+  salesInsight: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontSize: '20px',
+    fontWeight: 'bold',
+    padding: '5px 0',
+  },
+
+
+  '@media (max-width: 600px)': {
+    container: {
+      padding: '10px',
+      marginTop: '20px',
+    },
+    heading: {
+      fontSize: '28px',
+      marginBottom: '10px',
+    },
+    box1: {
+      height: '80px',
+      fontSize: '20px',
+    },
+    quicksightBox: {
+      height: '24px',
+      fontSize: '20px',
+      marginTop: '10px',
+    },
+    quicksightText: {
+      fontSize: '20px',
+    },
+    box2: {
+      flexDirection: 'column',
+      alignItems: 'stretch',
+      height: 'auto',
+      fontSize: '20px',
+      padding: '0',
+    },
+    iconWrapper: {
+      margin: '5px 0',
+    },
+    iconLabel: {
+      fontSize: '16px',
+    },
+    salesInsightsBox: {
+      padding: '5px',
+      width: '100%',
+    },
   },
 };
