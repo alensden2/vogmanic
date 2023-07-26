@@ -15,6 +15,9 @@ import Cart from "./pages/products/Cart";
 import ProductListingPage from "./pages/products/ProductListingPage";
 import Wishlist from "./pages/products/Wishlist";
 import Store from "./pages/store";
+import Login from "./pages/login/login"
+import SignUp from "./pages/signup/signup";
+import Dashboard from "./pages/userDashboard/UserDashboard"
 
 function App() {
 
@@ -41,6 +44,9 @@ function App() {
         <Route path="/order" element={<OrdersPage />} />
         <Route path="/order/:orderId" element={<OrderDetails />} />
         <Route path="/order/:orderId/cancel" element={<OrderCancellation />} />
+        <Route path="/login" element={<Login/>}/>
+        <Route path="/signup" element={<SignUp/>}/>
+        <Route path ="/dashboard" element={<Dashboard/>}/>
       </Routes>
     </BrowserRouter>
   );
