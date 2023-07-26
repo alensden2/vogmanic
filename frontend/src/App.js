@@ -10,7 +10,7 @@ import Store from "./pages/store";
 import Login from "./pages/login/login"
 import SignUp from "./pages/signup/signup";
 import Dashboard from "./pages/userDashboard/UserDashboard"
-import Checkout from "./pages/checkout/Checkout";
+// import Checkout from "./pages/checkout/Checkout";
 import OrderCancellation from "./pages/Order/OrderCancellation";
 import OrderDetails from "./pages/Order/OrderDetails";
 import OrdersPage from "./pages/Order/OrdersPage";
@@ -33,7 +33,7 @@ function App() {
         <Route path="/wishlist" element={<Wishlist />} />
         <Route path="/fetch_wishlist_db" element={<Wishlist />} />
         <Route path="/delete_wishlist_item" element={<Wishlist />} />
-        <Route path="/checkout" element={<Checkout />} />
+        {/* <Route path="/checkout" element={<Checkout />} /> */}
         <Route path="/order" element={<OrdersPage />} />
         <Route path="/order/:orderId" element={<OrderDetails />} />
         <Route path="/order/:orderId/cancel" element={<OrderCancellation />} />
