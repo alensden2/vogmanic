@@ -5,7 +5,6 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import HomeIcon from "@mui/icons-material/Home";
 import Inventory2Icon from "@mui/icons-material/Inventory2";
 import MenuIcon from "@mui/icons-material/Menu";
-import ShowChartIcon from "@mui/icons-material/ShowChart";
 import { AppBar, Box, Drawer, Toolbar, Typography } from "@mui/material";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";

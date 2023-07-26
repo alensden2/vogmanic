@@ -1,21 +1,20 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import "./App.css";
-import Home from "./pages/landing/home";
-import ContactPage from "./pages/ContactPage";
-import Faq from "./pages/landing/faq";
-import Store from "./pages/store";
-import ProductListingPage from "./pages/products/ProductListingPage";
-import Cart from "./pages/products/Cart"
-import Wishlist from "./pages/products/Wishlist"
 import AdminHomePage from "./pages/Admin/AdminHomePage";
 import Employees from "./pages/Admin/Employees";
-import { Inventory } from "@mui/icons-material";
 import InventoryPage from "./pages/Admin/Inventory";
 import SalesPage from "./pages/Admin/SalesPage";
-import OrdersPage from "./pages/Order/OrdersPage";
-import OrderDetails from "./pages/Order/OrderDetails";
+import ContactPage from "./pages/ContactPage";
 import OrderCancellation from "./pages/Order/OrderCancellation";
+import OrderDetails from "./pages/Order/OrderDetails";
+import OrdersPage from "./pages/Order/OrdersPage";
+import Faq from "./pages/landing/faq";
+import Home from "./pages/landing/home";
+import Cart from "./pages/products/Cart";
+import ProductListingPage from "./pages/products/ProductListingPage";
+import Wishlist from "./pages/products/Wishlist";
+import Store from "./pages/store";
 
 function App() {
 

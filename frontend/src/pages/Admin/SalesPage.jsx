@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import { Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material';
+import React, { useState } from 'react';
 import AdminBar from "../../components/adminbar";
 import Footer from '../../components/footer';
-import { Typography, Grid, Table, TableHead, TableBody, TableRow, TableCell } from '@mui/material';
 
 const samplePreorderSales = [
   {
