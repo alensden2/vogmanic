@@ -10,6 +10,7 @@ const placeOrder = async (request, response) => {
     try {
         const { orderId, items, shippingAddress } = request.body;
 
+
         const newOrder = new ConfirmedOrders({
             orderId,
             items,

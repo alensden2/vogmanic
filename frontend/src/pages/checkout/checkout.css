@@ -1,0 +1,38 @@
+.checkout{
+    margin-top: 5%;
+    display: flex;
+    justify-content: center;
+}
+
+.form{
+    width: 50%;
+    background-color: white;
+    margin: 5%;
+    padding: 3%;
+    border-radius: 15px;
+    box-shadow: 5px black;
+}
+
+.order_review{
+    width: 50%;
+    background-color: white;
+    margin: 5%;
+    padding: 5%;
+    border-radius: 15px;
+    box-shadow: 5px black;
+}
+
+.body{
+    background-color:whitesmoke;
+    flex-direction: row;
+    flex-wrap: wrap;
+    min-width: 100vh;
+}
+
+.payment{
+    margin-top: 2%;
+}
+
+.product_item{
+    margin: 3%;
+}
