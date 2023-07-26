@@ -5,7 +5,7 @@
 }
 
 .form{
-    width: 60%;
+    width: 50%;
     background-color: white;
     margin: 5%;
     padding: 3%;
@@ -14,20 +14,25 @@
 }
 
 .order_review{
-    width: 40%;
+    width: 50%;
     background-color: white;
     margin: 5%;
     padding: 5%;
     border-radius: 15px;
     box-shadow: 5px black;
-    height: 500px;
 }
 
 .body{
     background-color:whitesmoke;
     flex-direction: row;
+    flex-wrap: wrap;
+    min-width: 100vh;
 }
 
 .payment{
     margin-top: 2%;
+}
+
+.product_item{
+    margin: 3%;
 }

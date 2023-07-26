@@ -1,6 +1,10 @@
 const mongoose = require('mongoose');
 const productSchema = require('./Product')
 const orderSchema = mongoose.Schema({
+    orderId: {
+        type: String,
+        required: true,
+    },
     items: [productSchema.schema],
     status: {
         type: String,

@@ -1,28 +1,18 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
-import AdminHomePage from "./pages/Admin/AdminHomePage";
-import Employees from "./pages/Admin/Employees";
-import InventoryPage from "./pages/Admin/Inventory";
-import SalesPage from "./pages/Admin/SalesPage";
 import ContactPage from "./pages/ContactPage";
-import OrderCancellation from "./pages/Order/OrderCancellation";
-import OrderDetails from "./pages/Order/OrderDetails";
-import OrdersPage from "./pages/Order/OrdersPage";
 import Faq from "./pages/landing/faq";
 import Home from "./pages/landing/home";
 import Cart from "./pages/products/Cart";
 import ProductListingPage from "./pages/products/ProductListingPage";
-<<<<<<< HEAD
 import Wishlist from "./pages/products/Wishlist";
 import Store from "./pages/store";
-=======
-import Cart from "./pages/products/Cart"
-import Wishlist from "./pages/products/Wishlist"
 import Checkout from "./pages/checkout/Checkout";
->>>>>>> 8c6710572 (checkout bacic ui and paypal integration)
+import OrderCancellation from "./pages/Order/OrderCancellation";
+import OrderDetails from "./pages/Order/OrderDetails";
+import OrdersPage from "./pages/Order/OrdersPage";
 
 function App() {
-
   console.log("app");
 
   return (
@@ -39,18 +29,11 @@ function App() {
         <Route path="/delete_cart_item" element={<Cart />} />
         <Route path="/wishlist" element={<Wishlist />} />
         <Route path="/fetch_wishlist_db" element={<Wishlist />} />
-        <Route path="/delete_wishlist_item" element={<Wishlist/>} />
-<<<<<<< HEAD
-        <Route path="/home" element={<AdminHomePage />} />
-        <Route path="/employees" element={<Employees />} />
-        <Route path="/inventory" element={<InventoryPage />} />
-        <Route path="/sales" element={<SalesPage />} />
+        <Route path="/delete_wishlist_item" element={<Wishlist />} />
+        <Route path="/checkout" element={<Checkout />} />
         <Route path="/order" element={<OrdersPage />} />
         <Route path="/order/:orderId" element={<OrderDetails />} />
         <Route path="/order/:orderId/cancel" element={<OrderCancellation />} />
-=======
-        <Route path="/checkout" element={<Checkout/>}/>
->>>>>>> 8c6710572 (checkout bacic ui and paypal integration)
       </Routes>
     </BrowserRouter>
   );

@@ -8,9 +8,11 @@ const ConfirmedOrders = require('../../models/ConfirmedOrders');
  */
 const placeOrder = async (request, response) => {
     try {
-        const { items, shippingAddress } = request.body;
+        const { orderId, items, shippingAddress } = request.body;
+
 
         const newOrder = new ConfirmedOrders({
+            orderId,
             items,
             shippingAddress
         });
