@@ -3,13 +3,17 @@ const express = require('express');
 const cors = require('cors');
 const http = require('http');
 const socketIO = require('socket.io');
+const helmet = require('helmet'); 
 const app = express();
+const userRoutes = require('./routes/userRoutes');
 const productsRoutes = require('./routes/productsRoutes');
 const adminRoutes = require('./routes/adminRoutes.js');
 const orderRoutes = require('./routes/orderRoutes');
 const mongoose = require('mongoose')
 
+
 app.use(cors()); // Enable CORS for all routes
+app.use(helmet())
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
@@ -23,6 +27,10 @@ app.use('/', productsRoutes);
 
 // admin routes
 app.use('/admin', adminRoutes);
+
+//user routes
+
+app.use('/users', userRoutes);
 
 // Order Routes
 app.use('/order', orderRoutes);
