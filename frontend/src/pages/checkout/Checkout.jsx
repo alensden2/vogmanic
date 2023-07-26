@@ -5,7 +5,7 @@ import "./checkout.css";
 import { TextField, Button, Grid } from "@mui/material";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import Footer from "../../components/footer";
-import { useLocation } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
@@ -15,6 +15,7 @@ import { HOSTED_BASE_URL } from "../../constants";
 
 function Checkout() {
   const location = useLocation();
+  const navigate =useNavigate();
   const products = location.state.cartProducts;
   console.log(products);
 
@@ -83,7 +84,8 @@ function Checkout() {
         if(res.message=="Order placed successfully")
         {
             //update inventory
-            
+            navigate("/");
+            console.log("order placed");
         }
       })
     }
