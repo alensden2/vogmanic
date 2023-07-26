@@ -1,11 +1,9 @@
 import InfoIcon from "@mui/icons-material/Info";
-import QueryStatsIcon from "@mui/icons-material/QueryStats";
+import DeleteIcon from "@mui/icons-material/Delete";
+import AddIcon from "@mui/icons-material/Add";
 import {
     Box,
     Container,
-    List,
-    ListItem,
-    ListItemText,
     Typography,
 } from "@mui/material";
 import Button from "@mui/material/Button";
@@ -13,278 +11,363 @@ import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
+import Rating from "@mui/material/Rating";
 import * as React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import AdminNavbar from "../../components/adminbar";
-const InventoryPage = () => {
-    const [isNavbarOpen, setIsNavbarOpen] = useState(false);
-    const onInfoClick = () => {
-        alert("Info Displayed as a pop-up card");
-    };
+import axios from "axios";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogTitle from "@mui/material/DialogTitle";
+import TextField from "@mui/material/TextField";
+import Fab from "@mui/material/Fab";
+import InputAdornment from "@mui/material/InputAdornment";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
+import { useNavigate } from "react-router-dom";
 
-    const onQueryStatsClick = () => {
-        alert("Query Stats Displayed as a pop-up card");
+// InventoryPage component
+const InventoryPage = () => {
+    const navigate = useNavigate();
+    const [isNavbarOpen, setIsNavbarOpen] = useState(false);
+    const [products, setProducts] = useState([]);
+    const [deleteSuccess, setDeleteSuccess] = useState(false);
+    const [deleteFailure, setDeleteFailure] = useState(false);
+    const [deletedProductName, setDeletedProductName] = useState("");
+    const [isAddFormOpen, setIsAddFormOpen] = useState(false);
+    const [newProduct, setNewProduct] = useState({
+        name: "",
+        description: "",
+        price: "",
+        shipping_cost: "",
+        rating: 0,
+        category: "",
+        image_url: "",
+    });
+    // Event handler to navigate to the sales page
+    const onInfoClick = () => {
+        navigate('/sales');
     };
+    // Event handler to toggle the navbar
 
     const handleNavbarToggle = () => {
         setIsNavbarOpen(!isNavbarOpen);
     };
+    // Fetch products data from the server on component mount
+    useEffect(() => {
+        axios
+            .get("http://localhost:6001/admin/products")
+            .then((response) => {
+                setProducts(response.data);
+            })
+            .catch((error) => {
+                console.error("Error fetching products:", error);
+            });
+    }, []);
+    // Event handler to delete a product from the server
+    const handleDeleteProduct = (productId, productName) => {
 
-    const products = [
-        {
-            id: 1,
-            name: "Orange Blazer",
-            category: "Men's Formal Wear",
-            sku: "45638SDSY7493",
-            ref: "REF002#",
-            image:
-                "https://t4.ftcdn.net/jpg/02/49/74/73/240_F_249747366_kn4j6KaeMctSSmEtiy5JRuZOV71ixkNY.jpg",
-            price: "$89.99",
-            remainingItems: 51,
-            sizesAvailable: ["M", "XXL", "XL", "L"],
-        },
-        {
-            id: 2,
-            name: "Checkered Shirt",
-            category: "Men's Casual Wear",
-            sku: "638DFG4638222",
-            ref: "REF003#",
-            image:
-                "https://t3.ftcdn.net/jpg/01/26/91/78/240_F_126917876_QVFao2TKEqQejDDvxSddOVUXwU0vsnd9.jpg",
-            price: "$49.99",
-            remainingItems: 121,
-            sizesAvailable: ["M", "S", "XS", "L"],
-        },
-        {
-            id: 3,
-            name: "Checkered Crop Top",
-            category: "Women's Casual Wear",
-            sku: "73625GFR82763",
-            ref: "REF022#",
-            image:
-                "https://t4.ftcdn.net/jpg/06/00/99/93/240_F_600999355_jWQw0ztYdv4NNpXjfffv0fBg3QrWijyQ.jpg",
-            price: "$19.99",
-            remainingItems: 41,
-            sizesAvailable: ["S", "XXL", "XL", "L"],
-        },
-        {
-            id: 4,
-            name: "White jeans",
-            category: "Women's Party Wear",
-            sku: "5826578FD87S5",
-            ref: "REF232#",
-            image:
-                "https://t3.ftcdn.net/jpg/03/42/77/10/240_F_342771046_4RKe6ZxAEbGCKlJJtXf3vOdAUI3deO8Y.jpg",
-            price: "$89.99",
-            remainingItems: 81,
-            sizesAvailable: ["M", "XXL", "XL", "L"],
-        },
-        {
-            id: 5,
-            name: "Denim T-shirt",
-            category: "Men's Party Wear",
-            sku: "748392DFGJ783",
-            ref: "REF342#",
-            image:
-                "https://t4.ftcdn.net/jpg/05/82/21/71/240_F_582217142_KYmYcRA3Zr55ntz0L5Uyf0urCekCctCQ.jpg",
-            price: "$29.99",
-            remainingItems: 65,
-            sizesAvailable: ["M", "XXL", "XL", "L"],
-        },
-        {
-            id: 6,
-            name: "White Beach Shorts",
-            category: "Men's Summer Specials",
-            sku: "93928203UIY83",
-            ref: "REF932#",
-            image:
-                "https://t4.ftcdn.net/jpg/03/96/15/95/240_F_396159547_BAROJGva7HePYCj79Slor26Zz0U93DX5.jpg",
-            price: "$9.99",
-            remainingItems: 1,
-            sizesAvailable: ["M", "S", "XS", "L"],
-        },
-        {
-            id: 7,
-            name: "Beige blazer",
-            category: "Men's Formal Wear",
-            sku: "JSHDNW3821372",
-            ref: "REF2302#",
-            image:
-                "https://t4.ftcdn.net/jpg/05/80/01/97/240_F_580019718_jtHUCYcPSz2qPP1BwyE62tAlB5q6z368.jpg",
-            price: "$34.99",
-            remainingItems: 56,
-            sizesAvailable: ["M", "XXL", "XL", "L"],
-        },
-        {
-            id: 8,
-            name: "Blue smart formal",
-            category: "Men's Formal Wear",
-            sku: "KSJWIE88922345",
-            ref: "REF022302#",
-            image:
-                "https://t4.ftcdn.net/jpg/02/86/47/09/240_F_286470965_viaHM6ZNjrcvLENe14yWQFi1jEm2jKeV.jpg",
-            price: "$23.99",
-            remainingItems: 1,
-            sizesAvailable: ["M", "XXL", "XL", "L"],
-        },
-        {
-            id: 9,
-            name: "Plain Vanilla White",
-            category: "Men's Formal Wear",
-            sku: "45638SDSY7493",
-            ref: "REF054302#",
-            image:
-                "https://t3.ftcdn.net/jpg/03/90/26/62/240_F_390266222_0zsJWkU9rXdlZCrpyfVpzrZxJyywoiPf.jpg",
-            price: "$82.99",
-            remainingItems: 5,
-            sizesAvailable: ["M", "XXL", "XL", "L"],
-        },
-    ];
+        axios
+            .delete(`http://localhost:6001/admin/deleteProduct/${productId}`)
+            .then((response) => {
+                setDeleteSuccess(true);
+                setDeleteFailure(false);
+                setDeletedProductName(productName);
+
+                setProducts((prevProducts) => prevProducts.filter((product) => product._id !== productId));
+            })
+            .catch((error) => {
+                setDeleteSuccess(false);
+                setDeleteFailure(true);
+                console.error("Error deleting product:", error);
+                setDeletedProductName(productName);
+            });
+    };
+    // Event handler to close the success and failure dialogs
+
+    const handleDialogClose = () => {
+        setDeleteSuccess(false);
+        setDeleteFailure(false);
+    };
+    // Event handler to open the add product form
+
+    const handleOpenAddForm = () => {
+        setIsAddFormOpen(true);
+    };
+    // Event handler to close the add product form and reset the input fields
+
+    const handleCloseAddForm = () => {
+        setIsAddFormOpen(false);
+        setNewProduct({
+            name: "",
+            description: "",
+            price: "",
+            shipping_cost: "",
+            rating: 0,
+            category: "",
+            image_url: "",
+        });
+    };
+    // Event handler to add a new product to the server
+
+    const handleAddProduct = () => {
+
+        if (!newProduct.name || !newProduct.description || !newProduct.price || !newProduct.shipping_cost || !newProduct.category || !newProduct.image_url) {
+            handleShowFailureDialog();
+            return;
+        }
+
+        axios
+            .post("http://localhost:6001/admin/addProduct", newProduct)
+            .then((response) => {
+                const addedProduct = response.data;
+                setProducts((prevProducts) => [...prevProducts, addedProduct]);
+                setDeletedProductName(newProduct.name);
+                handleShowSuccessDialog();
+                handleCloseAddForm();
+                window.location.reload();
+            })
+            .catch((error) => {
+                console.error("Error adding product:", error);
+                setDeletedProductName(newProduct.name);
+                handleShowFailureDialog();
+            });
+    };
+    // State variables to manage success and failure dialogs
+
+    const [showSuccessDialog, setShowSuccessDialog] = useState(false);
+    const [showFailureDialog, setShowFailureDialog] = useState(false);
+    // Event handlers to show/hide the success and failure dialogs
+
+    const handleShowSuccessDialog = () => {
+        setShowSuccessDialog(true);
+    };
+
+    const handleShowFailureDialog = () => {
+        setShowFailureDialog(true);
+    };
+
+    const handleCloseDialogs = () => {
+        setShowSuccessDialog(false);
+        setShowFailureDialog(false);
+    };
+    // Return the JSX for rendering the InventoryPage component
 
     return (
         <>
-
             <AdminNavbar isOpen={isNavbarOpen} onToggle={handleNavbarToggle} />
-            <Container>
-                <Box
-                    sx={{
-                        ml: isNavbarOpen ? "240px" : 0,
-                        p: 3,
-                        marginTop: "64px",
-                        display: "flex",
-                        flexWrap: "wrap",
-                        justifyContent: isNavbarOpen ? "flex-start" : "center",
-                        gap: "20px",
-                    }}
-                >
-                    <Typography variant="h6" component="div" sx={{ marginBottom: 2 }}>
-                        <b>Inventory</b>
+            <Box
+                sx={{
+                    backgroundColor: "#f8f8f8",
+                    minHeight: "100vh",
+                    pt: "64px",
+                    pb: "20px",
+                }}
+            >
+                <Container maxWidth="lg">
+                    <Typography variant="h6" component="div" sx={{ mb: 2 }}>
                     </Typography>
-
                     <Box
                         sx={{
                             display: "flex",
                             flexWrap: "wrap",
+                            justifyContent: "center",
                             gap: "20px",
-                            justifyContent: isNavbarOpen ? "flex-start" : "center",
-                            height: "100%",
                         }}
                     >
                         {products.map((product) => (
                             <Card
-                                key={product.id}
+                                key={product._id}
                                 sx={{
                                     maxWidth: 300,
-                                    marginBottom: 3,
                                     height: "100%",
-                                    padding: "10px",
-                                    display: "flex",
-                                    flexDirection: "column",
-                                    boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
                                     borderRadius: "8px",
+                                    overflow: "hidden",
+                                    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
                                     transition: "transform 0.2s",
                                     "&:hover": {
-                                        transform: "scale(1.02)",
+                                        transform: "scale(1.03)",
                                     },
                                 }}
                             >
                                 <CardMedia
-                                    sx={{ height: 200, width: 300, borderRadius: "8px" }}
-                                    image={product.image}
+                                    sx={{ height: 200, width: "100%", borderRadius: "8px 8px 0 0" }}
+                                    image={product.image_url}
                                     title={product.name}
-                                ></CardMedia>
+                                />
                                 <CardContent sx={{ flexGrow: 1 }}>
                                     <Typography
                                         variant="h6"
                                         component="div"
-                                        sx={{ fontWeight: "bold", marginBottom: "8px" }}
+                                        sx={{ fontWeight: "bold", mb: 1 }}
                                     >
                                         {product.name}
                                     </Typography>
-                                    <List sx={{ paddingTop: 2 }}>
-                                        <ListItem sx={{ paddingTop: 0, paddingBottom: 1 }}>
-                                            <ListItemText primary={`Reference: ${product.ref}`} />
-                                        </ListItem>
-                                        <ListItem sx={{ paddingTop: 0, paddingBottom: 1 }}>
-                                            <ListItemText primary={`SKU: ${product.sku}`} />
-                                        </ListItem>
-                                        <ListItem sx={{ paddingTop: 0, paddingBottom: 1 }}>
-                                            <ListItemText
-                                                primary={`Units: ${product.remainingItems}`}
-                                            />
-                                        </ListItem>
-                                        <ListItem sx={{ paddingTop: 0, paddingBottom: 1 }}>
-                                            <ListItemText
-                                                primary={`Total Remaining items: ${product.remainingItems}`}
-                                            />
-                                        </ListItem>
-                                        <ListItem sx={{ paddingTop: 0, paddingBottom: 1 }}>
-                                            <ListItemText
-                                                primary={`Sizes Available: ${product.sizesAvailable.join(
-                                                    ", "
-                                                )}`}
-                                            />
-                                        </ListItem>
-                                    </List>
-                                    <Typography
-                                        variant="subtitle1"
-                                        component="div"
-                                        sx={{ marginTop: 2 }}
-                                    >
-                                        <Box
-                                            sx={{
-                                                display: "inline-block",
-                                                backgroundColor: "#f9f9f9",
-                                                padding: "4px 8px",
-                                                borderRadius: "4px",
-                                                fontWeight: "bold",
-                                                fontSize: "1.2rem",
-                                                color: "#333",
-                                                boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-                                            }}
-                                        >
-                                            {product.price}
-                                        </Box>
+                                    <Typography variant="body2" component="div" sx={{ mb: 1 }}>
+                                        Category: {product.category}
+                                    </Typography>
+                                    <Typography variant="body2" component="div" sx={{ mb: 1 }}>
+                                        Rating:
+                                        <Rating
+                                            name={`product-rating-${product._id}`}
+                                            value={product.rating}
+                                            precision={0.5}
+                                            readOnly
+                                        />
+                                    </Typography>
+                                    <Typography variant="body2" component="div">
+                                        Price: {product.price}
                                     </Typography>
                                 </CardContent>
-
-                                <CardActions
-                                    sx={{
-                                        display: "flex",
-                                        justifyContent: "space-between",
-                                        borderTop: "1px solid rgba(0, 0, 0, 0.1)",
-                                        paddingTop: 1,
-                                    }}
-                                >
+                                <CardActions sx={{ justifyContent: "center" }}>
                                     <Button
-                                        variant="text"
+                                        variant="outlined"
                                         startIcon={<InfoIcon />}
                                         onClick={onInfoClick}
                                         sx={{ color: "#2196f3" }}
                                     >
-                                        Info
+                                        Sales
                                     </Button>
                                     <Button
-                                        variant="text"
-                                        startIcon={<QueryStatsIcon />}
-                                        onClick={onQueryStatsClick}
+                                        variant="outlined"
+                                        startIcon={<DeleteIcon />}
+                                        onClick={() => handleDeleteProduct(product._id, product.name)}
                                         sx={{ color: "#f44336" }}
                                     >
-                                        Query Stats
+                                        Delete
                                     </Button>
                                 </CardActions>
                             </Card>
                         ))}
                     </Box>
-                </Box>
-            </Container>
+                </Container>
+            </Box>
+            <Dialog open={deleteSuccess} onClose={handleDialogClose}>
+                <DialogTitle>Success</DialogTitle>
+                <DialogContent>
+                    {`${deletedProductName} is deleted successfully.`}
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleDialogClose}>OK</Button>
+                </DialogActions>
+            </Dialog>
+            <Dialog open={deleteFailure} onClose={handleDialogClose}>
+                <DialogTitle>Failure</DialogTitle>
+                <DialogContent>
+                    {`${deletedProductName} couldn't be deleted.`}
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleDialogClose}>OK</Button>
+                </DialogActions>
+            </Dialog>
+            <Dialog open={showSuccessDialog} onClose={handleCloseDialogs}>
+                <DialogTitle>Success</DialogTitle>
+                <DialogContent>
+                    {`${deletedProductName} is added successfully.`}
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseDialogs}>OK</Button>
+                </DialogActions>
+            </Dialog>
+            <Dialog open={showFailureDialog} onClose={handleCloseDialogs}>
+                <DialogTitle>Failure</DialogTitle>
+                <DialogContent>
+                    {`${deletedProductName} couldn't be added.`}
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseDialogs}>OK</Button>
+                </DialogActions>
+            </Dialog>
+            <Fab
+                color="primary"
+                aria-label="add"
+                sx={{ position: "fixed", bottom: 16, right: 16 }}
+                onClick={handleOpenAddForm}
+            >
+                <AddIcon />
+            </Fab>
+            <Dialog open={isAddFormOpen} onClose={handleCloseAddForm}>
+                <DialogTitle>Add Product</DialogTitle>
+                <DialogContent>
+                    <TextField
+                        label="Name"
+                        fullWidth
+                        margin="normal"
+                        value={newProduct.name}
+                        onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })}
+                    />
+                    <TextField
+                        label="Description"
+                        fullWidth
+                        margin="normal"
+                        value={newProduct.description}
+                        onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })}
+                    />
+                    <TextField
+                        label="Price"
+                        fullWidth
+                        margin="normal"
+                        value={newProduct.price}
+                        onChange={(e) => setNewProduct({ ...newProduct, price: e.target.value })}
+                        InputProps={{
+                            startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                        }}
+                    />
+                    <TextField
+                        label="Shipping Cost"
+                        fullWidth
+                        margin="normal"
+                        value={newProduct.shipping_cost}
+                        onChange={(e) => setNewProduct({ ...newProduct, shipping_cost: e.target.value })}
+                        InputProps={{
+                            startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                        }}
+                    />
+                    <FormControl fullWidth margin="normal">
+                        <InputLabel>Rating</InputLabel>
+                        <Select
+                            value={newProduct.rating}
+                            onChange={(e) => setNewProduct({ ...newProduct, rating: e.target.value })}
+                        >
+                            <MenuItem value={0}><Rating value={0} readOnly /></MenuItem>
+                            <MenuItem value={1}><Rating value={1} readOnly /></MenuItem>
+                            <MenuItem value={2}><Rating value={2} readOnly /></MenuItem>
+                            <MenuItem value={3}><Rating value={3} readOnly /></MenuItem>
+                            <MenuItem value={4}><Rating value={4} readOnly /></MenuItem>
+                            <MenuItem value={5}><Rating value={5} readOnly /></MenuItem>
+                        </Select>
+                    </FormControl>
+                    <FormControl fullWidth margin="normal">
+                        <InputLabel>Category</InputLabel>
+                        <Select
+                            value={newProduct.category}
+                            onChange={(e) => setNewProduct({ ...newProduct, category: e.target.value })}
+                        >
+                            <MenuItem value="Mens clothes">Mens clothes</MenuItem>
+                            <MenuItem value="Women's clothes">Women's clothes</MenuItem>
+                            <MenuItem value="Sunglasses">Sunglasses</MenuItem>
+                            <MenuItem value="Hats">Hats</MenuItem>
+                            <MenuItem value="Bags">Bags</MenuItem>
+                        </Select>
+                    </FormControl>
+                    <TextField
+                        label="Image URL"
+                        fullWidth
+                        margin="normal"
+                        value={newProduct.image_url}
+                        onChange={(e) => setNewProduct({ ...newProduct, image_url: e.target.value })}
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseAddForm}>Cancel</Button>
+                    <Button onClick={handleAddProduct} color="primary">Add</Button>
+                </DialogActions>
+            </Dialog>
         </>
     );
 };
 
 export default InventoryPage;
-
-// reference
-// card mui - https://mui.com/material-ui/react-card/
-// photos - https://stock.adobe.com/ca/search?filters%5Bcontent_type%3Aphoto%5D=1&filters%5Bcontent_type%3Aillustration%5D=1&filters%5Bcontent_type%3Azip_vector%5D=1&filters%5Bcontent_type%3Avideo%5D=1&filters%5Bcontent_type%3Atemplate%5D=1&filters%5Bcontent_type%3A3d%5D=1&filters%5Bcontent_type%3Aimage%5D=1&k=mens+clothing+formal&order=relevance&safe_search=1&limit=100&search_page=1&search_type=usertyped&acp=&aco=mens+clothing+formal&get_facets=0
-// how to iterate through a array in mui cards https://forum.freecodecamp.org/t/iterate-a-card-component-with-properties-from-an-array-of-objects/445211/2

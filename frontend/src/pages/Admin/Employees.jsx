@@ -21,6 +21,7 @@ import React, { useEffect, useState } from "react";
 import AdminBar from "../../components/adminbar";
 import Footer from "../../components/footer";
 
+// Custom dialog component for displaying messages
 const DialogBox = ({ isOpen, onClose, title, content }) => {
   return (
     <Dialog open={isOpen} onClose={onClose}>
@@ -33,6 +34,7 @@ const DialogBox = ({ isOpen, onClose, title, content }) => {
   );
 };
 
+// Custom dialog component for displaying success message after employee deletion
 const SuccessDeleteDialogBox = ({ isOpen, onClose, employeeName }) => {
   return (
     <Dialog open={isOpen} onClose={onClose}>
@@ -46,6 +48,7 @@ const SuccessDeleteDialogBox = ({ isOpen, onClose, employeeName }) => {
 };
 
 const Employees = () => {
+  // State variables to manage component behavior
   const [isNavbarOpen, setIsNavbarOpen] = useState(false);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [newEmployee, setNewEmployee] = useState({
@@ -65,6 +68,7 @@ const Employees = () => {
   const [isSuccessDeleteOpen, setIsSuccessDeleteOpen] = useState(false);
   const [deletedEmployeeName, setDeletedEmployeeName] = useState("");
 
+  // Helper functions to validate email and phone inputs using regular expressions
   const isValidEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
@@ -74,7 +78,7 @@ const Employees = () => {
     const phoneRegex = /^\d{3}[-.\s]?\d{3}[-.\s]?\d{4}$/;
     return phoneRegex.test(phone);
   };
-
+  // Fetch employees data from the server on component mount
   useEffect(() => {
     axios
       .get("http://localhost:6001/admin/employees")
@@ -87,14 +91,15 @@ const Employees = () => {
         setIsLoading(false);
       });
   }, []);
-
+  // Event handler to toggle the navbar
   const handleNavbarToggle = () => {
     setIsNavbarOpen(!isNavbarOpen);
   };
-
+  // Event handler to open the add employee dialog
   const handleAddClick = () => {
     setIsAddDialogOpen(true);
   };
+  // Event handler to close the add employee dialog and reset the input fields
 
   const handleDialogClose = () => {
     setIsAddDialogOpen(false);
@@ -107,6 +112,7 @@ const Employees = () => {
       address: "",
     });
   };
+  // Event handler to update the new employee state when input fields change
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -115,6 +121,7 @@ const Employees = () => {
       [name]: value,
     });
   };
+  // Event handler to add a new employee to the server
 
   const handleAddEmployee = () => {
     if (
@@ -168,6 +175,7 @@ const Employees = () => {
         setIsFailureOpen(true);
       });
   };
+  // Event handler to delete an employee from the server
 
   const handleDeleteEmployee = (employeeId) => {
     axios

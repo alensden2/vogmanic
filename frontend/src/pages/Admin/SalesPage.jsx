@@ -6,31 +6,39 @@ import AdminBar from '../../components/adminbar';
 import Footer from '../../components/footer';
 
 export default function SalesPage() {
+  // State variables to manage the state of the component
   const [isNavbarOpen, setIsNavbarOpen] = useState(false);
   const [totalSales, setTotalSales] = useState(null);
   const [totalOrder, setTotalOrder] = useState(null);
   const [orderDetails, setOrderDetails] = useState([]);
 
+  // Event handler to toggle the navbar
   const handleNavbarToggle = () => {
     setIsNavbarOpen(!isNavbarOpen);
   };
+  // Fetch data from the server on component mount using useEffect
 
   useEffect(() => {
+    // Fetch total sales from the server
+
     fetch('http://localhost:6001/admin/totalSaleAllOrders')
       .then((response) => response.json())
       .then((data) => setTotalSales(parseFloat(data.totalSales).toFixed(2)))
       .catch((error) => console.error('Error fetching total sales:', error));
+    // Fetch total orders from the server
 
     fetch('http://localhost:6001/admin/totalOrders')
       .then((response) => response.json())
       .then((data) => setTotalOrder(data.TotalOrders))
       .catch((error) => console.error('Error fetching total orders:', error));
+    // Fetch order details from the server
 
     fetch('http://localhost:6001/admin/totalSalePerOrders')
       .then((response) => response.json())
       .then((data) => setOrderDetails(data))
       .catch((error) => console.error('Error fetching order details:', error));
   }, []);
+  // Return the JSX for rendering the SalesPage component
 
   return (
     <div>

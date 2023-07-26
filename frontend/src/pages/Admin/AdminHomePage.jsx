@@ -18,6 +18,7 @@ export default function AdminHomePage() {
     setIsNavbarOpen(!isNavbarOpen);
   };
 
+  // Fetch data from the server when the component mounts
   useEffect(() => {
     fetch('http://localhost:6001/admin/totalSaleAllOrders')
       .then((response) => response.json())
@@ -62,24 +63,24 @@ export default function AdminHomePage() {
           </div>
         </div>
 
-        <div style={styles.box2}>
-          <div style={styles.iconWrapper}>
-            <MonetizationOnIcon style={{ fontSize: '4rem' }} />
-            <div style={styles.iconLabel}>
-              {totalSales === null ? 'Total Sales: Loading...' : `Total Sales: $${totalSales}`}
+        <div style={styles.quickInfoContainer}>
+          <div style={styles.quickInfoBox}>
+            <MonetizationOnIcon style={styles.quickInfoIcon} />
+            <div style={styles.quickInfoText}>
+              {totalSales === null ? 'Total Sales: Loading...' : `$${totalSales}`}
             </div>
           </div>
 
-          <div style={styles.iconWrapper}>
-            <ShoppingBagIcon style={{ fontSize: '4rem' }} />
-            <div style={styles.iconLabel}>
+          <div style={styles.quickInfoBox}>
+            <ShoppingBagIcon style={styles.quickInfoIcon} />
+            <div style={styles.quickInfoText}>
               {totalItemsSold === null ? 'Items Sold: Loading...' : `Items Sold: ${totalItemsSold}`}
             </div>
           </div>
 
-          <div style={styles.iconWrapper}>
-            <LocalShippingIcon style={{ fontSize: '4rem' }} />
-            <div style={styles.iconLabel}>
+          <div style={styles.quickInfoBox}>
+            <LocalShippingIcon style={styles.quickInfoIcon} />
+            <div style={styles.quickInfoText}>
               {totalOrders === null ? 'Total Orders: Loading...' : `Total Orders: ${totalOrders}`}
             </div>
           </div>
@@ -157,35 +158,36 @@ const styles = {
     alignItems: 'center',
     height: '100%',
   },
-  box2: {
+  quickInfoContainer: {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
     width: '90%',
     maxWidth: '1400px',
-    height: '100px',
-    border: '1px solid #ccc',
-    borderRadius: '5px',
-    fontSize: '24px',
-    backgroundColor: '#f0f0f0',
-    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
     marginTop: '20px',
-    padding: '2px',
+    gap: '20px',
   },
-  iconWrapper: {
+  quickInfoBox: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
     flex: 1,
-    margin: '10px',
+    padding: '10px',
+    border: '1px solid #ccc',
+    borderRadius: '5px',
+    backgroundColor: '#f0f0f0',
+    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
   },
-  iconLabel: {
+  quickInfoIcon: {
+    fontSize: '4rem',
+  },
+  quickInfoText: {
     marginTop: '10px',
     fontWeight: 'bold',
   },
   salesInsightsBox: {
-    width: '1280px',
-    maxWidth: '1400px',
+    width: '90%',
+    maxWidth: '1385px',
     border: '1px solid #ccc',
     borderRadius: '5px',
     backgroundColor: '#f0f0f0',
@@ -209,6 +211,14 @@ const styles = {
     padding: '5px 0',
   },
 
+  '@media (max-width: 768px)': {
+    quickInfoContainer: {
+      flexDirection: 'column',
+    },
+    quickInfoBox: {
+      width: '100%',
+    },
+  },
 
   '@media (max-width: 600px)': {
     container: {
@@ -231,22 +241,27 @@ const styles = {
     quicksightText: {
       fontSize: '20px',
     },
-    box2: {
+    quickInfoContainer: {
       flexDirection: 'column',
-      alignItems: 'stretch',
-      height: 'auto',
-      fontSize: '20px',
-      padding: '0',
+      gap: '10px',
     },
-    iconWrapper: {
-      margin: '5px 0',
+    quickInfoBox: {
+      padding: '8px',
+      fontSize: '18px',
     },
-    iconLabel: {
+    quickInfoIcon: {
+      fontSize: '3rem',
+    },
+    quickInfoText: {
+      marginTop: '8px',
       fontSize: '16px',
     },
     salesInsightsBox: {
       padding: '5px',
       width: '100%',
+    },
+    salesInsight: {
+      fontSize: '18px',
     },
   },
 };
