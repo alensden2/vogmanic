@@ -33,7 +33,7 @@ const AppBarStyled = styled(AppBar, {
       duration: theme.transitions.duration.enteringScreen,
     }),
   }),
- 
+
 }));
 
 const Navbar = ({ isOpen, onToggle }) => {
@@ -56,7 +56,7 @@ const Navbar = ({ isOpen, onToggle }) => {
 
   const handleNavigation = (path) => {
     navigate(path);
-    handleMobileMenuClose(); 
+    handleMobileMenuClose();
   };
 
   return (
@@ -99,7 +99,7 @@ const Navbar = ({ isOpen, onToggle }) => {
             </Typography>
             <Hidden mdDown>
               <Stack direction="row" spacing={2}>
-              <IconButton
+                <IconButton
                   color="inherit"
                   onClick={() => handleNavigation("/products")}
                 >
@@ -175,21 +175,6 @@ const Navbar = ({ isOpen, onToggle }) => {
                     }}
                   >
                     FAQs
-                  </Typography>
-                </IconButton>
-                <IconButton
-                  color="inherit"
-                  onClick={() => handleNavigation("/store")}
-                >
-                  <Typography
-                    variant="body1"
-                    sx={{
-                      cursor: "pointer",
-                      color: "black",
-                      fontWeight: 500,
-                    }}
-                  >
-                    Store
                   </Typography>
                 </IconButton>
               </Stack>

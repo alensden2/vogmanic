@@ -1,4 +1,4 @@
-import { Box, Grid, IconButton, Paper, TextField, Typography, useTheme, Button } from "@mui/material";
+import { Box, Grid, IconButton, Paper, TextField, Typography, useTheme, Button, Dialog, DialogTitle, DialogContent, DialogActions } from "@mui/material";
 import { styled } from "@mui/system";
 import React, { useState } from "react";
 import EmailIcon from "@mui/icons-material/Email";
@@ -39,6 +39,7 @@ const ContactForm = () => {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [emailError, setEmailError] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -48,13 +49,10 @@ const ContactForm = () => {
       return;
     }
 
-    console.log("Email:", email);
-    console.log("Message:", message);
-    alert("Email Sent!")
-
     setEmail("");
     setMessage("");
     setEmailError(false);
+    setIsDialogOpen(true);
   };
 
   const handleEmailChange = (e) => {
@@ -66,38 +64,54 @@ const ContactForm = () => {
     setMessage(e.target.value);
   };
 
+  const handleCloseDialog = () => {
+    setIsDialogOpen(false);
+  };
+
   const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <TextField
-        label="Email"
-        value={email}
-        onChange={handleEmailChange}
-        error={emailError}
-        helperText={emailError ? "Invalid email" : ""}
-        fullWidth
-        margin="normal"
-        required
-      />
-      <TextField
-        label="Message"
-        value={message}
-        onChange={handleMessageChange}
-        multiline
-        fullWidth
-        margin="normal"
-        required
-      />
-      <Box sx={{ display: "flex", justifyContent: "center", marginTop: "2rem" }}>
-        <Button variant="contained" type="submit">
-          Send Message
-        </Button>
-      </Box>
-    </form>
+    <>
+      <form onSubmit={handleSubmit}>
+        <TextField
+          label="Email"
+          value={email}
+          onChange={handleEmailChange}
+          error={emailError}
+          helperText={emailError ? "Invalid email" : ""}
+          fullWidth
+          margin="normal"
+          required
+        />
+        <TextField
+          label="Message"
+          value={message}
+          onChange={handleMessageChange}
+          multiline
+          fullWidth
+          margin="normal"
+          required
+        />
+        <Box sx={{ display: "flex", justifyContent: "center", marginTop: "2rem" }}>
+          <Button variant="contained" type="submit">
+            Send Message
+          </Button>
+        </Box>
+      </form>
+
+      <Dialog open={isDialogOpen} onClose={handleCloseDialog}>
+        <DialogTitle>Message Sent</DialogTitle>
+        <DialogContent>
+          <Typography>Your email has been sent successfully!</Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDialog}>Close</Button>
+        </DialogActions>
+      </Dialog>
+    </>
   );
 };
 
