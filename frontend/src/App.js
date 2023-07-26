@@ -15,6 +15,11 @@ import Cart from "./pages/products/Cart";
 import ProductListingPage from "./pages/products/ProductListingPage";
 import Wishlist from "./pages/products/Wishlist";
 import Store from "./pages/store";
+import Login from "./pages/login/login"
+import SignUp from "./pages/signup/signup";
+import Dashboard from "./pages/userDashboard/UserDashboard"
+import Checkout from "./pages/checkout/Checkout";
+
 
 function App() {
 
