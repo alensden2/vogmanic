@@ -82,7 +82,7 @@ function Login() {
         if (response.ok) {
           console.log('Login success!');
           // Show an alert for login success
-          navigate("/products")
+          navigate("/dashboard")
           // You can also navigate to a different page on successful login using useNavigate()
           // navigate("/dashboard");
         } else {
