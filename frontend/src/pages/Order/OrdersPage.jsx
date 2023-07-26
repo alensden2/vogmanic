@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Typography, Container, Card, CardContent, TextField, Divider, Table, TableHead, TableRow, TableCell, TableBody } from "@mui/material";
+import { Box, Typography, Container, TextField, Table, TableHead, TableRow, TableCell, TableBody } from "@mui/material";
 import Navbar from "../../components/navbar";
 import Footer from "../../components/footer";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useNavigate } from 'react-router-dom';
+import { HOSTED_BASE_URL } from '../../constants';
 
 const theme = createTheme({
   palette: {
@@ -28,7 +29,7 @@ const OrdersPage = () => {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const response = await fetch('http://localhost:6001/order/getAll');
+        const response = await fetch(`${HOSTED_BASE_URL}/order/getAll`);
 
         if (!response.ok) {
           throw new Error('Network response was not ok');

@@ -6,6 +6,7 @@ import {
 import Navbar from "../../components/navbar";
 import Footer from "../../components/footer";
 import { useParams, useNavigate } from 'react-router-dom';
+import { HOSTED_BASE_URL } from '../../constants';
 
 const TotalLine = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -54,7 +55,7 @@ const OrderDetails = () => {
   useEffect(() => {
     const fetchOrderDetails = async () => {
       try {
-        const response = await fetch(`http://localhost:6001/order/${orderId}`);
+        const response = await fetch(`${HOSTED_BASE_URL}/order/${orderId}`);
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
@@ -122,8 +123,18 @@ const OrderDetails = () => {
                 </TotalLine>
               </CardContent>
               <Box sx={{ display: 'flex', justifyContent: 'center', marginBottom: '16px' }}>
-                <Button style={{ color: "#ffffff", backgroundColor: "#FF4081" }} disabled={orderDetails.status === 'Cancelled'} onClick={handleReturnCancel}>
-                  Return/Cancel
+                <Button
+                    sx={{
+                      color: "#ffffff",
+                      backgroundColor: "#FF4081",
+                      "&:hover": {
+                        backgroundColor: "#B22C5A"
+                      }
+                    }}
+                    disabled={orderDetails.status === 'Cancelled'}
+                    onClick={handleReturnCancel}
+                  >
+                    Return/Cancel
                 </Button>
               </Box>
             </Card>

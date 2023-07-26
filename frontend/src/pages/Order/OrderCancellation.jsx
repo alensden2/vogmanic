@@ -6,6 +6,7 @@ import {
 import Navbar from "../../components/navbar";
 import Footer from "../../components/footer";
 import { useParams, useNavigate } from 'react-router-dom';
+import { HOSTED_BASE_URL } from '../../constants';
 
 const CancelButton = styled(Button)(({ theme }) => ({
     backgroundColor: theme.palette.error.main,
@@ -25,7 +26,7 @@ const OrderCancellation = () => {
     useEffect(() => {
         const fetchOrderDetails = async () => {
             try {
-                const response = await fetch(`http://localhost:6001/order/${orderId}`);
+                const response = await fetch(`${HOSTED_BASE_URL}/order/${orderId}`);
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
@@ -41,7 +42,7 @@ const OrderCancellation = () => {
 
     const handleCancelOrder = async () => {
         try {
-            const response = await fetch(`http://localhost:6001/order/${orderId}/cancel`, {
+            const response = await fetch(`${HOSTED_BASE_URL}/order/${orderId}/cancel`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
