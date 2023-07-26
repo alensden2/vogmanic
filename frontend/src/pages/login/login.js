@@ -102,7 +102,7 @@ function Login() {
 
   return (
     <>
-      <Navbar />
+      <Navbar/>
       <Container maxWidth="md" style={{ height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop:"64px"}}>
         <Grid container spacing={0}>
           {/* Code for the wide screen (if needed) */}
@@ -174,7 +174,7 @@ function Login() {
           </Grid>
         </Grid>
       </Container>
-      <Footer />
+      <Footer/>
     </>
   );
 }
