@@ -20,6 +20,7 @@ const drawerWidth = 240;
 const AppBarStyled = styled(AppBar, {
   shouldForwardProp: (prop) => prop !== "open",
 })(({ theme, open }) => ({
+  zIndex: theme.zIndex.drawer + 1,
   transition: theme.transitions.create(["margin", "width"], {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
@@ -32,6 +33,7 @@ const AppBarStyled = styled(AppBar, {
       duration: theme.transitions.duration.enteringScreen,
     }),
   }),
+ 
 }));
 
 const Navbar = ({ isOpen, onToggle }) => {
@@ -97,6 +99,54 @@ const Navbar = ({ isOpen, onToggle }) => {
             </Typography>
             <Hidden mdDown>
               <Stack direction="row" spacing={2}>
+              <IconButton
+                  color="inherit"
+                  onClick={() => handleNavigation("/products")}
+                >
+                  <Typography
+                    variant="body1"
+                    sx={{
+                      cursor: "pointer",
+                      color: "black",
+                      fontWeight: 500,
+                    }}
+                  >
+                    Products
+                  </Typography>
+                </IconButton>
+
+                <IconButton
+                  color="inherit"
+                  onClick={() => handleNavigation("/order")}
+                >
+                  <Typography
+                    variant="body1"
+                    sx={{
+                      cursor: "pointer",
+                      color: "black",
+                      fontWeight: 500,
+                    }}
+                  >
+                    Orders
+                  </Typography>
+                </IconButton>
+
+                <IconButton
+                  color="inherit"
+                  onClick={() => handleNavigation("/wishlist")}
+                >
+                  <Typography
+                    variant="body1"
+                    sx={{
+                      cursor: "pointer",
+                      color: "black",
+                      fontWeight: 500,
+                    }}
+                  >
+                    Wishlist
+                  </Typography>
+                </IconButton>
+
                 <IconButton
                   color="inherit"
                   onClick={() => handleNavigation("/contact")}
