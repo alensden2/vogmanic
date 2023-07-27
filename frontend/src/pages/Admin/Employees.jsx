@@ -80,8 +80,11 @@ const Employees = () => {
   };
   // Fetch employees data from the server on component mount
   useEffect(() => {
+    const accessToken = localStorage.getItem("accessToken");
+    const headers = { Authorization: `Bearer ${accessToken}` };
+
     axios
-      .get("http://localhost:6001/admin/employees")
+      .get("http://localhost:6001/admin/employees", { headers })
       .then((response) => {
         setEmployees(response.data);
         setIsLoading(false);
@@ -155,12 +158,16 @@ const Employees = () => {
       address: newEmployee.address,
     };
 
+    const accessToken = localStorage.getItem("accessToken");
+    const headers = { Authorization: `Bearer ${accessToken}` };
+
     axios
-      .post("http://localhost:6001/admin/addEmployee", employeeData)
+      .post("http://localhost:6001/admin/addEmployee", employeeData, { headers })
       .then((response) => {
         console.log("Employee added successfully:", response.data);
+
         axios
-          .get("http://localhost:6001/admin/employees")
+          .get("http://localhost:6001/admin/employees", { headers })
           .then((response) => {
             setEmployees(response.data);
             setIsSuccessOpen(true);
@@ -178,8 +185,11 @@ const Employees = () => {
   // Event handler to delete an employee from the server
 
   const handleDeleteEmployee = (employeeId) => {
+    const accessToken = localStorage.getItem("accessToken");
+    const headers = { Authorization: `Bearer ${accessToken}` };
+
     axios
-      .delete(`http://localhost:6001/admin/deleteEmployee/${employeeId}`)
+      .delete(`http://localhost:6001/admin/deleteEmployee/${employeeId}`, { headers })
       .then((response) => {
         setEmployees((prevEmployees) =>
           prevEmployees.filter((employee) => employee._id !== employeeId)

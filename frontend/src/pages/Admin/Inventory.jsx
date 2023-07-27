@@ -58,8 +58,11 @@ const InventoryPage = () => {
     };
     // Fetch products data from the server on component mount
     useEffect(() => {
+        const accessToken = localStorage.getItem("accessToken");
+        const headers = { Authorization: `Bearer ${accessToken}` };
+
         axios
-            .get("http://localhost:6001/admin/products")
+            .get("http://localhost:6001/admin/products", { headers })
             .then((response) => {
                 setProducts(response.data);
             })
@@ -70,8 +73,11 @@ const InventoryPage = () => {
     // Event handler to delete a product from the server
     const handleDeleteProduct = (productId, productName) => {
 
+        const accessToken = localStorage.getItem("accessToken");
+        const headers = { Authorization: `Bearer ${accessToken}` };
+
         axios
-            .delete(`http://localhost:6001/admin/deleteProduct/${productId}`)
+            .delete(`http://localhost:6001/admin/deleteProduct/${productId}`, { headers })
             .then((response) => {
                 setDeleteSuccess(true);
                 setDeleteFailure(false);
@@ -120,8 +126,11 @@ const InventoryPage = () => {
             return;
         }
 
+        const accessToken = localStorage.getItem("accessToken");
+        const headers = { Authorization: `Bearer ${accessToken}` };
+
         axios
-            .post("http://localhost:6001/admin/addProduct", newProduct)
+            .post("http://localhost:6001/admin/addProduct", newProduct, { headers })
             .then((response) => {
                 const addedProduct = response.data;
                 setProducts((prevProducts) => [...prevProducts, addedProduct]);

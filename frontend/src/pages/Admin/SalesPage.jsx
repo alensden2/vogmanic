@@ -19,25 +19,25 @@ export default function SalesPage() {
   // Fetch data from the server on component mount using useEffect
 
   useEffect(() => {
-    // Fetch total sales from the server
+    const accessToken = localStorage.getItem("accessToken");
+    const headers = { Authorization: `Bearer ${accessToken}` };
 
-    fetch('http://localhost:6001/admin/totalSaleAllOrders')
+    fetch('http://localhost:6001/admin/totalSaleAllOrders', { headers })
       .then((response) => response.json())
       .then((data) => setTotalSales(parseFloat(data.totalSales).toFixed(2)))
       .catch((error) => console.error('Error fetching total sales:', error));
-    // Fetch total orders from the server
 
-    fetch('http://localhost:6001/admin/totalOrders')
+    fetch('http://localhost:6001/admin/totalOrders', { headers })
       .then((response) => response.json())
       .then((data) => setTotalOrder(data.TotalOrders))
       .catch((error) => console.error('Error fetching total orders:', error));
-    // Fetch order details from the server
 
-    fetch('http://localhost:6001/admin/totalSalePerOrders')
+    fetch('http://localhost:6001/admin/totalSalePerOrders', { headers })
       .then((response) => response.json())
       .then((data) => setOrderDetails(data))
       .catch((error) => console.error('Error fetching order details:', error));
   }, []);
+
   // Return the JSX for rendering the SalesPage component
 
   return (

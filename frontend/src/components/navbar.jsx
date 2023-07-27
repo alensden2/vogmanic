@@ -33,7 +33,6 @@ const AppBarStyled = styled(AppBar, {
       duration: theme.transitions.duration.enteringScreen,
     }),
   }),
-
 }));
 
 const Navbar = ({ isOpen, onToggle }) => {
@@ -57,6 +56,13 @@ const Navbar = ({ isOpen, onToggle }) => {
   const handleNavigation = (path) => {
     navigate(path);
     handleMobileMenuClose();
+  };
+
+  const handleLogout = () => {
+    // Remove the accessToken from the local storage
+    localStorage.removeItem("accessToken");
+    // Navigate to '/' after logout
+    navigate("/");
   };
 
   return (
@@ -189,6 +195,26 @@ const Navbar = ({ isOpen, onToggle }) => {
                 <MenuIcon />
               </IconButton>
             </Hidden>
+            {localStorage.getItem("accessToken") && (
+              <Hidden mdDown>
+                <IconButton
+                  color="inherit"
+                  onClick={handleLogout}
+                  sx={{ color: "black" }}
+                >
+                  <Typography
+                    variant="body1"
+                    sx={{
+                      cursor: "pointer",
+                      color: "black",
+                      fontWeight: 500,
+                    }}
+                  >
+                    Logout
+                  </Typography>
+                </IconButton>
+              </Hidden>
+            )}
           </Toolbar>
         </AppBarStyled>
         <Hidden lgUp>

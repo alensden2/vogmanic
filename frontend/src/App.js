@@ -19,6 +19,7 @@ import Login from "./pages/login/login"
 import SignUp from "./pages/signup/signup";
 import Dashboard from "./pages/userDashboard/UserDashboard"
 import Checkout from "./pages/checkout/Checkout";
+import AuthenticatedRoute from './components/AuthenticatedRoute';
 
 
 function App() {
@@ -30,27 +31,27 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/faq" element={<Faq />} />
-        <Route path="/store" element={<Store />} />
-        <Route path="/products" element={<ProductListingPage />} />
-        <Route path="/cart" element={<Cart />} />
-        <Route path="/fetch_cart_db" element={<Cart />} />
-        <Route path="/update_qty_db" element={<Cart />} />
-        <Route path="/delete_cart_item" element={<Cart />} />
-        <Route path="/wishlist" element={<Wishlist />} />
-        <Route path="/fetch_wishlist_db" element={<Wishlist />} />
-        <Route path="/delete_wishlist_item" element={<Wishlist />} />
-        <Route path="/home" element={<AdminHomePage />} />
-        <Route path="/employees" element={<Employees />} />
-        <Route path="/inventory" element={<InventoryPage />} />
-        <Route path="/sales" element={<SalesPage />} />
+        <Route path="/store" element={<AuthenticatedRoute> <Store /></AuthenticatedRoute>} />
+        <Route path="/products" element={ <AuthenticatedRoute> <ProductListingPage /> </AuthenticatedRoute>} />
+        <Route path="/cart" element={<AuthenticatedRoute> <Cart /> </AuthenticatedRoute>} />
+        <Route path="/fetch_cart_db" element={<AuthenticatedRoute> <Cart /> </AuthenticatedRoute>} />
+        <Route path="/update_qty_db" element={<AuthenticatedRoute> <Cart /> </AuthenticatedRoute>} />
+        <Route path="/delete_cart_item" element={<AuthenticatedRoute> <Cart /> </AuthenticatedRoute>} />
+        <Route path="/wishlist" element={<AuthenticatedRoute> <Wishlist /> </AuthenticatedRoute>} />
+        <Route path="/fetch_wishlist_db" element={<AuthenticatedRoute> <Wishlist /> </AuthenticatedRoute>} />
+        <Route path="/delete_wishlist_item" element={<AuthenticatedRoute> <Wishlist /> </AuthenticatedRoute>} />
+        <Route path="/home" element={ <AuthenticatedRoute> <AdminHomePage /> </AuthenticatedRoute>} />
+        <Route path="/employees" element={<AuthenticatedRoute><Employees /></AuthenticatedRoute>} />
+        <Route path="/inventory" element={<AuthenticatedRoute><InventoryPage /></AuthenticatedRoute>} />
+        <Route path="/sales" element={<AuthenticatedRoute><SalesPage /></AuthenticatedRoute>} />
         {/* <Route path="/checkout" element={<Checkout />} /> */}
-        <Route path="/order" element={<OrdersPage />} />
-        <Route path="/order/:orderId" element={<OrderDetails />} />
-        <Route path="/order/:orderId/cancel" element={<OrderCancellation />} />
-        <Route path="/checkout" element={<Checkout />} />
+        <Route path="/order" element={<AuthenticatedRoute><OrdersPage /></AuthenticatedRoute>} />
+        <Route path="/order/:orderId" element={<AuthenticatedRoute><OrderDetails /></AuthenticatedRoute>} />
+        <Route path="/order/:orderId/cancel" element={<AuthenticatedRoute><OrderCancellation /></AuthenticatedRoute>} />
+        <Route path="/checkout" element={<AuthenticatedRoute><Checkout /></AuthenticatedRoute>} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
-        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/dashboard" element={<AuthenticatedRoute><Dashboard /></AuthenticatedRoute>} />
       </Routes>
     </BrowserRouter>
   );

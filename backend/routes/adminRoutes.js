@@ -1,8 +1,11 @@
 const express = require('express');
 const router = express.Router();
+const authMiddleware = require('../middlewares/authMiddleware.js');
 
 const adminProductController = require('../controllers/Admin/AdminController')
 // const middleware = require('../middleware/auth')
+
+router.use(authMiddleware);
 
 /** Test Endpoint */
 router.get("/test", adminProductController.testAdminProductsController)
