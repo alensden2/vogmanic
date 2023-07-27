@@ -32,19 +32,18 @@ function App() {
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/faq" element={<Faq />} />
         <Route path="/store" element={<AuthenticatedRoute> <Store /></AuthenticatedRoute>} />
-        <Route path="/products" element={ <AuthenticatedRoute> <ProductListingPage /> </AuthenticatedRoute>} />
-        <Route path="/cart" element={<AuthenticatedRoute> <Cart /> </AuthenticatedRoute>} />
-        <Route path="/fetch_cart_db" element={<AuthenticatedRoute> <Cart /> </AuthenticatedRoute>} />
-        <Route path="/update_qty_db" element={<AuthenticatedRoute> <Cart /> </AuthenticatedRoute>} />
-        <Route path="/delete_cart_item" element={<AuthenticatedRoute> <Cart /> </AuthenticatedRoute>} />
-        <Route path="/wishlist" element={<AuthenticatedRoute> <Wishlist /> </AuthenticatedRoute>} />
-        <Route path="/fetch_wishlist_db" element={<AuthenticatedRoute> <Wishlist /> </AuthenticatedRoute>} />
-        <Route path="/delete_wishlist_item" element={<AuthenticatedRoute> <Wishlist /> </AuthenticatedRoute>} />
+        <Route path="/products" element={ <ProductListingPage /> } />
+        <Route path="/cart" element={ <Cart /> } />
+        <Route path="/fetch_cart_db" element={ <Cart /> } />
+        <Route path="/update_qty_db" element={ <Cart /> } />
+        <Route path="/delete_cart_item" element={ <Cart />} />
+        <Route path="/wishlist" element={ <Wishlist /> } />
+        <Route path="/fetch_wishlist_db" element={<Wishlist /> } />
+        <Route path="/delete_wishlist_item" element={<Wishlist /> } />
         <Route path="/home" element={ <AuthenticatedRoute> <AdminHomePage /> </AuthenticatedRoute>} />
         <Route path="/employees" element={<AuthenticatedRoute><Employees /></AuthenticatedRoute>} />
         <Route path="/inventory" element={<AuthenticatedRoute><InventoryPage /></AuthenticatedRoute>} />
         <Route path="/sales" element={<AuthenticatedRoute><SalesPage /></AuthenticatedRoute>} />
-        {/* <Route path="/checkout" element={<Checkout />} /> */}
         <Route path="/order" element={<AuthenticatedRoute><OrdersPage /></AuthenticatedRoute>} />
         <Route path="/order/:orderId" element={<AuthenticatedRoute><OrderDetails /></AuthenticatedRoute>} />
         <Route path="/order/:orderId/cancel" element={<AuthenticatedRoute><OrderCancellation /></AuthenticatedRoute>} />
