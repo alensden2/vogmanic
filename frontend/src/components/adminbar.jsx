@@ -15,7 +15,7 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import { styled, useTheme } from "@mui/material/styles";
 import React from "react";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 
 const drawerWidth = 240;
 const icons = [
@@ -59,11 +59,23 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 const AdminNavbar = ({ isOpen, onToggle }) => {
   const theme = useTheme();
   const navigate = useNavigate();
+
+  // Check if the user is authenticated by checking the presence of the access token in local storage
+  const isAuthenticated = !!localStorage.getItem("accessToken");
+
   const handleRoutes = (route) => {
     navigate(route);
   };
+
   const handleDrawerClose = () => {
     onToggle();
+  };
+
+  const handleLogout = () => {
+    // Remove the accessToken from the local storage
+    localStorage.removeItem("accessToken");
+    // Navigate to '/' after logout
+    navigate("/");
   };
 
   return (
@@ -81,11 +93,7 @@ const AdminNavbar = ({ isOpen, onToggle }) => {
             edge="start"
             sx={{ mr: 2, ...(isOpen && { display: "none" }) }}
           >
-            <MenuIcon
-              sx={{
-                color: "black",
-              }}
-            />
+            <MenuIcon sx={{ color: "black" }} />
           </IconButton>
           <Typography
             variant="h6"
@@ -99,6 +107,18 @@ const AdminNavbar = ({ isOpen, onToggle }) => {
           >
             VogueManic
           </Typography>
+          {/* Show the logout button if the user is authenticated */}
+          {isAuthenticated && (
+            <IconButton
+              color="inherit"
+              aria-label="logout"
+              onClick={handleLogout}
+              edge="end"
+              sx={{ ml: "auto", color: "black" }} // Set the color of the button to black
+            >
+              Logout
+            </IconButton>
+          )}
         </Toolbar>
       </AppBarStyled>
       <Drawer
@@ -154,7 +174,7 @@ const AdminNavbar = ({ isOpen, onToggle }) => {
 
 export default AdminNavbar;
 
-
-// referene Adminnavbar - https://mui.com/material-ui/react-app-bar/
+// referene navbar - https://mui.com/material-ui/react-app-bar/
 // reference side bar - https://mui.com/material-ui/react-drawer/
 // font reference -<link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
+// Navbar from - https://git.cs.dal.ca/alen/csci-5709-individual-b00930528-alen-john/-/blob/main/Assignments/assignment1/src/components/Navbar/navbar.jsx

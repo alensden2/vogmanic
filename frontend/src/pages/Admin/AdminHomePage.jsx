@@ -20,20 +20,26 @@ export default function AdminHomePage() {
 
   // Fetch data from the server when the component mounts
   useEffect(() => {
-    fetch('http://localhost:6001/admin/totalSaleAllOrders')
+    const accessToken = localStorage.getItem("accessToken");
+    const headers = {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${accessToken}`,
+    };
+
+    fetch("http://localhost:6001/admin/totalSaleAllOrders", { headers })
       .then((response) => response.json())
       .then((data) => setTotalSales(data.totalSales))
-      .catch((error) => console.error('Error fetching total sales:', error));
+      .catch((error) => console.error("Error fetching total sales:", error));
 
-    fetch('http://localhost:6001/admin/totalItemsSold')
+    fetch("http://localhost:6001/admin/totalItemsSold", { headers })
       .then((response) => response.json())
       .then((data) => setTotalItemsSold(data.totalItemsSold))
-      .catch((error) => console.error('Error fetching total items sold:', error));
+      .catch((error) => console.error("Error fetching total items sold:", error));
 
-    fetch('http://localhost:6001/admin/totalOrders')
+    fetch("http://localhost:6001/admin/totalOrders", { headers })
       .then((response) => response.json())
       .then((data) => setTotalOrders(data.TotalOrders))
-      .catch((error) => console.error('Error fetching total orders:', error));
+      .catch((error) => console.error("Error fetching total orders:", error));
   }, []);
 
   useEffect(() => {

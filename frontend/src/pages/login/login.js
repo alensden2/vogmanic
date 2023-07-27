@@ -85,7 +85,8 @@ function Login() {
           const data = await response.json();
 
           localStorage.setItem('accessToken', data.token);
-
+          localStorage.setItem('data', data)
+          console.log(localStorage.getItem('data'));
           console.log(localStorage.getItem('accessToken'))
           // Show an alert for login success
           navigate("/dashboard")
