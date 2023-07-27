@@ -65,9 +65,8 @@ function Checkout() {
       console.log("Form submitted successfully");
       //make post request to backend to add order to mongodb
 
-      const user=JSON.parse(localStorage.getItem("user"));
+    //   const user=JSON.parse(localStorage.getItem("user"));
       const order = {
-        userEmail: user.email,
         orderId: "order123",
         items: products,
         shippingAddress: "abc",
