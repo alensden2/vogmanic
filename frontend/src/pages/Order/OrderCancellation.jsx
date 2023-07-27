@@ -26,7 +26,15 @@ const OrderCancellation = () => {
     useEffect(() => {
         const fetchOrderDetails = async () => {
             try {
-                const response = await fetch(`${HOSTED_BASE_URL}/order/${orderId}`);
+                const response = await fetch(
+                    `${HOSTED_BASE_URL}/order/${orderId}`,
+                    {
+                        headers: {
+                          "content-type": "application/json",
+                          "Authorization": "Bearer "+localStorage.getItem("accessToken")
+                        },
+                      }
+                );
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
@@ -45,7 +53,8 @@ const OrderCancellation = () => {
             const response = await fetch(`${HOSTED_BASE_URL}/order/${orderId}/cancel`, {
                 method: 'PUT',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    "Authorization": "Bearer "+localStorage.getItem("accessToken")
                 },
                 body: JSON.stringify({
                     cancellationReason,

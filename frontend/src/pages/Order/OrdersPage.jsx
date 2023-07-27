@@ -28,8 +28,18 @@ const OrdersPage = () => {
 
   useEffect(() => {
     const fetchOrders = async () => {
+      const accessToken = localStorage.getItem("accessToken");
+      const headers = { Authorization: `Bearer ${accessToken}` };
       try {
-        const response = await fetch(`${HOSTED_BASE_URL}/order/getAll`);
+        const response = await fetch(
+          `${HOSTED_BASE_URL}/order/getAll`,
+          {
+            headers: {
+              "content-type": "application/json",
+              "Authorization": "Bearer "+localStorage.getItem("accessToken")
+            },
+          }
+        );
 
         if (!response.ok) {
           throw new Error('Network response was not ok');
