@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Typography, Card, CardContent, CardHeader, IconButton, Button, TextField } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 
-const EditableText = ({ label, value, onSave }) => {
+const EditableText = ({ label, value, onSave, editable = true }) => {
   const [editing, setEditing] = useState(false);
   const [editedValue, setEditedValue] = useState(value);
 
@@ -20,10 +20,17 @@ const EditableText = ({ label, value, onSave }) => {
     <div style={{ display: 'flex', alignItems: 'center' }}>
       {editing ? (
         <div>
-          <TextField fullWidth label={label} value={editedValue} onChange={(e) => setEditedValue(e.target.value)} />
-          <Button variant="contained" color="primary" onClick={handleSaveClick}>
-            Save
-          </Button>
+          <TextField
+            fullWidth
+            label={label}
+            value={editedValue}
+            onChange={(e) => setEditedValue(e.target.value)}
+          />
+          {editable && (
+            <Button variant="contained" color="primary" onClick={handleSaveClick}>
+              Save
+            </Button>
+          )}
         </div>
       ) : (
         <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -36,9 +43,11 @@ const EditableText = ({ label, value, onSave }) => {
               {value}
             </Typography>
           )}
-          <IconButton onClick={handleEditClick} aria-label="edit" style={{ padding: '4px' }}>
-            <EditIcon />
-          </IconButton>
+          {editable && (
+            <IconButton onClick={handleEditClick} aria-label="edit" style={{ padding: '4px' }}>
+              <EditIcon />
+            </IconButton>
+          )}
         </div>
       )}
     </div>
@@ -52,9 +61,11 @@ const UserInfo = () => {
   const [primaryAddress, setPrimaryAddress] = useState('');
   const [secondaryAddress, setSecondaryAddress] = useState('');
   const [otherAddresses, setOtherAddresses] = useState([]);
+  const [newAddress, setNewAddress] = useState('');
 
   useEffect(() => {
-    axios.get('http://localhost:6001/dashboard') // Replace this URL with your backend URL
+    axios
+      .get('http://localhost:6001/dashboard/') // Replace this URL with your backend URL
       .then((response) => {
         const { username, bio, email, primaryAddress, secondaryAddress, otherAddresses } = response.data;
         setUsername(username);
@@ -69,16 +80,8 @@ const UserInfo = () => {
       });
   }, []);
 
-  const handleSaveUsername = (value) => {
-    setUsername(value);
-  };
-
   const handleSaveBio = (value) => {
     setBio(value);
-  };
-
-  const handleSaveEmail = (value) => {
-    setEmail(value);
   };
 
   const handleSavePrimaryAddress = (value) => {
@@ -93,29 +96,15 @@ const UserInfo = () => {
     setOtherAddresses(values);
   };
 
-  const saveUserInfo = () => {
-    const userInfo = {
-      username,
-      bio,
-      email,
-      primaryAddress,
-      secondaryAddress,
-      otherAddresses,
-    };
-
-    axios.put('/api/user-dashboard', userInfo) // Replace this URL with your backend URL
-      .then((response) => {
-        console.log(response.data);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+  const handleAddAddress = () => {
+    setOtherAddresses([...otherAddresses, newAddress]);
+    setNewAddress('');
   };
 
   return (
     <div>
       <Card marginBottom="5">
-        <CardHeader title={<EditableText label="Username" value={username} onSave={handleSaveUsername} />} />
+        <CardHeader title={<EditableText label="Username" value={username} editable={false} />} />
         <CardContent>
           <EditableText label="Bio" value={bio} onSave={handleSaveBio} />
         </CardContent>
@@ -125,7 +114,7 @@ const UserInfo = () => {
         <CardContent>
           <Typography variant="h4">Contact Information:</Typography>
           <Typography variant="h6">Email:</Typography>
-          <EditableText label="Email" value={email} onSave={handleSaveEmail} />
+          <EditableText label="Email" value={email} editable={false} />
           <Typography variant="h6">Primary Address:</Typography>
           <EditableText label="Primary Address" value={primaryAddress} onSave={handleSavePrimaryAddress} />
           <Typography variant="h6">Secondary Address:</Typography>
@@ -143,11 +132,15 @@ const UserInfo = () => {
               key={index}
             />
           ))}
+
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <TextField label="New Address" value={newAddress} onChange={(e) => setNewAddress(e.target.value)} />
+            <Button variant="contained" color="primary" onClick={handleAddAddress}>
+              Add Address
+            </Button>
+          </div>
         </CardContent>
       </Card>
-      <Button variant="contained" color="primary" onClick={saveUserInfo}>
-        Save All
-      </Button>
     </div>
   );
 };

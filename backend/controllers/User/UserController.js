@@ -2,6 +2,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { randomBytes } = require('crypto');
 const User = require('../../models/User');
+const UserInfo = require('../../models/UserInfo');
 const crypto=require('crypto')
 
 
@@ -51,6 +52,24 @@ exports.registerUser = async (req, res) => {
     });
 
     await newUser.save();
+
+    // Automatically extract the username from the email
+    const username = email.split('@')[0];
+
+    // Check if user info already exists
+    let userInfo = await UserInfo.findOne({ userId: newUser._id });
+
+    if (!userInfo) {
+      // If user info doesn't exist, create a new entry for the user
+      userInfo = new UserInfo({ userId: newUser._id });
+    }
+
+    // Update user info with username and email
+    userInfo.username = username;
+    userInfo.email = email;
+
+    // Save the updated user information
+    await userInfo.save();
 
     // Generate a JSON web token for the registered user
     const token = generateToken(newUser._id,jwtSecretKey);

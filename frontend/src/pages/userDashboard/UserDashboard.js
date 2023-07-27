@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, Paper, Typography, AppBar, Toolbar, Container } from '@mui/material';
+import { Grid, Paper, Container } from '@mui/material';
 import UserInfo from './UserInfo';
 import AccessPanel from './AccessPanel';
 import Navbar from '../../components/navbar';

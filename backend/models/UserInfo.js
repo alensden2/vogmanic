@@ -13,7 +13,7 @@ const userInfoSchema = new mongoose.Schema({
   },
   bio: {
     type: String,
-    required: true,
+    required: false,
   },
   email: {
     type: String,
@@ -21,7 +21,7 @@ const userInfoSchema = new mongoose.Schema({
   },
   primaryAddress: {
     type: String,
-    required: true,
+    required: false,
   },
   secondaryAddress: {
     type: String,

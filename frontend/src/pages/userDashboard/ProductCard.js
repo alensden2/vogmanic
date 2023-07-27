@@ -1,9 +1,9 @@
 import React from 'react';
-import { Card, CardHeader, CardMedia, CardContent, CardActions, Typography, Button, useMediaQuery, useTheme } from '@mui/material';
+import { Card, CardHeader, CardMedia, CardContent, CardActions, Typography, Button } from '@mui/material';
+import { useNavigate } from 'react-router';
 
 const ProductCard = ({ product, noContent }) => {
-  const theme = useTheme();
-  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+  const navigate=useNavigate();
 
   const cardStyles = {
     marginBottom: "3vh",
@@ -15,35 +15,56 @@ const ProductCard = ({ product, noContent }) => {
     width: '100%', // Set full width for cards on smaller screens
   };
 
-  // Calculate the maximum height among the cards with content
-  const maxCardContentHeight = 120; // Adjust this value to fit the cards within the dimensions 1280x720
+  const handleRedirect = () => {
+    switch (product.name) {
+      case 'Shopping Cart':
+        navigate('/cart');
+        break;
+      case 'Wishlist':
+        navigate('/wishlist');
+        break;
+      case 'Recent Orders':
+        navigate('/order');
+        break;
+      case 'Receipts':
+        navigate('/dashboard');
+        break;
+      default:
+        break;
+    }
+  };
 
+  
   return (
-    <Card sx={cardStyles}>
-      <CardHeader title={product.name} />
-      {product.image && <CardMedia component="img" height="100" image={product.image} alt={product.name} />}
-      <CardContent>
-        <Typography variant="body2">Price: ${product.price}</Typography>
-        <Typography variant="body2">Description: {product.description}</Typography>
-      </CardContent>
-      <CardActions>
-        <Button size="small" onClick={() => window.alert('You clicked View More!')}>
-          View More
-        </Button>
-      </CardActions>
-      {!product.image && !noContent && (
-        <CardContent>
-       
-        </CardContent>
+    <>
+      {product && (
+        <Card sx={cardStyles}>
+          <CardHeader title={product.name} />
+          {product.image && <CardMedia component="img" height="100" image={product.image} alt={product.name} />}
+          <CardContent>
+            <Typography variant="body2">Price: ${product.price}</Typography>
+            <Typography variant="body2">Description: {product.description}</Typography>
+          </CardContent>
+          <CardActions>
+            <Button size="small" onClick={handleRedirect}>
+              View More
+            </Button>
+          </CardActions>
+          {!product.image && !noContent && (
+            <CardContent>
+              {/* Render additional content if needed */}
+            </CardContent>
+          )}
+          {noContent && (
+            <CardContent>
+              <Typography variant="body2" color="textSecondary">
+                No more content
+              </Typography>
+            </CardContent>
+          )}
+        </Card>
       )}
-      {noContent && (
-        <CardContent>
-          <Typography variant="body2" color="textSecondary">
-            No more content
-          </Typography>
-        </CardContent>
-      )}
-    </Card>
+    </>
   );
 };
 
