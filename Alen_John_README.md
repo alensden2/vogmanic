@@ -57,6 +57,9 @@ affordable rates while contributing to the planet and the environment.
 3) Components like the navbar, side bar and the MUI cards were refered from the mui documentations, a detailed explaination of the code is below (https://mui.com/material-ui/getting-started/overview/)
 4) Learnt how to iterate through a array and render that as mui cards from (https://forum.freecodecamp.org/t/iterate-a-card-component-with-properties-from-an-array-of-objects/445211/2)
 
+5) The majority of components are used from MUI. I have refered the MUI components documentation to integrate it to my app. Some examples of the same are listed below
+
+
 ### inventory.jsx
 *Lines 174 - 276*
 
@@ -490,6 +493,36 @@ export default function MenuAppBar() {
 - [mui-navbar](https://mui.com/material-ui/react-app-bar/)'s Code was modified by... adding 'sx' that is modifiying padding, fonts, structure according to this application. I also changed the look and feel according to a fashion ecommerce website. I also used my own logo for the nav bar.
 
 
+### The feature that I worked on
+
+* Admin module
+* Landing
+* Authorization for all the modules 
+
+### The files I worked on
+
+* Admin module
+* backend/controllers/Admin/AdminController.js
+* backend/models/Employee.js
+* backend/models/Product.js
+* backend/routes/adminRoutes.js
+* frontend/src/pages/landing/faq.jsx
+* frontend/src/components/adminbar.jsx
+* frontend/src/components/navbar.jsx
+* frontend/src/pages/Admin/AdminHomePage.jsx
+* frontend/src/pages/landing/home.jsx
+* frontend/src/components/AuthenticatedRoute.js
+* Authorization for all the modules 
+
+### The Team activities I participated
+
+* Frontend deployment
+* Authorization 
+
+## To Login as an admin in the Application
+* Use the following credentials 
+* ### Email - admin456@admin.com
+* ### Password - Admin@123
 
 ## Acknowledgments
 * Prof. Mosquera and all the TAs.
