@@ -1,14 +1,14 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
-const jwtSecretKey = process.env.JWT_SECRET;
+const jwtSecretKey = "SECRETKEY";
 
 // Middleware to authenticate user based on the JSON web token
 const authMiddleware = async (req, res, next) => {
   try {
     // Get the token from the Authorization header
     const token = req.headers.authorization?.split(' ')[1];
-
+    console.log(token);
     if (!token) {
       return res.status(401).json({ error: 'Authorization token not found' });
     }
