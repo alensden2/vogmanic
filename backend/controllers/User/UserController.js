@@ -10,9 +10,10 @@ const crypto=require('crypto')
 const randomKey = crypto.randomBytes(32).toString('hex');
 
 // Set the JWT_SECRET environment variable (in development environment)
-process.env.JWT_SECRET = randomKey;
+// process.env.JWT_SECRET = randomKey;
 
-const jwtSecretKey = process.env.JWT_SECRET 
+// const jwtSecretKey = process.env.JWT_SECRET 
+const jwtSecretKey = "SECRET_KEY";
 
 // Function to generate a JSON web token
 const generateToken = (userId) => {

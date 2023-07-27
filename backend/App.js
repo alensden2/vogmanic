@@ -86,7 +86,8 @@ io.on('connection', socket => {
 // connection made to DB
 
 
-const serverPort = process.env.PORT || 6001;
+// const serverPort = process.env.PORT || 6001;
+const serverPort = 6001;
 
 mongoose.connect("mongodb+srv://admin:admin%40123@cluster0.htrbjdo.mongodb.net/VogueManiac?retryWrites=true&w=majority", {
     useNewUrlParser: true,
