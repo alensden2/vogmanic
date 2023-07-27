@@ -38,7 +38,7 @@ const ProductListingPage = () => {
     // Function to fetch products from the backend
     const fetchProducts = async () => {
       // try {
-        const response = await fetch('http://localhost:6001/products', {
+        const response = await fetch('https://voguemanic-be.onrender.com/products', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -69,7 +69,7 @@ const ProductListingPage = () => {
     if (productToAdd) {
       setCartItems((prevCartItems) => [...prevCartItems, productToAdd]);  
       try {
-        const response = await fetch('http://localhost:6001/save_cart_db', {
+        const response = await fetch('https://voguemanic-be.onrender.com/save_cart_db', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -114,7 +114,7 @@ const ProductListingPage = () => {
     if (productToAdd) {
       setWishlistItems((prevCartItems) => [...prevCartItems, productToAdd]);  
       try {
-        const response = await fetch('http://localhost:6001/save_wishlist_db', {
+        const response = await fetch('https://voguemanic-be.onrender.com/save_wishlist_db', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

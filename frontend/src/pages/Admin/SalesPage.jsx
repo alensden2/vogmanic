@@ -22,17 +22,17 @@ export default function SalesPage() {
     const accessToken = localStorage.getItem("accessToken");
     const headers = { Authorization: `Bearer ${accessToken}` };
 
-    fetch('http://localhost:6001/admin/totalSaleAllOrders', { headers })
+    fetch('https://voguemanic-be.onrender.com/admin/totalSaleAllOrders', { headers })
       .then((response) => response.json())
       .then((data) => setTotalSales(parseFloat(data.totalSales).toFixed(2)))
       .catch((error) => console.error('Error fetching total sales:', error));
 
-    fetch('http://localhost:6001/admin/totalOrders', { headers })
+    fetch('https://voguemanic-be.onrender.com/admin/totalOrders', { headers })
       .then((response) => response.json())
       .then((data) => setTotalOrder(data.TotalOrders))
       .catch((error) => console.error('Error fetching total orders:', error));
 
-    fetch('http://localhost:6001/admin/totalSalePerOrders', { headers })
+    fetch('https://voguemanic-be.onrender.com/admin/totalSalePerOrders', { headers })
       .then((response) => response.json())
       .then((data) => setOrderDetails(data))
       .catch((error) => console.error('Error fetching order details:', error));

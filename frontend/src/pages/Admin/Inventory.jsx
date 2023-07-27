@@ -62,7 +62,7 @@ const InventoryPage = () => {
         const headers = { Authorization: `Bearer ${accessToken}` };
 
         axios
-            .get("http://localhost:6001/admin/products", { headers })
+            .get("https://voguemanic-be.onrender.com/admin/products", { headers })
             .then((response) => {
                 setProducts(response.data);
             })
@@ -77,7 +77,7 @@ const InventoryPage = () => {
         const headers = { Authorization: `Bearer ${accessToken}` };
 
         axios
-            .delete(`http://localhost:6001/admin/deleteProduct/${productId}`, { headers })
+            .delete(`https://voguemanic-be.onrender.com/admin/deleteProduct/${productId}`, { headers })
             .then((response) => {
                 setDeleteSuccess(true);
                 setDeleteFailure(false);
@@ -130,7 +130,7 @@ const InventoryPage = () => {
         const headers = { Authorization: `Bearer ${accessToken}` };
 
         axios
-            .post("http://localhost:6001/admin/addProduct", newProduct, { headers })
+            .post("https://voguemanic-be.onrender.com/admin/addProduct", newProduct, { headers })
             .then((response) => {
                 const addedProduct = response.data;
                 setProducts((prevProducts) => [...prevProducts, addedProduct]);

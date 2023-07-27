@@ -66,7 +66,7 @@ const UserInfo = () => {
   useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
     const headers = { Authorization: `Bearer ${accessToken}` };
-    axios.get('http://localhost:6001/dashboard/', { headers }) // Replace this URL with your backend URL
+    axios.get('https://voguemanic-be.onrender.com/dashboard/', { headers }) // Replace this URL with your backend URL
       .then((response) => {
         const { username, bio, email, primaryAddress, secondaryAddress, otherAddresses } = response.data;
         setUsername(username);
@@ -113,7 +113,7 @@ const UserInfo = () => {
       otherAddresses,
     };
 
-    axios.put('http://localhost:6001/dashboard/', userInfo, { headers }) // Replace this URL with your backend URL
+    axios.put('https://voguemanic-be.onrender.com/dashboard/', userInfo, { headers }) // Replace this URL with your backend URL
       .then((response) => {
         console.log(response.data);
       })

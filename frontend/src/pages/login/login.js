@@ -68,7 +68,7 @@ function Login() {
 
     if (isValid) {
       try {
-        const response = await fetch('http://localhost:6001/users/login', {
+        const response = await fetch('https://voguemanic-be.onrender.com/users/login', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

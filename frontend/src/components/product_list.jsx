@@ -33,7 +33,7 @@ const ProductList = () => {
     // Function to fetch products from the backend
     const fetchProducts = async () => {
       try {
-        const response = await fetch('http://localhost:6001/products', {
+        const response = await fetch('https://voguemanic-be.onrender.com/products', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'

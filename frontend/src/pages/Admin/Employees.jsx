@@ -84,7 +84,7 @@ const Employees = () => {
     const headers = { Authorization: `Bearer ${accessToken}` };
 
     axios
-      .get("http://localhost:6001/admin/employees", { headers })
+      .get("https://voguemanic-be.onrender.com/admin/employees", { headers })
       .then((response) => {
         setEmployees(response.data);
         setIsLoading(false);
@@ -162,12 +162,12 @@ const Employees = () => {
     const headers = { Authorization: `Bearer ${accessToken}` };
 
     axios
-      .post("http://localhost:6001/admin/addEmployee", employeeData, { headers })
+      .post("https://voguemanic-be.onrender.com/admin/addEmployee", employeeData, { headers })
       .then((response) => {
         console.log("Employee added successfully:", response.data);
 
         axios
-          .get("http://localhost:6001/admin/employees", { headers })
+          .get("https://voguemanic-be.onrender.com/admin/employees", { headers })
           .then((response) => {
             setEmployees(response.data);
             setIsSuccessOpen(true);
@@ -189,7 +189,7 @@ const Employees = () => {
     const headers = { Authorization: `Bearer ${accessToken}` };
 
     axios
-      .delete(`http://localhost:6001/admin/deleteEmployee/${employeeId}`, { headers })
+      .delete(`https://voguemanic-be.onrender.com/admin/deleteEmployee/${employeeId}`, { headers })
       .then((response) => {
         setEmployees((prevEmployees) =>
           prevEmployees.filter((employee) => employee._id !== employeeId)
