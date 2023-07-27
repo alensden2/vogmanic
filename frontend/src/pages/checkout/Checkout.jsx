@@ -15,13 +15,12 @@ import { HOSTED_BASE_URL } from "../../constants";
 
 function Checkout() {
   const location = useLocation();
-  const navigate =useNavigate();
+  const navigate = useNavigate();
   const products = location.state.cartProducts;
   console.log(products);
 
-  const [payment,setPayment]=useState(false);
+  const [payment, setPayment] = useState(false);
   const calculateTotalAmount = () => {
-  
     return products.reduce(
       (total, element) => total + element.price * element.count,
       0
@@ -65,10 +64,13 @@ function Checkout() {
       // Submit form logic here
       console.log("Form submitted successfully");
       //make post request to backend to add order to mongodb
+
+      const user=JSON.parse(localStorage.getItem("user"));
       const order = {
-        orderId:"order123",
+        userEmail: user.email,
+        orderId: "order123",
         items: products,
-        shippingAddress: "abc"
+        shippingAddress: "abc",
       };
       console.log(order);
       const response = fetch(HOSTED_BASE_URL + "/order/place", {
@@ -76,18 +78,18 @@ function Checkout() {
         body: JSON.stringify(order),
         headers: {
           "content-type": "application/json",
+          "Authorization": "Bearer "+localStorage.getItem("accessToken")
         },
       })
-      .then(res => res.json())
-      .then((res) => {
-        console.log(res);
-        if(res.message=="Order placed successfully")
-        {
+        .then((res) => res.json())
+        .then((res) => {
+          console.log(res);
+          if (res.message == "Order placed successfully") {
             //update inventory
             navigate("/");
             console.log("order placed");
-        }
-      })
+          }
+        });
     }
   };
 
@@ -200,15 +202,14 @@ function Checkout() {
                     onApprove={function (data, actions) {
                       return actions.order.capture().then(function (details) {
                         console.log(details);
-                        if(details.status=="COMPLETED")
-                        {
-                            setDisabled(true);
-                            setPayment(true);
+                        if (details.status == "COMPLETED") {
+                          setDisabled(true);
+                          setPayment(true);
                         }
                       });
                     }}
                     disabled={disabled}
-                    />
+                  />
                 </PayPalScriptProvider>
               </div>
               <Grid item xs={12}>
