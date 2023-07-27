@@ -10,7 +10,7 @@ function Login() {
   const [emailError, setEmailError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
   const [passwordStrength, setPasswordStrength] = useState([]);
-
+  const adminEmail = 'admin456@admin.com';
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
@@ -89,8 +89,13 @@ function Login() {
           console.log(localStorage.getItem('data'));
           console.log(localStorage.getItem('accessToken'))
           // Show an alert for login success
-          navigate("/dashboard")
-          // You can also navigate to a different page on successful login using useNavigate()
+          localStorage.setItem('userEmail', email);
+          if (email === adminEmail) {
+            navigate('/home');
+          } else {
+            // Show an alert for login success
+            navigate("/dashboard");
+          }          // You can also navigate to a different page on successful login using useNavigate()
           // navigate("/dashboard");
         } else {
           console.log('Login failed.');
