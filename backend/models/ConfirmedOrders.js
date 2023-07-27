@@ -22,6 +22,10 @@ const orderSchema = mongoose.Schema({
     cancellationComments: {
         type: String,
         default: null,
+    },
+    userEmail: {
+        type: String,
+        default: null,
     }
 }, { timestamps: true });
 
