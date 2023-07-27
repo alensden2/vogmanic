@@ -1,17 +1,16 @@
-import Navbar from "../../components/navbar";
-import { Container } from "@mui/material";
-import { useState } from "react";
-import "./checkout.css";
-import { TextField, Button, Grid } from "@mui/material";
-import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
-import Footer from "../../components/footer";
-import { useLocation, useNavigate } from "react-router";
+import { Button, Container, Grid, TextField } from "@mui/material";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
+import { PayPalButtons, PayPalScriptProvider } from "@paypal/react-paypal-js";
+import { useState } from "react";
+import { useLocation, useNavigate } from "react-router";
+import Footer from "../../components/footer";
+import Navbar from "../../components/navbar";
 import { HOSTED_BASE_URL } from "../../constants";
+import "./checkout.css";
 
 function Checkout() {
   const location = useLocation();

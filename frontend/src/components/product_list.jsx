@@ -1,8 +1,7 @@
-import { Box, Typography, Card, CardContent, CardMedia, Grid, IconButton, TextField, Drawer, List, ListItem, ListItemIcon, ListItemText } from "@mui/material";
-import { Star, ShoppingCart, Favorite, Search} from "@mui/icons-material";
+import { ChevronLeft as ChevronLeftIcon, ChevronRight as ChevronRightIcon, Favorite, Search, ShoppingCart, Star } from "@mui/icons-material";
+import { Box, Card, CardContent, CardMedia, Drawer, Grid, IconButton, List, ListItem, ListItemText, TextField, Typography } from "@mui/material";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
 import React, { useEffect, useState } from 'react';
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { ChevronLeft as ChevronLeftIcon, ChevronRight as ChevronRightIcon } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 
 const drawerWidth = 240;

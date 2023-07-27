@@ -1,11 +1,21 @@
-import React, { useState, useEffect } from 'react';
 import {
-    Box, Typography, Button, Container, Grid, Card, CardContent, TextField,
-    Divider, styled, ListItem, ListItemAvatar, Avatar, ListItemText
+    Avatar,
+    Box,
+    Button,
+    Card, CardContent,
+    Container,
+    Divider,
+    Grid,
+    ListItem, ListItemAvatar,
+    ListItemText,
+    TextField,
+    Typography,
+    styled
 } from "@mui/material";
-import Navbar from "../../components/navbar";
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import Footer from "../../components/footer";
-import { useParams, useNavigate } from 'react-router-dom';
+import Navbar from "../../components/navbar";
 import { HOSTED_BASE_URL } from '../../constants';
 
 const CancelButton = styled(Button)(({ theme }) => ({

@@ -1,8 +1,8 @@
+import { Box, Button, Container, Grid, TextField, Typography, useMediaQuery } from '@mui/material';
 import React, { useState } from 'react';
-import { useMediaQuery, Box, TextField, Button, Typography, Grid, Container } from '@mui/material';
-import Navbar from '../../components/navbar';
-import Footer from '../../components/footer';
 import { useNavigate } from 'react-router-dom';
+import Footer from '../../components/footer';
+import Navbar from '../../components/navbar';
 
 function Login() {
   const [email, setEmail] = useState('');

@@ -1,9 +1,9 @@
+import { Box, Container, Table, TableBody, TableCell, TableHead, TableRow, TextField, Typography } from "@mui/material";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
 import React, { useEffect, useState } from 'react';
-import { Box, Typography, Container, TextField, Table, TableHead, TableRow, TableCell, TableBody } from "@mui/material";
-import Navbar from "../../components/navbar";
-import Footer from "../../components/footer";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useNavigate } from 'react-router-dom';
+import Footer from "../../components/footer";
+import Navbar from "../../components/navbar";
 import { HOSTED_BASE_URL } from '../../constants';
 
 const theme = createTheme({
