@@ -46,7 +46,7 @@ const ProductCard = ({ product, noContent }) => {
             <Typography variant="body2">Description: {product.description}</Typography>
           </CardContent>
           <CardActions>
-            <Button size="small" onClick={handleRedirect}>
+            <Button size="small" onClick={handleRedirect} style={{ backgroundColor: 'black', color: 'white', marginTop: '20px' }}>
               View More
             </Button>
           </CardActions>

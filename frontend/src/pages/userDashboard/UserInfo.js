@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Typography, Card, CardContent, CardHeader, IconButton, Button, TextField } from '@mui/material';
+import { Typography, Card, CardContent, CardHeader, Button, TextField } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 
 const EditableText = ({ label, value, onSave, editable = true }) => {
@@ -27,7 +27,7 @@ const EditableText = ({ label, value, onSave, editable = true }) => {
             onChange={(e) => setEditedValue(e.target.value)}
           />
           {editable && (
-            <Button variant="contained" color="primary" onClick={handleSaveClick}>
+            <Button variant="contained" color="primary" onClick={handleSaveClick} style={{ backgroundColor: 'black', color: 'white' }}>
               Save
             </Button>
           )}
@@ -35,18 +35,19 @@ const EditableText = ({ label, value, onSave, editable = true }) => {
       ) : (
         <div style={{ display: 'flex', alignItems: 'center' }}>
           {label === 'Username' ? (
-            <Typography variant="h3" style={{ marginRight: '8px' }}>
+            <Typography variant="h3" style={{ marginRight: '8px', color: 'black' }}>
               {value}
             </Typography>
           ) : (
-            <Typography variant="body1" style={{ marginRight: '8px' }}>
+            <Typography variant="body1" style={{ marginRight: '8px', color: 'black' }}>
               {value}
             </Typography>
           )}
           {editable && (
-            <IconButton onClick={handleEditClick} aria-label="edit" style={{ padding: '4px' }}>
+            <Button onClick={handleEditClick} variant="outlined" style={{ color: 'black' }}>
               <EditIcon />
-            </IconButton>
+              Edit
+            </Button>
           )}
         </div>
       )}
@@ -61,11 +62,11 @@ const UserInfo = () => {
   const [primaryAddress, setPrimaryAddress] = useState('');
   const [secondaryAddress, setSecondaryAddress] = useState('');
   const [otherAddresses, setOtherAddresses] = useState([]);
-  const [newAddress, setNewAddress] = useState('');
 
   useEffect(() => {
-    axios
-      .get('http://localhost:6001/dashboard/') // Replace this URL with your backend URL
+    const accessToken = localStorage.getItem("accessToken");
+    const headers = { Authorization: `Bearer ${accessToken}` };
+    axios.get('http://localhost:6001/dashboard/', { headers }) // Replace this URL with your backend URL
       .then((response) => {
         const { username, bio, email, primaryAddress, secondaryAddress, otherAddresses } = response.data;
         setUsername(username);
@@ -80,8 +81,16 @@ const UserInfo = () => {
       });
   }, []);
 
+  const handleSaveUsername = (value) => {
+    setUsername(value);
+  };
+
   const handleSaveBio = (value) => {
     setBio(value);
+  };
+
+  const handleSaveEmail = (value) => {
+    setEmail(value);
   };
 
   const handleSavePrimaryAddress = (value) => {
@@ -92,19 +101,31 @@ const UserInfo = () => {
     setSecondaryAddress(value);
   };
 
-  const handleSaveOtherAddresses = (values) => {
-    setOtherAddresses(values);
-  };
+  const saveUserInfo = () => {
+    const accessToken = localStorage.getItem("accessToken");
+    const headers = { Authorization: `Bearer ${accessToken}` };
+    const userInfo = {
+      username,
+      email,
+      bio,
+      primaryAddress,
+      secondaryAddress,
+      otherAddresses,
+    };
 
-  const handleAddAddress = () => {
-    setOtherAddresses([...otherAddresses, newAddress]);
-    setNewAddress('');
+    axios.put('http://localhost:6001/dashboard/', userInfo, { headers }) // Replace this URL with your backend URL
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   };
 
   return (
-    <div>
+    <div style={{ backgroundColor: 'beige', padding: '20px' }}>
       <Card marginBottom="5">
-        <CardHeader title={<EditableText label="Username" value={username} editable={false} />} />
+        <CardHeader title={<EditableText label="Username" value={username} onSave={handleSaveUsername} editable={false} />} />
         <CardContent>
           <EditableText label="Bio" value={bio} onSave={handleSaveBio} />
         </CardContent>
@@ -114,33 +135,16 @@ const UserInfo = () => {
         <CardContent>
           <Typography variant="h4">Contact Information:</Typography>
           <Typography variant="h6">Email:</Typography>
-          <EditableText label="Email" value={email} editable={false} />
+          <EditableText label="Email" value={email} onSave={handleSaveEmail} editable={false} />
           <Typography variant="h6">Primary Address:</Typography>
           <EditableText label="Primary Address" value={primaryAddress} onSave={handleSavePrimaryAddress} />
           <Typography variant="h6">Secondary Address:</Typography>
           <EditableText label="Secondary Address" value={secondaryAddress} onSave={handleSaveSecondaryAddress} />
-          <Typography variant="h6">Other Addresses:</Typography>
-          {otherAddresses.map((address, index) => (
-            <EditableText
-              label={`Address ${index + 1}`}
-              value={address}
-              onSave={(value) => {
-                const updatedAddresses = [...otherAddresses];
-                updatedAddresses[index] = value;
-                handleSaveOtherAddresses(updatedAddresses);
-              }}
-              key={index}
-            />
-          ))}
-
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            <TextField label="New Address" value={newAddress} onChange={(e) => setNewAddress(e.target.value)} />
-            <Button variant="contained" color="primary" onClick={handleAddAddress}>
-              Add Address
-            </Button>
-          </div>
         </CardContent>
       </Card>
+      <Button variant="contained" color="primary" onClick={saveUserInfo} style={{ backgroundColor: 'black', color: 'white', marginTop: '20px' }}>
+        Save All
+      </Button>
     </div>
   );
 };
