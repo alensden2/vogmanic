@@ -16,7 +16,7 @@ router.get("/health-check", (request, response) => {
 router.post("/place", orderController.placeOrder);
 
 /** Get Orders Endpoint */
-router.get("/getAll", orderController.getAllOrders);
+router.post("/getAll", orderController.getAllOrders);
 
 /** Get Order Details by ID Endpoint */
 router.get("/:orderId", orderController.getOrderById);

@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import Footer from "../../components/footer";
 import Navbar from "../../components/navbar";
 import { HOSTED_BASE_URL } from '../../constants';
+import axios from 'axios';
 
 const theme = createTheme({
   palette: {
@@ -29,23 +30,20 @@ const OrdersPage = () => {
   useEffect(() => {
     const fetchOrders = async () => {
       const accessToken = localStorage.getItem("accessToken");
-      const headers = { Authorization: `Bearer ${accessToken}` };
+      const userEmail = localStorage.getItem("userEmail");
       try {
-        const response = await fetch(
-          `${HOSTED_BASE_URL}/order/getAll`,
+        const response = await axios.post(
+          `http://localhost:6001/order/getAll`,
+          { userEmail },
           {
             headers: {
               "content-type": "application/json",
-              "Authorization": "Bearer "+localStorage.getItem("accessToken")
-            },
+              "Authorization": `Bearer ${accessToken}`
+            }
           }
         );
 
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-
-        const orderData = await response.json();
+        const orderData = response.data;
         setOrders(orderData.orders);
         setFilteredOrders(orderData.orders);
       } catch (error) {

@@ -36,7 +36,8 @@ const placeOrder = async (request, response) => {
  */
 const getAllOrders = async (request, response) => {
     try {
-        let orders = await ConfirmedOrders.find();  
+        const { userEmail } = request.body;
+        let orders = await ConfirmedOrders.find({ userEmail });  
         orders = orders.map(order => {
             const { _id, orderId, createdAt, updatedAt } = order.toObject();
             return { _id, orderId, createdAt, updatedAt };
