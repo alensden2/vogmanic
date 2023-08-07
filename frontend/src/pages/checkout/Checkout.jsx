@@ -16,6 +16,7 @@ import { HOSTED_BASE_URL } from "../../constants";
 function Checkout() {
   const location = useLocation();
   const navigate = useNavigate();
+  console.log("location: "+location.state)
   const products = location.state.cartProducts;
   console.log(products);
 

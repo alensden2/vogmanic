@@ -33,6 +33,7 @@ const ProductListingPage = () => {
   const [wishlistItems, setWishlistItems] = useState([]);
   const navigate = useNavigate();
   const cartItemCount = cartItems.length;
+  const email=localStorage.getItem("email");
  
   useEffect(() => {
     // Function to fetch products from the backend
@@ -67,6 +68,8 @@ const ProductListingPage = () => {
 
 
     if (productToAdd) {
+      console.log("adding product");
+      productToAdd.email=email;
       setCartItems((prevCartItems) => [...prevCartItems, productToAdd]);  
       try {
         const response = await fetch('http://localhost:6001/save_cart_db', {

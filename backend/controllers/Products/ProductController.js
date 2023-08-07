@@ -34,9 +34,10 @@ const client = new MongoClient(uri, {
         const collection = db.collection('cart'); 
 
         const productToAdd = req.body;
-        const productId = productToAdd._id;
+        const email=productToAdd.email;
+        const productId = productToAdd._id+email;
 
-        const existingProduct = await collection.findOne({ _id: productId });
+        const existingProduct = await collection.findOne({ _id: productId, email:email });
 
         if (existingProduct) {
             // If a document with the same _id already exists, increment the count field
@@ -48,6 +49,7 @@ const client = new MongoClient(uri, {
          } 
         else {
           // If no document with the same _id exists, insert a new document
+          productToAdd._id=productId
           const newProduct = { ...productToAdd, count: 1 };
           const addedProduct = await collection.insertOne(newProduct);
           res.status(201).json({ message: 'Cart details added to MongoDB', addedProduct });
@@ -63,9 +65,9 @@ async function fetchCartDetailsFromDB(req,res) {
   try{
       await client.connect();  
       const db = client.db(dbName);
-    
+      const email=req.body.email;
       const collection = db.collection('cart'); 
-      const cart_products = await collection.find().toArray();
+      const cart_products = await collection.find({email:email}).toArray();
       res.send(cart_products);
     } 
   catch (error) {
@@ -79,8 +81,8 @@ async function updateCartQuantity(req,res) {
       await client.connect();  
       const db = client.db(dbName);
       const collection = db.collection('cart'); 
-
-      const productId = req.body.productId;;
+      const email=req.body.email;
+      const productId = req.body.productId+email;
       const newQuantity = req.body.newQuantity;
 
       const existingProduct = await collection.findOne({ _id: productId });
@@ -88,7 +90,7 @@ async function updateCartQuantity(req,res) {
       if (existingProduct) {
         // If a document with the same _id already exists, update the count field
         await collection.updateOne(
-          { _id: productId },
+          { _id: productId, email:email },
           { $set: { count: newQuantity } }
         );
         res.status(200).json({ message: 'Product count updated in the cart', existingProduct });
@@ -112,11 +114,12 @@ async function updateCartQuantity(req,res) {
         const collection = db.collection('cart'); 
   
         const productId = req.body.productId;
+        const email=req.body.email;
 
         // const objectIdProductId = new ObjectId(productId);
 
     // Find and delete the item with the given productId from the cart
-    const result = await collection.deleteOne({ _id: productId });
+    const result = await collection.deleteOne({ _id: productId+email, email:email });
 
       if (result.deletedCount === 1) {
         console.log('Product removed from the cart:', productId);

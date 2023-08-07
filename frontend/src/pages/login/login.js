@@ -83,9 +83,10 @@ function Login() {
           console.log('Login success!');
 
           const data = await response.json();
-
+          console.log(data);
           localStorage.setItem('accessToken', data.token);
           localStorage.setItem('data', data)
+          localStorage.setItem("email",data.email);
           console.log(localStorage.getItem('data'));
           console.log(localStorage.getItem('accessToken'))
           // Show an alert for login success

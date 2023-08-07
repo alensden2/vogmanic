@@ -22,6 +22,7 @@ const theme = createTheme({
 });
 
 const Cart = () => {
+  const email=localStorage.getItem("email");
 
   const [cartProducts, setCartProducts] = useState([]);
   const navigate = useNavigate();
@@ -38,6 +39,7 @@ const Cart = () => {
           headers: {
             'Content-Type': 'application/json'
           },
+          body:JSON.stringify({email:email})
         });
 
         if (!response.ok) {
@@ -69,7 +71,7 @@ const Cart = () => {
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify({ productId, newQuantity }),
+          body: JSON.stringify({ productId, newQuantity, email: email }),
         });
     
         if (!response.ok) {
@@ -92,7 +94,7 @@ const Cart = () => {
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify({ productId}),
+          body: JSON.stringify({ productId,email: email}),
         });
   
         if (!response.ok) {
