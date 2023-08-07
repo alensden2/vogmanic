@@ -62,6 +62,7 @@ const client = new MongoClient(uri, {
     }
 
 async function fetchCartDetailsFromDB(req,res) {
+  console.log("here");
   try{
       await client.connect();  
       const db = client.db(dbName);
