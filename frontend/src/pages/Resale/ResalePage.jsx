@@ -48,7 +48,7 @@ const ResalePage = () => {
     const userEmail = localStorage.getItem("userEmail");
     try {
       const response = await axios.post(
-        `http://localhost:6001/resale/getAll`,
+        `http://localhost:6001/resale/get`,
         { userEmail, isResold },
         {
           headers: {
