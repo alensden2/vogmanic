@@ -7,6 +7,27 @@ const ResaleProducts = require('../../models/ResaleProducts');
  * @param {request} request 
  * @param {response} response 
  */
+const getAllResaleProducts = async (request, response) => {
+    try {
+
+        const products = await ResaleProducts.find({
+            isResold: true
+        });
+
+        response.status(200).json(products);
+    } catch (error) {
+        response.status(500).json({
+            message: error.message
+        });
+    }
+};
+
+/**
+ * Get resale products
+ * 
+ * @param {request} request 
+ * @param {response} response 
+ */
 const getResaleProducts = async (request, response) => {
     try {
         const { userEmail, isResold } = request.body;
@@ -79,4 +100,5 @@ module.exports = {
     getResaleProducts,
     getResaleProduct,
     updateResaleProduct,
+    getAllResaleProducts,
 };

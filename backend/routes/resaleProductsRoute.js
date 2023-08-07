@@ -12,8 +12,11 @@ router.get("/health-check", (request, response) => {
     });
 })
 
-/** Resale Product List Endpoint */
-router.post("/getAll", resaleProductsController.getResaleProducts);
+/** Resale Product List For Product Page Endpoint */
+router.get("/getAll", resaleProductsController.getAllResaleProducts);
+
+/** Resale Product List For User Endpoint */
+router.post("/get", resaleProductsController.getResaleProducts);
 
 /** Resale Product Details Endpoint */
 router.get("/:productId", resaleProductsController.getResaleProduct);
