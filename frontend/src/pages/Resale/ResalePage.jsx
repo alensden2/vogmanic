@@ -17,6 +17,7 @@ import { useNavigate } from 'react-router-dom';
 import Footer from "../../components/footer";
 import Navbar from "../../components/navbar";
 import axios from 'axios';
+import { HOSTED_BASE_URL } from "../../constants";
 
 const theme = createTheme({
   palette: {
@@ -48,7 +49,7 @@ const ResalePage = () => {
     const userEmail = localStorage.getItem("userEmail");
     try {
       const response = await axios.post(
-        `http://localhost:6001/resale/get`,
+        `${HOSTED_BASE_URL}/resale/get`,
         { userEmail, isResold },
         {
           headers: {

@@ -33,7 +33,7 @@ const OrdersPage = () => {
       const userEmail = localStorage.getItem("userEmail");
       try {
         const response = await axios.post(
-          `http://localhost:6001/order/getAll`,
+          `${HOSTED_BASE_URL}/order/getAll`,
           { userEmail },
           {
             headers: {

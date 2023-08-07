@@ -60,7 +60,15 @@ const ProductListingPage = () => {
 
     // Function to fetch resell products
     const fetchResellProducts = async () => {
-      const response = await fetch('http://localhost:6001/resale/getAll');
+      const response = await fetch(
+        'http://localhost:6001/resale/getAll',
+        {
+          headers: {
+            "content-type": "application/json",
+            "Authorization": "Bearer "+localStorage.getItem("accessToken")
+          },
+        }
+      );
       if (response.ok) {
         const resellProductsData = await response.json();
         setResellProducts(resellProductsData);
