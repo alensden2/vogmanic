@@ -9,6 +9,8 @@ import ContactPage from "./pages/ContactPage";
 import OrderCancellation from "./pages/Order/OrderCancellation";
 import OrderDetails from "./pages/Order/OrderDetails";
 import OrdersPage from "./pages/Order/OrdersPage";
+import ResalePage from "./pages/Resale/ResalePage";
+import ResaleProductPage from "./pages/Resale/ResaleProductPage";
 import Faq from "./pages/landing/faq";
 import Home from "./pages/landing/home";
 import Cart from "./pages/products/Cart";
@@ -47,6 +49,8 @@ function App() {
         <Route path="/order" element={<AuthenticatedRoute><OrdersPage /></AuthenticatedRoute>} />
         <Route path="/order/:orderId" element={<AuthenticatedRoute><OrderDetails /></AuthenticatedRoute>} />
         <Route path="/order/:orderId/cancel" element={<AuthenticatedRoute><OrderCancellation /></AuthenticatedRoute>} />
+        <Route path="/resale" element={<AuthenticatedRoute><ResalePage /></AuthenticatedRoute>} />
+        <Route path="/resale/:productId" element={<AuthenticatedRoute><ResaleProductPage /></AuthenticatedRoute>} />
         <Route path="/checkout" element={<AuthenticatedRoute><Checkout /></AuthenticatedRoute>} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
