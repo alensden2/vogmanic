@@ -1,6 +1,5 @@
+import { Drawer, List, ListItem, ListItemText } from "@mui/material";
 import React from 'react';
-import { Drawer, List, ListItem, ListItemIcon, ListItemText } from "@mui/material";
-import { ChevronLeft as ChevronLeftIcon, ChevronRight as ChevronRightIcon } from "@mui/icons-material";
 
 const Sidebar = ({ categories, selectedCategory, handleCategorySelect, isDrawerOpen, handleDrawerToggle }) => {
   return (

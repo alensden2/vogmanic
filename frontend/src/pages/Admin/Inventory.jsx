@@ -1,6 +1,6 @@
-import InfoIcon from "@mui/icons-material/Info";
-import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
+import DeleteIcon from "@mui/icons-material/Delete";
+import InfoIcon from "@mui/icons-material/Info";
 import {
     Box,
     Container,
@@ -11,23 +11,23 @@ import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
-import Rating from "@mui/material/Rating";
-import * as React from "react";
-import { useState, useEffect } from "react";
-import AdminNavbar from "../../components/adminbar";
-import axios from "axios";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
-import TextField from "@mui/material/TextField";
 import Fab from "@mui/material/Fab";
-import InputAdornment from "@mui/material/InputAdornment";
 import FormControl from "@mui/material/FormControl";
+import InputAdornment from "@mui/material/InputAdornment";
 import InputLabel from "@mui/material/InputLabel";
-import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
+import Rating from "@mui/material/Rating";
+import Select from "@mui/material/Select";
+import TextField from "@mui/material/TextField";
+import axios from "axios";
+import * as React from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import AdminNavbar from "../../components/adminbar";
 
 // InventoryPage component
 const InventoryPage = () => {
@@ -62,7 +62,7 @@ const InventoryPage = () => {
         const headers = { Authorization: `Bearer ${accessToken}` };
 
         axios
-            .get("http://localhost:6001/admin/products", { headers })
+            .get("https://voguemanic-be.onrender.com/admin/products", { headers })
             .then((response) => {
                 setProducts(response.data);
             })
@@ -77,7 +77,7 @@ const InventoryPage = () => {
         const headers = { Authorization: `Bearer ${accessToken}` };
 
         axios
-            .delete(`http://localhost:6001/admin/deleteProduct/${productId}`, { headers })
+            .delete(`https://voguemanic-be.onrender.com/admin/deleteProduct/${productId}`, { headers })
             .then((response) => {
                 setDeleteSuccess(true);
                 setDeleteFailure(false);
@@ -130,7 +130,7 @@ const InventoryPage = () => {
         const headers = { Authorization: `Bearer ${accessToken}` };
 
         axios
-            .post("http://localhost:6001/admin/addProduct", newProduct, { headers })
+            .post("https://voguemanic-be.onrender.com/admin/addProduct", newProduct, { headers })
             .then((response) => {
                 const addedProduct = response.data;
                 setProducts((prevProducts) => [...prevProducts, addedProduct]);

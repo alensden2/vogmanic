@@ -1,5 +1,5 @@
 import { ChevronLeft as ChevronLeftIcon, ChevronRight as ChevronRightIcon, Favorite, FavoriteBorder, Search, ShoppingCart, Star } from "@mui/icons-material";
-import { Box, Card, CardContent, CardMedia, Drawer, Grid, IconButton, List, ListItem, ListItemText, TextField, Typography } from "@mui/material";
+import { Box, Card, CardContent, CardMedia, Drawer, Grid, IconButton, List, ListItem, ListItemText, TextField, Typography, Tabs, Tab } from "@mui/material";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
@@ -16,7 +16,6 @@ const theme = createTheme({
     secondary: {
       main: "#ff4081", 
     },
-
   },
   typography: {
     fontFamily: "Neue-Helvetica,Helvetica,Arial,sans-serif"
@@ -25,6 +24,8 @@ const theme = createTheme({
 
 const ProductListingPage = () => {
   const [products, setProducts] = useState([]);
+  const [resellProducts, setResellProducts] = useState([]);
+  const [currentTab, setCurrentTab] = useState('new');
   const [searchTerm, setSearchTerm] = useState('');
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('');
@@ -39,7 +40,7 @@ const ProductListingPage = () => {
     // Function to fetch products from the backend
     const fetchProducts = async () => {
       // try {
-        const response = await fetch('http://localhost:6001/products', {
+        const response = await fetch('https://voguemanic-be.onrender.com/products', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -58,21 +59,45 @@ const ProductListingPage = () => {
         setCategories(uniqueCategories);
     };
 
+    // Function to fetch resell products
+    const fetchResellProducts = async () => {
+      const response = await fetch(
+        'http://localhost:6001/resale/getAll',
+        {
+          headers: {
+            "content-type": "application/json",
+            "Authorization": "Bearer "+localStorage.getItem("accessToken")
+          },
+        }
+      );
+      if (response.ok) {
+        const resellProductsData = await response.json();
+        setResellProducts(resellProductsData);
+      } else {
+        console.error('Failed to fetch resell products');
+      }
+    };
+
+
     // Call the fetchProducts function to retrieve products
     fetchProducts();
+    fetchResellProducts();
   }, []);
 
   const handleAddToCart = async (productId) => {
-    // Implement logic to add the product to the cart
-    const productToAdd = products.find((product) => product._id === productId);
-
+    let productToAdd;
+    if (currentTab === 'new') {
+      productToAdd = products.find((product) => product._id === productId);
+    } else {
+      productToAdd = resellProducts.find((product) => product._id === productId);
+    }
 
     if (productToAdd) {
       console.log("adding product");
       productToAdd.email=email;
       setCartItems((prevCartItems) => [...prevCartItems, productToAdd]);  
       try {
-        const response = await fetch('http://localhost:6001/save_cart_db', {
+        const response = await fetch('https://voguemanic-be.onrender.com/save_cart_db', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -112,12 +137,18 @@ const ProductListingPage = () => {
 
 
     // Implement logic to add the product to the wishlist
-    const productToAdd = products.find((product) => product._id === productId);
+    let productToAdd;
+    if (currentTab === 'new') {
+      productToAdd = products.find((product) => product._id === productId);
+    } else {
+      productToAdd = resellProducts.find((product) => product._id === productId);
+    }
+    // const productToAdd = products.find((product) => product._id === productId);
 
     if (productToAdd) {
       setWishlistItems((prevCartItems) => [...prevCartItems, productToAdd]);  
       try {
-        const response = await fetch('http://localhost:6001/save_wishlist_db', {
+        const response = await fetch('https://voguemanic-be.onrender.com/save_wishlist_db', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -171,18 +202,30 @@ const ProductListingPage = () => {
     return productToAdd;
   }
 
+  const productsToRender = currentTab === 'new' ? filteredProducts : resellProducts;
+
 
   return (
 
     <Box>
-        <Navbar/>
+        <Navbar />
     <ThemeProvider theme={theme}>
+        <Tabs
+          value={currentTab}
+          onChange={(e, newValue) => setCurrentTab(newValue)}
+          indicatorColor="primary"
+          textColor="primary"
+          style={{ margin: '5rem', marginBottom: '0px' }}
+        >
+          <Tab label="New Products" value="new" />
+          <Tab label="Resell Products" value="resell" />
+        </Tabs>
 
     <Box sx={{ display: 'flex' }}>
         {/* Sidebar with categories */}
         <Box
           sx={{
-            marginTop: 'px',
+            marginTop: '0px',
               position: "absolute",
               zIndex: 1000,
               width: drawerWidth, // Set the width of the drawer
@@ -270,7 +313,7 @@ const ProductListingPage = () => {
           justifyContent="center"
           sx={{ paddingTop: "16px", minWidth: "900px" }}
         >
-          {filteredProducts.map((product) => (
+          {productsToRender.map((product) => (
             <Grid item key={product._id} xs={12} sm={6} md={4}>
               <Card
                 sx={{

@@ -89,7 +89,7 @@ function SignUp() {
 
     if (isValid) {
       try {
-        const response = await fetch('http://localhost:6001/users/signup', {
+        const response = await fetch('https://voguemanic-be.onrender.com/users/signup', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

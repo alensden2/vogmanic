@@ -1,8 +1,8 @@
+import { Box, Button, Container, Grid, TextField, Typography, useMediaQuery } from '@mui/material';
 import React, { useState } from 'react';
-import { useMediaQuery, Box, TextField, Button, Typography, Grid, Container } from '@mui/material';
-import Navbar from '../../components/navbar';
-import Footer from '../../components/footer';
 import { useNavigate } from 'react-router-dom';
+import Footer from '../../components/footer';
+import Navbar from '../../components/navbar';
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -10,7 +10,7 @@ function Login() {
   const [emailError, setEmailError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
   const [passwordStrength, setPasswordStrength] = useState([]);
-
+  const adminEmail = 'admin456@admin.com';
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
@@ -68,7 +68,7 @@ function Login() {
 
     if (isValid) {
       try {
-        const response = await fetch('http://localhost:6001/users/login', {
+        const response = await fetch('https://voguemanic-be.onrender.com/users/login', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -90,8 +90,13 @@ function Login() {
           console.log(localStorage.getItem('data'));
           console.log(localStorage.getItem('accessToken'))
           // Show an alert for login success
-          navigate("/dashboard")
-          // You can also navigate to a different page on successful login using useNavigate()
+          localStorage.setItem('userEmail', email);
+          if (email === adminEmail) {
+            navigate('/home');
+          } else {
+            // Show an alert for login success
+            navigate("/dashboard");
+          }          // You can also navigate to a different page on successful login using useNavigate()
           // navigate("/dashboard");
         } else {
           console.log('Login failed.');

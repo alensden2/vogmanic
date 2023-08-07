@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import AdminBar from '../../components/adminbar';
+import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
-import LocalShippingIcon from '@mui/icons-material/LocalShipping';
+import React, { useEffect, useState } from 'react';
+import AdminBar from '../../components/adminbar';
 import Footer from '../../components/footer';
 
 export default function AdminHomePage() {
@@ -26,17 +26,17 @@ export default function AdminHomePage() {
       Authorization: `Bearer ${accessToken}`,
     };
 
-    fetch("http://localhost:6001/admin/totalSaleAllOrders", { headers })
+    fetch("https://voguemanic-be.onrender.com/admin/totalSaleAllOrders", { headers })
       .then((response) => response.json())
       .then((data) => setTotalSales(data.totalSales))
       .catch((error) => console.error("Error fetching total sales:", error));
 
-    fetch("http://localhost:6001/admin/totalItemsSold", { headers })
+    fetch("https://voguemanic-be.onrender.com/admin/totalItemsSold", { headers })
       .then((response) => response.json())
       .then((data) => setTotalItemsSold(data.totalItemsSold))
       .catch((error) => console.error("Error fetching total items sold:", error));
 
-    fetch("http://localhost:6001/admin/totalOrders", { headers })
+    fetch("https://voguemanic-be.onrender.com/admin/totalOrders", { headers })
       .then((response) => response.json())
       .then((data) => setTotalOrders(data.TotalOrders))
       .catch((error) => console.error("Error fetching total orders:", error));

@@ -9,6 +9,7 @@ const userRoutes = require('./routes/userRoutes');
 const productsRoutes = require('./routes/productsRoutes');
 const adminRoutes = require('./routes/adminRoutes.js');
 const orderRoutes = require('./routes/orderRoutes');
+const resaleProductsRoute = require('./routes/resaleProductsRoute');
 const userDashboardRoutes = require('./routes/userDashboardRoutes');
 const mongoose = require('mongoose')
 
@@ -37,6 +38,9 @@ app.use('/dashboard', userDashboardRoutes)
 
 // Order Routes
 app.use('/order', orderRoutes);
+
+// Resale Product Routes
+app.use('/resale', resaleProductsRoute);
 
 app.use(function (req, res, next) {
     next(createError(404));
@@ -86,7 +90,8 @@ io.on('connection', socket => {
 // connection made to DB
 
 
-const serverPort = process.env.PORT || 6001;
+// const serverPort = process.env.PORT || 6001;
+const serverPort = 6001;
 
 mongoose.connect("mongodb+srv://admin:admin%40123@cluster0.htrbjdo.mongodb.net/VogueManiac?retryWrites=true&w=majority", {
     useNewUrlParser: true,

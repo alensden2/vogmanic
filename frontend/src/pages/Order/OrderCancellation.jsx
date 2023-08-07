@@ -1,11 +1,21 @@
-import React, { useState, useEffect } from 'react';
 import {
-    Box, Typography, Button, Container, Grid, Card, CardContent, TextField,
-    Divider, styled, ListItem, ListItemAvatar, Avatar, ListItemText
+    Avatar,
+    Box,
+    Button,
+    Card, CardContent,
+    Container,
+    Divider,
+    Grid,
+    ListItem, ListItemAvatar,
+    ListItemText,
+    TextField,
+    Typography,
+    styled
 } from "@mui/material";
-import Navbar from "../../components/navbar";
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import Footer from "../../components/footer";
-import { useParams, useNavigate } from 'react-router-dom';
+import Navbar from "../../components/navbar";
 import { HOSTED_BASE_URL } from '../../constants';
 
 const CancelButton = styled(Button)(({ theme }) => ({
@@ -26,7 +36,15 @@ const OrderCancellation = () => {
     useEffect(() => {
         const fetchOrderDetails = async () => {
             try {
-                const response = await fetch(`${HOSTED_BASE_URL}/order/${orderId}`);
+                const response = await fetch(
+                    `${HOSTED_BASE_URL}/order/${orderId}`,
+                    {
+                        headers: {
+                          "content-type": "application/json",
+                          "Authorization": "Bearer "+localStorage.getItem("accessToken")
+                        },
+                      }
+                );
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
@@ -45,7 +63,8 @@ const OrderCancellation = () => {
             const response = await fetch(`${HOSTED_BASE_URL}/order/${orderId}/cancel`, {
                 method: 'PUT',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    "Authorization": "Bearer "+localStorage.getItem("accessToken")
                 },
                 body: JSON.stringify({
                     cancellationReason,

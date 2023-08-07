@@ -34,7 +34,7 @@ const Cart = () => {
   useEffect(() => {
     const fetchCartProducts = async () => {
       try {
-        const response = await fetch('http://localhost:6001/fetch_cart_db', {
+        const response = await fetch('https://voguemanic-be.onrender.com/fetch_cart_db', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -66,7 +66,7 @@ const Cart = () => {
           
         );
         console.log(newQuantity);
-        const response = await fetch('http://localhost:6001/update_qty_db', {
+        const response = await fetch('https://voguemanic-be.onrender.com/update_qty_db', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -89,7 +89,7 @@ const Cart = () => {
     const handleRemoveFromCart = async (productId) => {
       try {
         // Make an API call to remove the item from the database
-        const response = await fetch('http://localhost:6001/delete_cart_item/', {
+        const response = await fetch('https://voguemanic-be.onrender.com/delete_cart_item/', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'

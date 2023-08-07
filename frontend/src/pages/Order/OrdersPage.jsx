@@ -1,10 +1,11 @@
+import { Box, Container, Table, TableBody, TableCell, TableHead, TableRow, TextField, Typography } from "@mui/material";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
 import React, { useEffect, useState } from 'react';
-import { Box, Typography, Container, TextField, Table, TableHead, TableRow, TableCell, TableBody } from "@mui/material";
-import Navbar from "../../components/navbar";
-import Footer from "../../components/footer";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useNavigate } from 'react-router-dom';
+import Footer from "../../components/footer";
+import Navbar from "../../components/navbar";
 import { HOSTED_BASE_URL } from '../../constants';
+import axios from 'axios';
 
 const theme = createTheme({
   palette: {
@@ -28,14 +29,21 @@ const OrdersPage = () => {
 
   useEffect(() => {
     const fetchOrders = async () => {
+      const accessToken = localStorage.getItem("accessToken");
+      const userEmail = localStorage.getItem("userEmail");
       try {
-        const response = await fetch(`${HOSTED_BASE_URL}/order/getAll`);
+        const response = await axios.post(
+          `${HOSTED_BASE_URL}/order/getAll`,
+          { userEmail },
+          {
+            headers: {
+              "content-type": "application/json",
+              "Authorization": `Bearer ${accessToken}`
+            }
+          }
+        );
 
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-
-        const orderData = await response.json();
+        const orderData = response.data;
         setOrders(orderData.orders);
         setFilteredOrders(orderData.orders);
       } catch (error) {

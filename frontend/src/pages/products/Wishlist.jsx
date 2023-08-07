@@ -30,7 +30,7 @@ const Wishlist = () => {
   useEffect(() => {
     const fetchWishlistProducts = async () => {
       try {
-        const response = await fetch('http://localhost:6001/fetch_wishlist_db', {
+        const response = await fetch('https://voguemanic-be.onrender.com/fetch_wishlist_db', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -56,7 +56,7 @@ const Wishlist = () => {
     
         try {
             // Make an API call to remove the item from the database
-            const response = await fetch('http://localhost:6001/delete_wishlist_item/', {
+            const response = await fetch('https://voguemanic-be.onrender.com/delete_wishlist_item/', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json'
@@ -87,7 +87,7 @@ const Wishlist = () => {
     if (productToAdd) {
       setCartItems((prevCartItems) => [...prevCartItems, productToAdd]);  
       try {
-        const response = await fetch('http://localhost:6001/save_cart_db', {
+        const response = await fetch('https://voguemanic-be.onrender.com/save_cart_db', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

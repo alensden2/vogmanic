@@ -1,11 +1,22 @@
-import React, { useEffect, useState } from 'react';
 import {
-  Box, Typography, Button, Container, Grid, Card, CardContent, Paper,
-  List, ListItem, ListItemText, ListItemAvatar, Avatar, Divider, styled
+  Avatar,
+  Box,
+  Button,
+  Card, CardContent,
+  Container,
+  Divider,
+  Grid,
+  List, ListItem,
+  ListItemAvatar,
+  ListItemText,
+  Paper,
+  Typography,
+  styled
 } from "@mui/material";
-import Navbar from "../../components/navbar";
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import Footer from "../../components/footer";
-import { useParams, useNavigate } from 'react-router-dom';
+import Navbar from "../../components/navbar";
 import { HOSTED_BASE_URL } from '../../constants';
 
 const TotalLine = styled('div')(({ theme }) => ({
@@ -55,7 +66,15 @@ const OrderDetails = () => {
   useEffect(() => {
     const fetchOrderDetails = async () => {
       try {
-        const response = await fetch(`${HOSTED_BASE_URL}/order/${orderId}`);
+        const response = await fetch(
+          `${HOSTED_BASE_URL}/order/${orderId}`,
+          {
+            headers: {
+              "content-type": "application/json",
+              "Authorization": "Bearer "+localStorage.getItem("accessToken")
+            },
+          }
+        );
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
