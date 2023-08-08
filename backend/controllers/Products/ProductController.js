@@ -29,14 +29,12 @@ const client = new MongoClient(uri, {
   async function saveCartDetailsToDB(req,res) {
     try{
         await client.connect();  
-        await client.connect();
         const db = client.db(dbName);
         const collection = db.collection('cart'); 
 
         const productToAdd = req.body;
         const email=productToAdd.email;
         const productId = productToAdd._id+email;
-
         const existingProduct = await collection.findOne({ _id: productId, email:email });
 
         if (existingProduct) {
@@ -85,7 +83,7 @@ async function updateCartQuantity(req,res) {
       const email=req.body.email;
       const productId = req.body.productId+email;
       const newQuantity = req.body.newQuantity;
-
+      console.log("productid: "+productId);
       const existingProduct = await collection.findOne({ _id: productId });
 
       if (existingProduct) {
@@ -131,10 +129,22 @@ async function updateCartQuantity(req,res) {
       }
     }
 
+async function deleteCart(req,res)
+{
+  const email=req.body.email;
+  await client.connect();  
+  const db = client.db(dbName);
+  const collection = db.collection('cart'); 
+
+  const result=collection.deleteMany({email:email});
+
+  res.status(200).json({message: "success"});
+
+}    
+
 async function saveWishlistDetailsToDB(req,res) {
   try{
       await client.connect();  
-      await client.connect();
       const db = client.db(dbName);
       const collection = db.collection('wishlist'); 
 
@@ -197,4 +207,4 @@ async function deleteWishlistItem(req,res) {
     }
   }
 
-module.exports = { fetchProducts, saveCartDetailsToDB, fetchCartDetailsFromDB,updateCartQuantity,deleteCartItem, saveWishlistDetailsToDB,fetchWishlistDetailsFromDB,deleteWishlistItem };
+module.exports = { fetchProducts, saveCartDetailsToDB, fetchCartDetailsFromDB,updateCartQuantity,deleteCartItem, saveWishlistDetailsToDB,fetchWishlistDetailsFromDB,deleteWishlistItem, deleteCart };

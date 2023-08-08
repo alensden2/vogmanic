@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Footer from "../../components/footer";
 import Navbar from "../../components/navbar";
+import { HOSTED_BASE_URL } from "../../constants";
 
 const theme = createTheme({
   palette: {
@@ -22,7 +23,7 @@ const theme = createTheme({
 });
 
 const Cart = () => {
-  const email=localStorage.getItem("email");
+  const email=localStorage.getItem("userEmail");
 
   const [cartProducts, setCartProducts] = useState([]);
   const navigate = useNavigate();
@@ -34,10 +35,11 @@ const Cart = () => {
   useEffect(() => {
     const fetchCartProducts = async () => {
       try {
-        const response = await fetch('https://voguemanic-be.onrender.com/fetch_cart_db', {
+        const response = await fetch(HOSTED_BASE_URL+'/product/fetch_cart_db', {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json'
+            "content-type": "application/json",
+            "Authorization": "Bearer "+localStorage.getItem("accessToken")
           },
           body:JSON.stringify({email:email})
         });
@@ -66,10 +68,11 @@ const Cart = () => {
           
         );
         console.log(newQuantity);
-        const response = await fetch('https://voguemanic-be.onrender.com/update_qty_db', {
+        const response = await fetch(HOSTED_BASE_URL+'/product/update_qty_db', {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json'
+            "content-type": "application/json",
+            "Authorization": "Bearer "+localStorage.getItem("accessToken")
           },
           body: JSON.stringify({ productId, newQuantity, email: email }),
         });
@@ -89,10 +92,11 @@ const Cart = () => {
     const handleRemoveFromCart = async (productId) => {
       try {
         // Make an API call to remove the item from the database
-        const response = await fetch('https://voguemanic-be.onrender.com/delete_cart_item/', {
+        const response = await fetch(HOSTED_BASE_URL+'/product/delete_cart_item/', {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json'
+            "content-type": "application/json",
+            "Authorization": "Bearer "+localStorage.getItem("accessToken")
           },
           body: JSON.stringify({ productId,email: email}),
         });
@@ -115,10 +119,14 @@ const Cart = () => {
     };
   
     const handleProceedToCheckout = () => {
-     console.log(cartProducts)
+      const products= cartProducts.map(product=>({
+          ...product,
+          _id: product._id.split(localStorage.getItem("userEmail"))[0]
+        }))
+     console.log(products)
       navigate("/checkout", {
         state: {
-          cartProducts: cartProducts,
+          cartProducts: products,
         },
       });
     };

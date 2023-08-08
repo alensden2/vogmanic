@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Footer from '../../components/footer';
 import Navbar from '../../components/navbar';
+import { HOSTED_BASE_URL } from '../../constants';
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -68,7 +69,7 @@ function Login() {
 
     if (isValid) {
       try {
-        const response = await fetch('https://voguemanic-be.onrender.com/users/login', {
+        const response = await fetch(HOSTED_BASE_URL+'/users/login', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -86,7 +87,6 @@ function Login() {
           console.log(data);
           localStorage.setItem('accessToken', data.token);
           localStorage.setItem('data', data)
-          localStorage.setItem("email",data.email);
           console.log(localStorage.getItem('data'));
           console.log(localStorage.getItem('accessToken'))
           // Show an alert for login success

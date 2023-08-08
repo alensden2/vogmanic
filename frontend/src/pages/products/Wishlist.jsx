@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Footer from "../../components/footer";
 import Navbar from "../../components/navbar";
+import { HOSTED_BASE_URL } from "../../constants";
 
 const theme = createTheme({
   palette: {
@@ -30,7 +31,7 @@ const Wishlist = () => {
   useEffect(() => {
     const fetchWishlistProducts = async () => {
       try {
-        const response = await fetch('https://voguemanic-be.onrender.com/fetch_wishlist_db', {
+        const response = await fetch(HOSTED_BASE_URL+'/product/fetch_wishlist_db', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -56,7 +57,7 @@ const Wishlist = () => {
     
         try {
             // Make an API call to remove the item from the database
-            const response = await fetch('https://voguemanic-be.onrender.com/delete_wishlist_item/', {
+            const response = await fetch(HOSTED_BASE_URL+'/product/delete_wishlist_item/', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json'
@@ -87,7 +88,7 @@ const Wishlist = () => {
     if (productToAdd) {
       setCartItems((prevCartItems) => [...prevCartItems, productToAdd]);  
       try {
-        const response = await fetch('https://voguemanic-be.onrender.com/save_cart_db', {
+        const response = await fetch(HOSTED_BASE_URL+'/product/save_cart_db', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
