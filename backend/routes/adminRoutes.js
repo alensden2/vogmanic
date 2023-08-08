@@ -15,6 +15,8 @@ router.get("/products", adminProductController.getAllProducts) /**Insert Auth Mi
 router.post("/addProduct", adminProductController.addProduct)
 /** Delete a product */
 router.delete("/deleteProduct/:id", adminProductController.deleteProduct);
+/** Update a product */
+router.put("/updateProduct/:id", adminProductController.updateProduct);
 /** Get all confirmed orders */
 router.get('/confirmedOrders', adminProductController.getAllConfirmedorders)
 /** Get Total orders */

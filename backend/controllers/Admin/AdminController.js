@@ -97,6 +97,38 @@ const deleteProduct = async (req, res) => {
 };
 
 /**
+ * Promotions 
+ * 
+ * @param {request} req 
+ * @param {response} res 
+ */
+const updateProduct = async (req, res) => {
+    try {
+        const productId = req.params.id;
+        const { name, price } = req.body;
+
+        // Modify the name to add "DISCOUNTED" at the end
+        const updatedName = name + " DISCOUNTED";
+
+        // Find the product by its ID and update its name and price
+        const updatedProduct = await Product.findByIdAndUpdate(
+            productId,
+            { name: updatedName, price },
+            { new: true } // Return the updated document
+        );
+
+        if (!updatedProduct) {
+            return res.status(404).json({ message: "Product not found" });
+        }
+
+        res.status(200).json({ message: "Product updated successfully", updatedProduct });
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+
+}
+
+/**
  * Gets all confirmed orders 
  * 
  * @param {request} req 
@@ -195,7 +227,7 @@ const countTotalOrders = async (req, res) => {
         // Find all the confirmed orders
         const orders = await ConfirmedOrders.find();
         // Return the total number of orders
-        return res.status(200).json({"TotalOrders" : orders.length}) 
+        return res.status(200).json({ "TotalOrders": orders.length })
     } catch (error) {
         // Handle any errors that occur during the process
         console.error(error);
@@ -221,7 +253,7 @@ const calculateTotalItemsSold = async (req, res) => {
         orders.forEach((order) => {
             totalItemsSold += order.items.length;
         });
-        return res.status(200).json({ totalItemsSold : totalItemsSold}) 
+        return res.status(200).json({ totalItemsSold: totalItemsSold })
     } catch (error) {
         res.status(400).json({
             message: error.message
@@ -316,4 +348,4 @@ const testAdminProductsController = async (req, res) => {
     })
 }
 
-module.exports = { getAllProducts, testAdminProductsController, addProduct, deleteProduct, getAllConfirmedorders, getTotalCostEachOrder, getTotalCostPerOrder, getAllEmployees, deleteEmployee, addEmployee, calculateTotalItemsSold, countTotalOrders }
+module.exports = { getAllProducts, testAdminProductsController, addProduct, updateProduct, deleteProduct, getAllConfirmedorders, getTotalCostEachOrder, getTotalCostPerOrder, getAllEmployees, deleteEmployee, addEmployee, calculateTotalItemsSold, countTotalOrders }
