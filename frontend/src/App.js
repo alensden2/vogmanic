@@ -34,7 +34,7 @@ function App() {
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/faq" element={<Faq />} />
         <Route path="/store" element={<AuthenticatedRoute> <Store /></AuthenticatedRoute>} />
-        <Route path="/products" element={ <ProductListingPage /> } />
+        <Route path="/products" element={ <AuthenticatedRoute><ProductListingPage /></AuthenticatedRoute> } />
         <Route path="/cart" element={ <Cart /> } />
         <Route path="/fetch_cart_db" element={ <Cart /> } />
         <Route path="/update_qty_db" element={ <Cart /> } />
