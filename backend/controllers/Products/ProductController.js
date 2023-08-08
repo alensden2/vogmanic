@@ -114,11 +114,12 @@ async function updateCartQuantity(req,res) {
   
         const productId = req.body.productId;
         const email=req.body.email;
+        console.log()
 
         // const objectIdProductId = new ObjectId(productId);
 
     // Find and delete the item with the given productId from the cart
-    const result = await collection.deleteOne({ _id: productId+email, email:email });
+    const result = await collection.deleteOne({ _id: productId, email:email });
 
       if (result.deletedCount === 1) {
         console.log('Product removed from the cart:', productId);
