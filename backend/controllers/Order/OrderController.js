@@ -19,8 +19,11 @@ const placeOrder = async (request, response) => {
         });
 
         await newOrder.save();
-
         items.forEach(async (item) => {
+            const oldItem = await ResaleProducts.findOne({ _id: item._id, userEmail: userEmail });                          
+            if (oldItem) {                 
+                await ResaleProducts.deleteOne({ _id: oldItem._id });             
+            }
             const newResaleProduct = new ResaleProducts({
                 name: item.name,
                 description: item.description,
@@ -34,6 +37,8 @@ const placeOrder = async (request, response) => {
 
             await newResaleProduct.save();
         });
+
+    
 
         response.status(200).json({
             message: "Order placed successfully"
