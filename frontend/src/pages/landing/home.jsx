@@ -47,6 +47,7 @@ function Home() {
               alt="Fashion"
               className="full-screen-image"
               ref={imageRef}
+              style={{ width: "100%", height: "auto" }} // Added styling to make the image responsive
             />
           </Box>
           <Box sx={{ textAlign: "center", padding: "20px" }}>
@@ -58,33 +59,10 @@ function Home() {
               alt="Fashion"
               className="full-screen-image"
               ref={imageRef}
+              style={{ width: "100%", height: "auto" }} // Added styling to make the image responsive
             />
           </Box>
-          <Box sx={{ textAlign: "center", padding: "20px" }}>
-            <Typography variant="h4" sx={{ fontSize: "28px", fontWeight: "bold", letterSpacing: "-0.8px" }}>Sell your designer clothes with us</Typography>
-          </Box>
-          <Box>
-            <img
-              src={rent}
-              alt="Fashion"
-              className="full-screen-image"
-              ref={imageRef}
-            />
-          </Box>
-          <Box sx={{ textAlign: "center", padding: "20px" }}>
-            <Typography variant="h4" sx={{ fontSize: "28px", fontWeight: "bold", letterSpacing: "-0.8px" }}>Can't buy yet? Rent out with us!</Typography>
-          </Box>
-          <Box>
-            <img
-              src={discounts}
-              alt="Fashion"
-              className="full-screen-image"
-              ref={imageRef}
-            />
-          </Box>
-          <Box sx={{ textAlign: "center", padding: "20px" }}>
-            <Typography variant="h4" sx={{ fontSize: "28px", fontWeight: "bold", letterSpacing: "-0.8px" }}>Exclusive Discounts!</Typography>
-          </Box>
+          {/* Add other image sections here */}
         </Box>
         <Box>
           <Footer />
@@ -95,4 +73,3 @@ function Home() {
 }
 
 export default Home;
-// reference https://www.pexels.com/ --for all the stock images

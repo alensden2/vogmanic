@@ -13,11 +13,11 @@ import { HOSTED_BASE_URL } from "../../constants";
 import "./checkout.css";
 
 function Checkout() {
-  const [confirmed,isConfirmed]=useState(false);
+  const [confirmed, isConfirmed] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
-  console.log("location: "+location.state)
-  const [products,setProduct] = useState(location.state.cartProducts);
+  console.log("location: " + location.state)
+  const [products, setProduct] = useState(location.state.cartProducts);
   console.log(products);
 
   const [payment, setPayment] = useState(false);
@@ -66,11 +66,11 @@ function Checkout() {
       console.log("Form submitted successfully");
       console.log(e);
       //make post request to backend to add order to mongodb
-    //   const user=JSON.parse(localStorage.getItem("user"));
+      //   const user=JSON.parse(localStorage.getItem("user"));
       const order = {
-        orderId: localStorage.getItem("userEmail")+Math.random(),
+        orderId: localStorage.getItem("userEmail") + Math.random(),
         items: products,
-        shippingAddress: formData.city+", "+formData.state+", "+formData.pincode,
+        shippingAddress: formData.city + ", " + formData.state + ", " + formData.pincode,
         userEmail: localStorage.getItem("userEmail")
       };
       console.log(order);
@@ -79,7 +79,7 @@ function Checkout() {
         body: JSON.stringify(order),
         headers: {
           "content-type": "application/json",
-          "Authorization": "Bearer "+localStorage.getItem("accessToken")
+          "Authorization": "Bearer " + localStorage.getItem("accessToken")
         },
       })
         .then((res) => res.json())
@@ -97,30 +97,29 @@ function Checkout() {
 
   const totalAmount = calculateTotalAmount();
 
-  useEffect(()=>{
+  useEffect(() => {
 
-    if(confirmed)
-    {
-      fetch(HOSTED_BASE_URL+"/product/deleteCart",{
-        method:"POST",
-        body:JSON.stringify({email: localStorage.getItem("userEmail")}),
+    if (confirmed) {
+      fetch(HOSTED_BASE_URL + "/product/deleteCart", {
+        method: "POST",
+        body: JSON.stringify({ email: localStorage.getItem("userEmail") }),
         headers: {
           "content-type": "application/json",
-          "Authorization": "Bearer "+localStorage.getItem("accessToken")
+          "Authorization": "Bearer " + localStorage.getItem("accessToken")
         },
       })
       navigate("/");
       console.log("order placed");
     }
 
-  },[confirmed])
+  }, [confirmed])
 
   return (
     <div className="body">
       <Navbar />
       <div className="checkout">
         <div className="form">
-          <Typography component="div" variant="h5">
+          <Typography component="div" variant="h5" color="primary" sx={{ color: 'black' }}>
             Checkout
           </Typography>
           <Container maxWidth="sm">
@@ -231,7 +230,7 @@ function Checkout() {
                 </PayPalScriptProvider>
               </div>
               <Grid item xs={12}>
-                <Button type="submit" variant="contained" color="primary">
+                <Button sx={{ alignSelf: 'center', backgroundColor: 'beige', color: 'black', borderColor: 'black', fontWeight: 'bold' }} type="submit" variant="contained" color="primary">
                   Confirm Order
                 </Button>
               </Grid>
@@ -239,7 +238,9 @@ function Checkout() {
           </Container>
         </div>
         <div className="order_review">
-          <h2>Order Review</h2>
+          <Typography sx={{ color: 'black' }} variant="h6" color="primary">
+            Order Review
+          </Typography>
           {products.map((element) => {
             return (
               <Card

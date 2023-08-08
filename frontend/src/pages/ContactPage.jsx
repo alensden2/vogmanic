@@ -16,20 +16,29 @@ const ContainerStyled = styled(Box)(({ theme }) => ({
   backgroundColor: "white",
 }));
 
+const StyledIconButton = styled(IconButton)(({ theme }) => ({
+  alignSelf: 'center',
+  backgroundColor: 'beige',
+  color: 'black',
+  borderColor: 'black',
+  fontWeight: 'bold',
+}));
+
+
 const ContactItem = ({ icon: Icon, title, children }) => {
   const theme = useTheme();
 
   return (
     <Grid item xs={12} md={6} lg={3} textAlign="center">
       <Typography variant="h6" gutterBottom>{title}</Typography>
-      <IconButton
+      <StyledIconButton
         aria-label={title}
         color="primary"
         component="a"
         href={title === "CALL US" ? "tel:+11234567890" : ""}
       >
         <Icon />
-      </IconButton>
+      </StyledIconButton>
       <Typography variant="subtitle1" sx={{ marginTop: theme.spacing(1) }}>{children}</Typography>
     </Grid>
   );
