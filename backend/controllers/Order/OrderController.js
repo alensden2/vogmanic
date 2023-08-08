@@ -20,7 +20,7 @@ const placeOrder = async (request, response) => {
 
         await newOrder.save();
         items.forEach(async (item) => {
-            const oldItem = await ResaleProducts.findOne({ _id: item._id, userEmail: userEmail });                          
+            const oldItem = await ResaleProducts.findOne({ _id: item._id });                          
             if (oldItem) {                 
                 await ResaleProducts.deleteOne({ _id: oldItem._id });             
             }
