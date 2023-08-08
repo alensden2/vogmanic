@@ -35,13 +35,8 @@ function App() {
         <Route path="/faq" element={<Faq />} />
         <Route path="/store" element={<AuthenticatedRoute> <Store /></AuthenticatedRoute>} />
         <Route path="/products" element={ <AuthenticatedRoute><ProductListingPage /></AuthenticatedRoute> } />
-        <Route path="/cart" element={ <Cart /> } />
-        <Route path="/fetch_cart_db" element={ <Cart /> } />
-        <Route path="/update_qty_db" element={ <Cart /> } />
-        <Route path="/delete_cart_item" element={ <Cart />} />
-        <Route path="/wishlist" element={ <Wishlist /> } />
-        <Route path="/fetch_wishlist_db" element={<Wishlist /> } />
-        <Route path="/delete_wishlist_item" element={<Wishlist /> } />
+        <Route path="/cart" element={ <AuthenticatedRoute><Cart /></AuthenticatedRoute> } />
+        <Route path="/wishlist" element={<AuthenticatedRoute><Wishlist /></AuthenticatedRoute> } />
         <Route path="/home" element={ <AuthenticatedRoute> <AdminHomePage /> </AuthenticatedRoute>} />
         <Route path="/employees" element={<AuthenticatedRoute><Employees /></AuthenticatedRoute>} />
         <Route path="/inventory" element={<AuthenticatedRoute><InventoryPage /></AuthenticatedRoute>} />
