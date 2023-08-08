@@ -100,7 +100,7 @@ exports.loginUser = async (req, res) => {
     const token = generateToken(user._id, jwtSecretKey);
 
     // Return the token in the response
-    res.status(200).json({ message: 'Login successful', token });
+    res.status(200).json({ message: 'Login successful', token, email: user.email });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal server error' });

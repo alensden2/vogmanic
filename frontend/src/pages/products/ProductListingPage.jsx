@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import Footer from "../../components/footer";
 import Navbar from "../../components/navbar";
+import { HOSTED_BASE_URL } from "../../constants";
 
 const drawerWidth = 240;
 
@@ -34,15 +35,17 @@ const ProductListingPage = () => {
   const [wishlistItems, setWishlistItems] = useState([]);
   const navigate = useNavigate();
   const cartItemCount = cartItems.length;
+  const email=localStorage.getItem("userEmail");
  
   useEffect(() => {
     // Function to fetch products from the backend
     const fetchProducts = async () => {
       // try {
-        const response = await fetch('https://voguemanic-be.onrender.com/products', {
+        const response = await fetch(HOSTED_BASE_URL+'/product/products', {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            "Authorization": "Bearer "+localStorage.getItem("accessToken")
           },
         });
 
@@ -61,7 +64,7 @@ const ProductListingPage = () => {
     // Function to fetch resell products
     const fetchResellProducts = async () => {
       const response = await fetch(
-        'http://localhost:6001/resale/getAll',
+        HOSTED_BASE_URL+'/resale/getAll',
         {
           headers: {
             "content-type": "application/json",
@@ -92,12 +95,15 @@ const ProductListingPage = () => {
     }
 
     if (productToAdd) {
+      console.log("adding product");
+      productToAdd.email=email;
       setCartItems((prevCartItems) => [...prevCartItems, productToAdd]);  
       try {
-        const response = await fetch('https://voguemanic-be.onrender.com/save_cart_db', {
+        const response = await fetch(HOSTED_BASE_URL+"/product/save_cart_db", {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            "Authorization": "Bearer "+localStorage.getItem("accessToken")
           },
           body: JSON.stringify(productToAdd),
         });
@@ -108,7 +114,7 @@ const ProductListingPage = () => {
       console.log(productToAdd)
       navigate("/cart", {
         state: {
-          productId: productToAdd._id,
+          productId: productToAdd._id+email,
           productName: productToAdd.name,
           price: productToAdd.price,
         },
@@ -145,10 +151,11 @@ const ProductListingPage = () => {
     if (productToAdd) {
       setWishlistItems((prevCartItems) => [...prevCartItems, productToAdd]);  
       try {
-        const response = await fetch('https://voguemanic-be.onrender.com/save_wishlist_db', {
+        const response = await fetch(HOSTED_BASE_URL+'/product/save_wishlist_db', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            "Authorization": "Bearer "+localStorage.getItem("accessToken")
           },
           body: JSON.stringify(productToAdd),
         });

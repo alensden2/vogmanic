@@ -5,7 +5,7 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import { PayPalButtons, PayPalScriptProvider } from "@paypal/react-paypal-js";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import Footer from "../../components/footer";
 import Navbar from "../../components/navbar";
@@ -13,9 +13,11 @@ import { HOSTED_BASE_URL } from "../../constants";
 import "./checkout.css";
 
 function Checkout() {
+  const [confirmed,isConfirmed]=useState(false);
   const location = useLocation();
   const navigate = useNavigate();
-  const products = location.state.cartProducts;
+  console.log("location: "+location.state)
+  const [products,setProduct] = useState(location.state.cartProducts);
   console.log(products);
 
   const [payment, setPayment] = useState(false);
@@ -62,13 +64,14 @@ function Checkout() {
     if (isFormValid && payment) {
       // Submit form logic here
       console.log("Form submitted successfully");
+      console.log(e);
       //make post request to backend to add order to mongodb
-
     //   const user=JSON.parse(localStorage.getItem("user"));
       const order = {
-        orderId: "order123",
+        orderId: localStorage.getItem("userEmail")+Math.random(),
         items: products,
-        shippingAddress: "abc",
+        shippingAddress: formData.city+", "+formData.state+", "+formData.pincode,
+        userEmail: localStorage.getItem("userEmail")
       };
       console.log(order);
       const response = fetch(HOSTED_BASE_URL + "/order/place", {
@@ -84,8 +87,7 @@ function Checkout() {
           console.log(res);
           if (res.message == "Order placed successfully") {
             //update inventory
-            navigate("/");
-            console.log("order placed");
+            isConfirmed(true)
           }
         });
     }
@@ -94,6 +96,24 @@ function Checkout() {
   const [disabled, setDisabled] = useState(false);
 
   const totalAmount = calculateTotalAmount();
+
+  useEffect(()=>{
+
+    if(confirmed)
+    {
+      fetch(HOSTED_BASE_URL+"/product/deleteCart",{
+        method:"POST",
+        body:JSON.stringify({email: localStorage.getItem("userEmail")}),
+        headers: {
+          "content-type": "application/json",
+          "Authorization": "Bearer "+localStorage.getItem("accessToken")
+        },
+      })
+      navigate("/");
+      console.log("order placed");
+    }
+
+  },[confirmed])
 
   return (
     <div className="body">
