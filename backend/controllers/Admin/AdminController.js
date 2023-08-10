@@ -342,10 +342,4 @@ const deleteEmployee = async (req, res) => {
     }
 }
 
-const testAdminProductsController = async (req, res) => {
-    res.status(200).json({
-        status: "Works Admin Controller"
-    })
-}
-
 module.exports = { getAllProducts, testAdminProductsController, addProduct, updateProduct, deleteProduct, getAllConfirmedorders, getTotalCostEachOrder, getTotalCostPerOrder, getAllEmployees, deleteEmployee, addEmployee, calculateTotalItemsSold, countTotalOrders }

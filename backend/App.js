@@ -25,6 +25,13 @@ app.use(express.json());
 // Middleware for parsing URL-encoded bodies
 app.use(express.urlencoded({ extended: false }));
 
+/** Health Check Endpoint */
+app.get("/health-check", (request, response) => {
+    response.status(200).send({
+        status: true,
+    });
+});
+
 // Defining routes
 app.use('/admin', adminRoutes);
 app.use('/users', userRoutes);
