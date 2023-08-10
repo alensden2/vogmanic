@@ -1,7 +1,6 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
-
-const jwtSecretKey = "SECRET_KEY";
+const { JWT_SECRET_KEY } = require('../config');
 
 // Middleware to authenticate user based on the JSON web token
 const authMiddleware = async (req, res, next) => {
@@ -14,7 +13,7 @@ const authMiddleware = async (req, res, next) => {
     }
 
     // Verify the token and get the user ID
-    const decodedToken = jwt.verify(token, jwtSecretKey);
+    const decodedToken = jwt.verify(token, JWT_SECRET_KEY);
     const userId = decodedToken.userId;
 
     // Fetch the user based on the user ID
