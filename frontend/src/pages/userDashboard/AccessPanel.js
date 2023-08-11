@@ -31,7 +31,7 @@ const AccessPanel = () => {
             </Grid>
             <Grid item xs={12} style={{ display: 'flex', marginBottom: '10px' }}>
               {receipts.slice(0, maxItemsToShow).map((receipt) => (
-                <ProductCard key={receipt.id} product={{ name: 'Receipts' }} routeName="receipts" />
+                <ProductCard key={receipt.id} product={{ name: 'Resale' }} routeName="receipts" />
               ))}
               {receipts.length > maxItemsToShow && (
                 <ProductCard noContent />
@@ -51,7 +51,7 @@ const AccessPanel = () => {
             </Grid>
             <Grid item xs={12} md={6} style={{ display: 'flex', marginBottom: '10px' }}>
               {receipts.slice(0, maxItemsToShow).map((receipt) => (
-                <ProductCard key={receipt.id} product={{ name: 'Receipts' }} />
+                <ProductCard key={receipt.id} product={{ name: 'Resale' }} />
               ))}
               {receipts.length > maxItemsToShow && (
                 <ProductCard noContent />
