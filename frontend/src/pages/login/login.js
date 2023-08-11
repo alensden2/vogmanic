@@ -1,3 +1,30 @@
+/*
+ * The `Login` component handles user authentication and login functionality.
+ *
+ * User Login:
+ * - Users enter their email and password in the input fields.
+ * - The component validates the email format and password strength according to defined regex patterns.
+ * - Upon successful validation, the user's credentials are sent to the server for verification.
+ * - If login is successful, the user's access token is stored in local storage, and they are redirected to the appropriate page based on their role.
+ * - If login fails, error messages are shown to the user.
+ *
+ * Password Strength:
+ * - The component calculates password strength based on length, capital letters, numbers, and special characters.
+ * - If the password is weak, error messages indicating the required criteria are displayed.
+ *
+ * Responsive Design:
+ * - The component provides a responsive layout with different views for wide screens and smaller screens.
+ * - For wide screens, a "Sign Up" section is displayed alongside the login form to encourage user registration.
+ *
+ * Navigation:
+ * - The component uses the `useNavigate` hook to handle navigation to the signup page upon clicking the "Sign Up" button.
+ *
+ * Enhancing User Experience:
+ * - The component provides real-time feedback on email and password input validity.
+ * - It helps users understand password requirements and shows password strength indications.
+ * - Alerts are displayed for successful login, login failure, and unexpected errors.
+ */
+
 import { Box, Button, Container, Grid, TextField, Typography, useMediaQuery } from '@mui/material';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -14,18 +41,54 @@ function Login() {
   const adminEmail = 'admin456@admin.com';
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-
   const navigate = useNavigate();
   const handleSignup = () => {
     navigate("/signup");
   };
 
+  /*
+  * The `handleSignup` function is responsible for navigating the user to the signup page.
+  *
+  * Navigation to Signup Page:
+  * - When the "Sign Up" button is clicked, this function is triggered.
+  * - It uses the `useNavigate` hook to navigate to the "/signup" route, where users can register.
+  * - Users are encouraged to sign up for a new account by clicking this button.
+  *
+  * The `handleEmailChange` function is responsible for handling changes to the email input field.
+  *
+  * Email Validation:
+  * - When the user types in the email input field, this function is triggered.
+  * - It updates the `email` state with the current value of the input.
+  * - It validates the email format using a regex pattern (`emailRegex`).
+  * - If the input email doesn't match the expected format, the `emailError` state is set to `true`.
+  * - This provides real-time feedback to the user by highlighting the input field or showing an error message.
+  */
   const handleEmailChange = (event) => {
     const inputEmail = event.target.value;
     setEmail(inputEmail);
     setEmailError(!emailRegex.test(inputEmail));
   };
 
+  /*
+  * The `handlePasswordChange` function is responsible for handling changes to the password input field.
+  *
+  * Password Strength and Validation:
+  * - When the user types in the password input field, this function is triggered.
+  * - It updates the `password` state with the current value of the input.
+  * - It validates the password format using a regex pattern (`passwordRegex`).
+  * - If the input password doesn't match the expected format, the `passwordError` state is set to `true`.
+  * - The function also calculates the strength of the password based on various criteria (length, capital letter, number, special character).
+  * - It constructs an array of strength messages based on the password's adherence to these criteria.
+  * - The `passwordStrength` state is updated with these messages to provide real-time feedback to the user.
+  *
+  * Password Strength Criteria:
+  * - Minimum 8 characters
+  * - At least one capital letter
+  * - At least one number
+  * - At least one special character (e.g., @$!%*?&)
+  *
+  * This function enhances user experience by providing real-time password strength feedback and validation.
+  */
   const handlePasswordChange = (event) => {
     const inputPassword = event.target.value;
     setPassword(inputPassword);
@@ -53,6 +116,24 @@ function Login() {
     setPasswordStrength(strengthMessages);
   };
 
+  /*
+  * The `handleSubmit` function is responsible for handling the submission of the login form.
+  *
+  * Form Validation and Login:
+  * - When the user submits the login form, this function is triggered.
+  * - It prevents the default form submission to handle the process programmatically.
+  * - It performs validation checks on the entered email and password using regex patterns (`emailRegex` and `passwordRegex`).
+  * - If either the email or password fails validation, the corresponding error state (`emailError` or `passwordError`) is set to `true`.
+  * - If both email and password are valid, it sends a POST request to the server's login endpoint.
+  * - If the server responds with an OK status, the user's access token is stored in the local storage.
+  * - The user's email is also stored for future reference.
+  * - Depending on whether the user is an admin or not, they are redirected to different pages (`/home` for admin, `/dashboard` for others).
+  * - In case of a login failure, an alert is shown with an appropriate message.
+  * - If any unexpected errors occur during the process, another alert is displayed.
+  *
+  * This function enhances user experience by validating the form inputs, providing login feedback,
+  * and allowing the user to securely access their account information.
+  */
   const handleSubmit = async (event) => {
     event.preventDefault();
     let isValid = true;
@@ -69,7 +150,7 @@ function Login() {
 
     if (isValid) {
       try {
-        const response = await fetch(HOSTED_BASE_URL+'/users/login', {
+        const response = await fetch(HOSTED_BASE_URL + '/users/login', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -105,12 +186,15 @@ function Login() {
     }
   };
 
+  /**
+   * For mobile screens
+   */
   const isWideScreen = useMediaQuery('(min-width:768px)');
 
   return (
     <>
-      <Navbar/>
-      <Container maxWidth="md" style={{ height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop:"64px"}}>
+      <Navbar />
+      <Container maxWidth="md" style={{ height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: "64px" }}>
         <Grid container spacing={0}>
           {/* Code for the wide screen (if needed) */}
           {isWideScreen ? (
@@ -181,7 +265,7 @@ function Login() {
           </Grid>
         </Grid>
       </Container>
-      <Footer/>
+      <Footer />
     </>
   );
 }

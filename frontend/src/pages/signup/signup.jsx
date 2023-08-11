@@ -1,10 +1,31 @@
-import React, { useState } from 'react';
-import { useMediaQuery, Box, TextField, Button, Typography, Grid, Container } from '@mui/material';
+/*
+ * The `SignUp` component provides a user registration form for signing up new users.
+ *
+ * Core Functionality:
+ * - Captures user input for email, password, and birthdate.
+ * - Validates email format, password complexity, and birthdate validity.
+ * - Displays password strength requirements and error messages.
+ * - Submits user registration data to the backend for account creation.
+ * - Navigates to the login page upon successful registration.
+ *
+ * Features:
+ * - Utilizes Material-UI components for a clean and responsive design.
+ * - Implements adaptive layout for wide and narrow screens.
+ * - Utilizes date picker for selecting and validating birthdate.
+ * - Displays informative helper texts and error messages for input fields.
+ * - Dynamically calculates and displays password strength requirements.
+ * - Provides a visually appealing and user-friendly signup process.
+ * - Handles form submission and communicates with the backend server.
+ * - Offers a seamless navigation experience with links to the login page.
+ */
+import { Box, Button, Container, Grid, TextField, Typography, useMediaQuery } from '@mui/material';
+import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
-import Navbar from '../../components/navbar';
-import Footer from '../../components/footer';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Footer from '../../components/footer';
+import Navbar from '../../components/navbar';
+import { HOSTED_BASE_URL } from '../../constants';
 
 function SignUp() {
   const [email, setEmail] = useState('');
@@ -16,21 +37,49 @@ function SignUp() {
   const [confirmPasswordError, setConfirmPasswordError] = useState(false);
   const [birthdateError, setBirthdateError] = useState(false);
   const [passwordStrength, setPasswordStrength] = useState([]);
-
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+  const navigate = useNavigate()
 
-  const navigate=useNavigate()
-  const handleLogin =()=>{
+  /*
+   * The `handleLogin` function navigates the user to the login page.
+   *
+   * Functionality:
+   * - Initiates navigation to the login page using the `useNavigate` hook.
+   * - Allows users to easily switch to the login page for existing members.
+   * - Provides a smooth user experience by maintaining consistent navigation.
+   */
+  const handleLogin = () => {
     navigate("/login")
   }
 
+  /*
+   * The `handleEmailChange` function handles changes to the email input field.
+   *
+   * Functionality:
+   * - Updates the `email` state with the input value from the email field.
+   * - Validates the email format using a regular expression.
+   * - Sets the `emailError` state based on whether the email format is valid.
+   *
+   * @param {Object} event - The event object containing the input value.
+   */
   const handleEmailChange = (event) => {
     const inputEmail = event.target.value;
     setEmail(inputEmail);
     setEmailError(!emailRegex.test(inputEmail));
   };
 
+  /*
+   * The `handlePasswordChange` function handles changes to the password input field.
+   *
+   * Functionality:
+   * - Updates the `password` state with the input value from the password field.
+   * - Validates the password format using a regular expression.
+   * - Updates the `passwordError` state based on whether the password format is valid.
+   * - Calculates and updates `passwordStrength` based on password complexity criteria.
+   *
+   * @param {Object} event - The event object containing the input value.
+   */
   const handlePasswordChange = (event) => {
     const inputPassword = event.target.value;
     setPassword(inputPassword);
@@ -57,12 +106,32 @@ function SignUp() {
     setPasswordStrength(strengthMessages);
   };
 
+  /*
+   * The `handleConfirmPasswordChange` function handles changes to the confirm password input field.
+   *
+   * Functionality:
+   * - Updates the `confirmPassword` state with the input value from the confirm password field.
+   * - Compares the input value with the current password and updates `confirmPasswordError` accordingly.
+   *
+   * @param {Object} event - The event object containing the input value.
+   */
   const handleConfirmPasswordChange = (event) => {
     const inputConfirmPassword = event.target.value;
     setConfirmPassword(inputConfirmPassword);
     setConfirmPasswordError(inputConfirmPassword !== password);
   };
 
+  /*
+   * The `handleSubmit` function handles the form submission for user signup.
+   *
+   * Functionality:
+   * - Prevents the default form submission behavior.
+   * - Validates user input for email, password, confirm password, and birthdate.
+   * - If all input is valid, sends a POST request to the server to create a new user.
+   * - Displays success or failure messages based on the response from the server.
+   *
+   * @param {Object} event - The event object representing the form submission.
+   */
   const handleSubmit = async (event) => {
     event.preventDefault();
     let isValid = true;
@@ -89,7 +158,7 @@ function SignUp() {
 
     if (isValid) {
       try {
-        const response = await fetch('https://voguemanic-be.onrender.com/users/signup', {
+        const response = await fetch(`${HOSTED_BASE_URL}/users/signup`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -103,11 +172,9 @@ function SignUp() {
         });
 
         if (response.ok) {
-          console.log('Signup success!');
           // Show an alert for signup success
           navigate("/login")
         } else {
-          console.log('Signup failed.');
           // Show an alert for signup failure
           alert('Signup failed. User already exists');
         }
@@ -119,11 +186,24 @@ function SignUp() {
     }
   };
 
+  /**
+   * Wide screen handle
+   */
   const isWideScreen = useMediaQuery('(min-width:768px)');
 
+  /*
+   * The `handleBirthdateChange` function handles the change of the birthdate value in the date picker.
+   *
+   * Functionality:
+   * - Compares the selected birthdate with the current date.
+   * - If the selected birthdate is in the future, sets a birthdate error and displays an alert.
+   * - Otherwise, updates the birthdate state and clears the birthdate error.
+   *
+   * @param {Date} date - The selected birthdate from the date picker.
+   */
   const handleBirthdateChange = (date) => {
     const today = new Date();
-    
+
     if (date > today) {
       setBirthdateError(true); // Set birthdate error
       alert("Birthday date is invalid")
@@ -131,14 +211,13 @@ function SignUp() {
       setBirthdate(date);
       setBirthdateError(false);
     }
-};
+  };
 
   return (
     <>
       <Navbar />
-      <Container maxWidth="md" style={{ height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop:"64px" }}>
+      <Container maxWidth="md" style={{ height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: "64px" }}>
         <Grid container spacing={0}>
-          {/* Code for the wide screen (if needed) */}
           {isWideScreen ? (
             <Grid item xs={12} sm={6}>
               <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', height: '100%', bgcolor: 'black', padding: 3 }}>
@@ -159,15 +238,12 @@ function SignUp() {
               </Box>
             </Grid>
           ) : null}
-
-          {/* Code for the sign-up section */}
           <Grid item xs={12} sm={isWideScreen ? 6 : 12}>
             <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '100%', bgcolor: 'beige', padding: 3 }}>
               <form style={{ display: 'flex', flexDirection: 'column', width: '100%' }} onSubmit={handleSubmit}>
                 <Typography variant="h3" style={{ alignSelf: 'center' }} gutterBottom>
                   Sign Up
                 </Typography>
-
                 <TextField
                   helperText="Please enter your email"
                   fullWidth
@@ -180,7 +256,6 @@ function SignUp() {
                   onChange={handleEmailChange}
                   error={emailError}
                 />
-
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DatePicker
                     label="Birthday"
@@ -190,7 +265,6 @@ function SignUp() {
                     error={birthdateError}
                   />
                 </LocalizationProvider>
-
                 <TextField
                   helperText="Please enter your password (min 8 characters with at least one number, one special character, and one capital letter)"
                   fullWidth
@@ -204,7 +278,6 @@ function SignUp() {
                   onChange={handlePasswordChange}
                   error={passwordError}
                 />
-
                 <TextField
                   helperText="Please re-enter your password to confirm password"
                   fullWidth
@@ -218,13 +291,11 @@ function SignUp() {
                   onChange={handleConfirmPasswordChange}
                   error={confirmPasswordError}
                 />
-
                 {passwordStrength.length > 0 && (
                   <Typography variant="body1" gutterBottom style={{ color: 'red' }}>
                     {passwordStrength.join(', ')}
                   </Typography>
                 )}
-
                 <Button variant="outlined" style={{ alignSelf: 'center', backgroundColor: 'black', color: 'beige', borderColor: 'beige', fontWeight: 'bold', marginTop: 10 }} fullWidth type="submit">
                   Submit
                 </Button>

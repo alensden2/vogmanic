@@ -1,12 +1,40 @@
-import { Box, Grid, IconButton, Paper, TextField, Typography, useTheme, Button, Dialog, DialogTitle, DialogContent, DialogActions } from "@mui/material";
-import { styled } from "@mui/system";
-import React, { useState } from "react";
+/*
+ * The `ContactPage` component provides users with contact information and a form to send messages.
+ *
+ * Core Functionality:
+ * - Displays contact details including phone number, email, and addresses.
+ * - Allows users to send messages using a contact form.
+ * - Validates and sends user messages via email.
+ * - Notifies users upon successful message submission through a dialog.
+ *
+ * Features:
+ * - Utilizes Material-UI components for a visually appealing and responsive design.
+ * - Uses a styled `IconButton` and grid layout to present contact details.
+ * - Implements a form with text fields to capture user email and message input.
+ * - Validates email input and provides error feedback.
+ * - Shows a dialog with a success message after submitting the contact form.
+ * - Ensures smooth user experience with responsive layout and styling.
+ *
+ * Reference:
+ * - MUI TextField documentation: https://mui.com/material-ui/react-text-field/
+ */
 import EmailIcon from "@mui/icons-material/Email";
 import HomeIcon from "@mui/icons-material/Home";
 import PhoneIcon from "@mui/icons-material/Phone";
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, IconButton, Paper, TextField, Typography, useTheme } from "@mui/material";
+import { styled } from "@mui/system";
+import React, { useState } from "react";
 import Footer from "../components/footer";
 import Navbar from "../components/navbar";
 
+/*
+ * The `ContainerStyled` component is a customized styled container for content.
+ *
+ * Core Functionality:
+ * - Sets up a styled container with specific flex and alignment properties.
+ * - Provides consistent padding and flexible height for content alignment.
+ * - Ensures the container adapts to the available space and maintains a white background.
+ */
 const ContainerStyled = styled(Box)(({ theme }) => ({
   display: "flex",
   flexDirection: "column",
@@ -15,7 +43,15 @@ const ContainerStyled = styled(Box)(({ theme }) => ({
   flex: '1 0 auto',
   backgroundColor: "white",
 }));
-
+/*
+ * The `StyledIconButton` component is a customized styled icon button with specific styling.
+ *
+ * Core Styling:
+ * - Aligns the icon button to the center of its container.
+ * - Sets a beige background color and black text color for visual appeal.
+ * - Adds a black border around the button.
+ * - Applies bold font weight to the button's text content.
+ */
 const StyledIconButton = styled(IconButton)(({ theme }) => ({
   alignSelf: 'center',
   backgroundColor: 'beige',
@@ -24,10 +60,20 @@ const StyledIconButton = styled(IconButton)(({ theme }) => ({
   fontWeight: 'bold',
 }));
 
-
+/*
+ * The `ContactItem` component displays a contact item with an icon, title, and children content.
+ *
+ * Props:
+ * - `icon`: The icon component to be displayed.
+ * - `title`: The title of the contact item.
+ * - `children`: The content to be displayed beneath the title.
+ *
+ * Core Functionality:
+ * - Renders the provided icon, title, and children within a grid layout.
+ * - Applies the current theme for styling purposes.
+ */
 const ContactItem = ({ icon: Icon, title, children }) => {
   const theme = useTheme();
-
   return (
     <Grid item xs={12} md={6} lg={3} textAlign="center">
       <Typography variant="h6" gutterBottom>{title}</Typography>
@@ -43,45 +89,36 @@ const ContactItem = ({ icon: Icon, title, children }) => {
     </Grid>
   );
 };
-
 const ContactForm = () => {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [emailError, setEmailError] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-
   const handleSubmit = (e) => {
     e.preventDefault();
-
     if (!validateEmail(email)) {
       setEmailError(true);
       return;
     }
-
     setEmail("");
     setMessage("");
     setEmailError(false);
     setIsDialogOpen(true);
   };
-
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
     setEmailError(false);
   };
-
   const handleMessageChange = (e) => {
     setMessage(e.target.value);
   };
-
   const handleCloseDialog = () => {
     setIsDialogOpen(false);
   };
-
   const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   };
-
   return (
     <>
       <form onSubmit={handleSubmit}>
@@ -123,7 +160,6 @@ const ContactForm = () => {
     </>
   );
 };
-
 const ContactPage = () => {
   return (
     <>
