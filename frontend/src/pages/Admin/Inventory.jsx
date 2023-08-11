@@ -28,6 +28,7 @@ import * as React from "react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AdminNavbar from "../../components/adminbar";
+import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 
 // InventoryPage component
 const InventoryPage = () => {
@@ -51,11 +52,54 @@ const InventoryPage = () => {
     const onInfoClick = () => {
         navigate('/sales');
     };
+
+    const [promoDialogOpen, setPromoDialogOpen] = useState(false);
+    const [selectedProductForPromo, setSelectedProductForPromo] = useState(null);
+    const [discountedPrice, setDiscountedPrice] = useState("");
     // Event handler to toggle the navbar
 
     const handleNavbarToggle = () => {
         setIsNavbarOpen(!isNavbarOpen);
     };
+
+    const handleSetDiscount = () => {
+        if (!discountedPrice || !selectedProductForPromo) {
+            return;
+        }
+
+        const accessToken = localStorage.getItem("accessToken");
+        const headers = { Authorization: `Bearer ${accessToken}` };
+
+        const { productId, productName } = selectedProductForPromo;
+
+        const updatedProduct = {
+            name: productName,
+            price: discountedPrice
+        };
+
+        axios
+            .put(`https://voguemanic-be.onrender.com/admin/updateProduct/${productId}`, updatedProduct, { headers })
+            .then((response) => {
+                // Handle the successful update response as needed
+                console.log("Product price updated successfully:", response.data);
+
+                // You can update the local state or perform any other necessary actions
+                // For example, update the product's price in the local state
+                setProducts((prevProducts) =>
+                    prevProducts.map((product) =>
+                        product._id === productId ? { ...product, price: discountedPrice } : product
+                    )
+                );
+            })
+            .catch((error) => {
+                // Handle the error
+                console.error("Error updating product:", error);
+            });
+
+        setPromoDialogOpen(false);
+        setDiscountedPrice("");
+    };
+
     // Fetch products data from the server on component mount
     useEffect(() => {
         const accessToken = localStorage.getItem("accessToken");
@@ -92,6 +136,18 @@ const InventoryPage = () => {
                 setDeletedProductName(productName);
             });
     };
+
+    // Event handler to Promo a product from the server
+    const handlePromoProduct = (productId, productName) => {
+
+
+        setSelectedProductForPromo({ productId, productName });
+        console.log("Cliked")
+
+
+        setPromoDialogOpen(true);
+
+    };
     // Event handler to close the success and failure dialogs
 
     const handleDialogClose = () => {
@@ -121,7 +177,14 @@ const InventoryPage = () => {
 
     const handleAddProduct = () => {
 
-        if (!newProduct.name || !newProduct.description || !newProduct.price || !newProduct.shipping_cost || !newProduct.category || !newProduct.image_url) {
+        if (
+            !newProduct.name.trim() ||
+            !newProduct.description.trim() ||
+            !newProduct.price.trim() ||
+            !newProduct.shipping_cost.trim() ||
+            !newProduct.category ||
+            !newProduct.image_url.trim()
+        ) {
             handleShowFailureDialog();
             return;
         }
@@ -248,6 +311,14 @@ const InventoryPage = () => {
                                     >
                                         Delete
                                     </Button>
+                                    <Button
+                                        variant="outlined"
+                                        startIcon={<AutoAwesomeIcon />}
+                                        onClick={() => handlePromoProduct(product._id, product.name)}
+                                        sx={{ color: "#f44336" }}
+                                    >
+                                        Promo
+                                    </Button>
                                 </CardActions>
                             </Card>
                         ))}
@@ -263,6 +334,27 @@ const InventoryPage = () => {
                     <Button onClick={handleDialogClose}>OK</Button>
                 </DialogActions>
             </Dialog>
+            <Dialog open={promoDialogOpen} onClose={() => setPromoDialogOpen(false)}>
+                <DialogTitle style={{ textAlign: "center", paddingBottom: "0" }}>Promotions</DialogTitle>
+                <DialogContent>
+                    <TextField
+                        label="Discounted Price"
+                        fullWidth
+                        margin="normal"
+                        value={discountedPrice}
+                        onChange={(e) => setDiscountedPrice(e.target.value)}
+                    />
+                </DialogContent>
+                <DialogActions style={{ justifyContent: "center", paddingTop: "0" }}>
+                    <Button onClick={() => setPromoDialogOpen(false)} variant="outlined" color="secondary">
+                        Cancel
+                    </Button>
+                    <Button onClick={handleSetDiscount} variant="contained" color="primary">
+                        Set Discount
+                    </Button>
+                </DialogActions>
+            </Dialog>
+
             <Dialog open={deleteFailure} onClose={handleDialogClose}>
                 <DialogTitle>Failure</DialogTitle>
                 <DialogContent>
@@ -299,7 +391,7 @@ const InventoryPage = () => {
                 <AddIcon />
             </Fab>
             <Dialog open={isAddFormOpen} onClose={handleCloseAddForm}>
-                <DialogTitle>Add Product</DialogTitle>
+                <DialogTitle style={{ textAlign: "center", paddingBottom: "0" }}>Add Product</DialogTitle>
                 <DialogContent>
                     <TextField
                         label="Name"
@@ -307,6 +399,8 @@ const InventoryPage = () => {
                         margin="normal"
                         value={newProduct.name}
                         onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })}
+                        error={newProduct.name.trim() === ""}
+                        helperText={newProduct.name.trim() === "" ? "Name is mandatory" : ""}
                     />
                     <TextField
                         label="Description"
@@ -314,6 +408,8 @@ const InventoryPage = () => {
                         margin="normal"
                         value={newProduct.description}
                         onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })}
+                        error={newProduct.description.trim() === ""}
+                        helperText={newProduct.name.trim() === "" ? "Description is mandatory" : ""}
                     />
                     <TextField
                         label="Price"
@@ -324,6 +420,8 @@ const InventoryPage = () => {
                         InputProps={{
                             startAdornment: <InputAdornment position="start">$</InputAdornment>,
                         }}
+                        error={newProduct.price.trim() === ""}
+                        helperText={newProduct.price.trim() === "" ? "price is mandatory" : ""}
                     />
                     <TextField
                         label="Shipping Cost"
@@ -334,32 +432,33 @@ const InventoryPage = () => {
                         InputProps={{
                             startAdornment: <InputAdornment position="start">$</InputAdornment>,
                         }}
+                        error={newProduct.shipping_cost.trim() === ""}
+                        helperText={newProduct.shipping_cost.trim() === "" ? "Shipping cost is mandatory" : ""}
                     />
-                    <FormControl fullWidth margin="normal">
-                        <InputLabel>Rating</InputLabel>
-                        <Select
+                    <FormControl fullWidth margin="normal" error={newProduct.rating < 1}>
+                        <TextField
+                            label="Rating"
+                            id="rating-input"
+                            type="number"
                             value={newProduct.rating}
-                            onChange={(e) => setNewProduct({ ...newProduct, rating: e.target.value })}
-                        >
-                            <MenuItem value={0}><Rating value={0} readOnly /></MenuItem>
-                            <MenuItem value={1}><Rating value={1} readOnly /></MenuItem>
-                            <MenuItem value={2}><Rating value={2} readOnly /></MenuItem>
-                            <MenuItem value={3}><Rating value={3} readOnly /></MenuItem>
-                            <MenuItem value={4}><Rating value={4} readOnly /></MenuItem>
-                            <MenuItem value={5}><Rating value={5} readOnly /></MenuItem>
-                        </Select>
+                            onChange={(e) => setNewProduct({ ...newProduct, rating: parseInt(e.target.value) })}
+                            error={newProduct.rating < 1 || newProduct.rating > 5}
+                            helperText={(newProduct.rating < 1 || newProduct.rating > 5) ? "Rating must be between 1 and 5" : ""}
+                        />
                     </FormControl>
+
+
                     <FormControl fullWidth margin="normal">
                         <InputLabel>Category</InputLabel>
                         <Select
                             value={newProduct.category}
                             onChange={(e) => setNewProduct({ ...newProduct, category: e.target.value })}
                         >
-                            <MenuItem value="Mens clothes">Mens clothes</MenuItem>
-                            <MenuItem value="Women's clothes">Women's clothes</MenuItem>
-                            <MenuItem value="Sunglasses">Sunglasses</MenuItem>
-                            <MenuItem value="Hats">Hats</MenuItem>
-                            <MenuItem value="Bags">Bags</MenuItem>
+                            {["Mens clothes", "Women's clothes", "Sunglasses", "Hats", "Bags"].map((category) => (
+                                <MenuItem key={category} value={category}>
+                                    {category}
+                                </MenuItem>
+                            ))}
                         </Select>
                     </FormControl>
                     <TextField
@@ -368,13 +467,37 @@ const InventoryPage = () => {
                         margin="normal"
                         value={newProduct.image_url}
                         onChange={(e) => setNewProduct({ ...newProduct, image_url: e.target.value })}
+                        error={newProduct.image_url.trim() === ""}
+                        helperText={newProduct.image_url.trim() === "" ? "Image url is mandatory" : ""}
                     />
                 </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleCloseAddForm}>Cancel</Button>
-                    <Button onClick={handleAddProduct} color="primary">Add</Button>
+                <DialogActions style={{ justifyContent: "center", paddingTop: "0" }}>
+                    <Button sx={{
+                        alignSelf: 'center',
+                        backgroundColor: 'beige',
+                        color: 'black',
+                        borderColor: 'black',
+                        fontWeight: 'bold',
+                    }} onClick={handleCloseAddForm} variant="outlined" color="secondary">
+                        Cancel
+                    </Button>
+                    <Button sx={{
+                        alignSelf: 'center', backgroundColor: 'black', color: 'beige', borderColor: 'beige', fontWeight: 'bold'
+                    }} onClick={handleAddProduct} variant="contained" color="primary"
+                        disabled={
+                            newProduct.name.trim() === "" ||
+                            newProduct.description.trim() === "" ||
+                            newProduct.price.trim() === "" ||
+                            newProduct.shipping_cost.trim() === "" ||
+                            newProduct.rating < 1 ||
+                            newProduct.image_url.trim() === "" ||
+                            newProduct.rating > 5
+                        }>
+                        Add
+                    </Button>
                 </DialogActions>
             </Dialog>
+
         </>
     );
 };

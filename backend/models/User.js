@@ -1,18 +1,19 @@
 const mongoose = require('mongoose');
 
+// Defining the schema for a user in the application.
 const userSchema = new mongoose.Schema({
   email: {
     type: String,
-    required: true,
-    unique: true,
+    required: true,  // Email is a required field for identification
+    unique: true,    // Ensuring that the email is unique across all users
   },
   password: {
     type: String,
-    required: true,
+    required: true,  // Password is required for authentication
   },
   birthdate: {
     type: Date,
-    required: true,
+    required: true,  // Birthdate is required, possibly for age verification or personalization
   },
 });
 

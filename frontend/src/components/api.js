@@ -1,7 +1,20 @@
-import axios from 'axios';
+/**
+ * API Configuration
+ *
+ * This module provides a configured Axios instance for making HTTP requests to the VogueManic backend API.
+ * It adds an interceptor to attach the access token to the request headers before each request is sent.
+ *
+ * It uses Axios to simplify the process of making API calls and utilizes the HOSTED_BASE_URL constant for the API endpoint.
+ */
 
+import axios from 'axios';
+import { HOSTED_BASE_URL } from '../../src/constants';
+
+/**
+ * Adds to check if token is present in the local storage
+ */
 const api = axios.create({
-  baseURL: 'http://localhost:6001/', // Replace this with your actual API base URL
+  baseURL: `${HOSTED_BASE_URL}/`,
   headers: {
     'Content-Type': 'application/json',
   },

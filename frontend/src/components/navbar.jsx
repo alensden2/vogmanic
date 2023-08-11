@@ -1,3 +1,15 @@
+/**
+ * Navbar Component
+ *
+ * This component represents the navigation bar of the VogueManic website.
+ * It includes an AppBar with various navigation links, a responsive menu for smaller screens,
+ * and optional logout button for authenticated users.
+ *
+ * @param {boolean} isOpen - Indicates whether the sidebar is open.
+ * @param {Function} onToggle - Function to toggle the sidebar.
+ * @returns {React Component} - The rendered navigation bar component.
+ */
+
 import MenuIcon from "@mui/icons-material/Menu";
 import {
   AppBar,
@@ -16,6 +28,18 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const drawerWidth = 240;
+
+/**
+ * Styled AppBar Component
+ *
+ * This styled component enhances the Material-UI AppBar by applying custom styles.
+ * It handles the transition of the AppBar's width and margin, ensuring smooth animation
+ * when opening and closing the sidebar. It also adjusts the z-index to ensure proper
+ * layering with the drawer component.
+ *
+ * @param {boolean} open - Indicates whether the sidebar is open.
+ * @returns {Styled Component} - The styled AppBar component with custom styles.
+ */
 
 const AppBarStyled = styled(AppBar, {
   shouldForwardProp: (prop) => prop !== "open",
@@ -38,33 +62,44 @@ const AppBarStyled = styled(AppBar, {
 const Navbar = ({ isOpen, onToggle }) => {
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
+  /**
+   * Handle closing the sidebar
+   */
   const handleDrawerClose = () => {
     onToggle();
   };
-
+  /**
+   * Open the mobile menu
+   */
   const handleMobileMenuOpen = () => {
     setMobileMenuOpen(true);
   };
-
+  /**
+   * Close the mobile menu
+   */
   const handleMobileMenuClose = () => {
     setMobileMenuOpen(false);
   };
-
+  /**
+   * Scroll trigger for hiding the AppBar
+   */
   const trigger = useScrollTrigger({ threshold: 100 });
-
+  /**
+   * Handle navigation to a specific path and close the mobile menu
+   *
+   * @param {string} path - The path to navigate to.
+   */
   const handleNavigation = (path) => {
     navigate(path);
     handleMobileMenuClose();
   };
-
+  /**
+   * Handle user logout by removing the access token and navigating to the home page
+   */
   const handleLogout = () => {
-    // Remove the accessToken from the local storage
     localStorage.removeItem("accessToken");
-    // Navigate to '/' after logout
     navigate("/");
   };
-
   return (
     <React.Fragment>
       <CssBaseline />
@@ -120,7 +155,6 @@ const Navbar = ({ isOpen, onToggle }) => {
                     Products
                   </Typography>
                 </IconButton>
-
                 <IconButton
                   color="inherit"
                   onClick={() => handleNavigation("/order")}
@@ -136,7 +170,6 @@ const Navbar = ({ isOpen, onToggle }) => {
                     Orders
                   </Typography>
                 </IconButton>
-
                 <IconButton
                   color="inherit"
                   onClick={() => handleNavigation("/resale")}
@@ -152,7 +185,6 @@ const Navbar = ({ isOpen, onToggle }) => {
                     Resale
                   </Typography>
                 </IconButton>
-
                 <IconButton
                   color="inherit"
                   onClick={() => handleNavigation("/wishlist")}
@@ -168,7 +200,6 @@ const Navbar = ({ isOpen, onToggle }) => {
                     Wishlist
                   </Typography>
                 </IconButton>
-
                 <IconButton
                   color="inherit"
                   onClick={() => handleNavigation("/contact")}
@@ -296,7 +327,6 @@ const Navbar = ({ isOpen, onToggle }) => {
     </React.Fragment>
   );
 };
-
 export default Navbar;
 
 // referene navbar - https://mui.com/material-ui/react-app-bar/
