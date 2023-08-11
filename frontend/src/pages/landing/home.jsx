@@ -1,8 +1,23 @@
+/**
+ * This page component represents the home page of the Vogmanic webstore.
+ * It showcases a variety of fashion-related content and features, including:
+ *
+ * - A dynamic scrolling effect triggered by the user's scroll position.
+ * - Introduction to the Vogmanic webstore's offerings and philosophy.
+ * - Display of a captivating image collection representing the latest fashion trends.
+ * - Section highlighting trendy collections available at the webstore.
+ * - Responsive presentation of images to ensure optimal display on various devices.
+ * - Integration of navigation elements like the Navbar and Footer components.
+ *
+ * The component employs Material-UI Typography and Box components for structured layout,
+ * as well as custom styling via CSS files. Various fashion-related images are imported
+ * to enhance the visual appeal of the page. The dynamic scrolling effect is implemented
+ * using the useRef and useEffect hooks to monitor the user's scroll position.
+ */
+
 import { Box, Typography } from "@mui/material";
 import React, { useEffect, useRef } from "react";
 import resale from "../../assets/Resale.jpeg";
-import discounts from "../../assets/discount.jpeg";
-import rent from "../../assets/rent.jpeg";
 import collections from "../../assets/resized image 1.jpeg";
 import Footer from "../../components/footer";
 import Navbar from "../../components/navbar";
@@ -17,12 +32,9 @@ function Home() {
         imageRef.current.offsetTop + imageRef.current.offsetHeight;
 
       if (scrollPosition >= imageBottomPosition) {
-        console.log("Reached image bottom");
       }
     };
-
     window.addEventListener("scroll", handleScroll);
-
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
@@ -47,7 +59,7 @@ function Home() {
               alt="Fashion"
               className="full-screen-image"
               ref={imageRef}
-              style={{ width: "100%", height: "auto" }} // Added styling to make the image responsive
+              style={{ width: "100%", height: "auto" }}
             />
           </Box>
           <Box sx={{ textAlign: "center", padding: "20px" }}>
@@ -59,10 +71,9 @@ function Home() {
               alt="Fashion"
               className="full-screen-image"
               ref={imageRef}
-              style={{ width: "100%", height: "auto" }} // Added styling to make the image responsive
+              style={{ width: "100%", height: "auto" }}
             />
           </Box>
-          {/* Add other image sections here */}
         </Box>
         <Box>
           <Footer />

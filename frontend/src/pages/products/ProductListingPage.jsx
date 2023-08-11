@@ -57,7 +57,6 @@ const ProductListingPage = () => {
       setProducts(productsData);
 
       const uniqueCategories = [...new Set(productsData.map(product => product.category))];
-      console.log(uniqueCategories)
       setCategories(uniqueCategories);
     };
 
@@ -79,9 +78,6 @@ const ProductListingPage = () => {
         console.error('Failed to fetch resell products');
       }
     };
-
-
-    // Call the fetchProducts function to retrieve products
     fetchProducts();
     fetchResellProducts();
   }, []);
@@ -95,7 +91,6 @@ const ProductListingPage = () => {
     }
 
     if (productToAdd) {
-      console.log("adding product");
       productToAdd.email = email;
       setCartItems((prevCartItems) => [...prevCartItems, productToAdd]);
       try {
@@ -111,7 +106,6 @@ const ProductListingPage = () => {
         if (!response.ok) {
           throw new Error('Failed to add cart details to MongoDB');
         }
-        console.log(productToAdd)
         navigate("/cart", {
           state: {
             productId: productToAdd._id + email,
@@ -125,29 +119,19 @@ const ProductListingPage = () => {
       }
     }
   };
-
   const handleAddToWishlist = async (productId) => {
     const productInList = wishlistItems.find((product) => product._id === productId);
-
-    console.log("Product In: ", productInList);
-
     if (productInList) {
       const filteredArray = wishlistItems.filter(item => item._id !== productId);
-      console.log("Filtered Items:", filteredArray);
       setWishlistItems(filteredArray);
       return;
     }
-
-
-    // Implement logic to add the product to the wishlist
     let productToAdd;
     if (currentTab === 'new') {
       productToAdd = products.find((product) => product._id === productId);
     } else {
       productToAdd = resellProducts.find((product) => product._id === productId);
     }
-    // const productToAdd = products.find((product) => product._id === productId);
-
     if (productToAdd) {
       setWishlistItems((prevCartItems) => [...prevCartItems, productToAdd]);
       try {
@@ -163,37 +147,27 @@ const ProductListingPage = () => {
         if (!response.ok) {
           throw new Error('Failed to add cart details to MongoDB');
         }
-        console.log(productToAdd)
       }
       catch (error) {
         console.error('Error adding wishlist details to MongoDB:', cartItemCount, error);
       }
     }
   };
-
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
   };
-
   const filteredProducts = products.filter((product) => {
-    // If no category is selected, show all products
     if (!selectedCategory) {
       return true;
     }
-
     return product.category === selectedCategory;
   }).filter((product) => {
-    // Filter the products whose name contains the search term
     return product.name.toLowerCase().includes(searchTerm.toLowerCase());
   });
-
-
   const handleCategorySelect = (category) => {
     setSelectedCategory(category);
-    //setSearchTerm('');
-    setIsDrawerOpen(false); // Reset the search term when a category is selected
+    setIsDrawerOpen(false); 
   };
-
   const handleDrawerToggle = () => {
     setIsDrawerOpen((prev) => !prev);
   };
@@ -205,12 +179,8 @@ const ProductListingPage = () => {
     wishlistItems.includes(productToAdd);
     return productToAdd;
   }
-
   const productsToRender = currentTab === 'new' ? filteredProducts : resellProducts;
-
-
   return (
-
     <Box>
       <Navbar />
       <ThemeProvider theme={theme}>
@@ -311,7 +281,6 @@ const ProductListingPage = () => {
                 }}
               />
             </Box>
-
             <Grid
               container
               spacing={3}
@@ -338,7 +307,7 @@ const ProductListingPage = () => {
                         alt={product.name}
                         sx={{
                           height: "300px",
-                          objectFit: "cover", // Use 'contain' to fit the image inside the card
+                          objectFit: "cover",
                           borderTopLeftRadius: "4px",
                           borderTopRightRadius: "4px",
                         }}
@@ -376,7 +345,6 @@ const ProductListingPage = () => {
                       >
                         {product.name}
                       </Typography>
-                      {/* <Typography variant="body2">{product.description}</Typography> */}
                       <Box
                         sx={{
                           display: "flex",

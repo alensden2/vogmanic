@@ -81,14 +81,9 @@ function Login() {
         });
 
         if (response.ok) {
-          console.log('Login success!');
-
           const data = await response.json();
-          console.log(data);
           localStorage.setItem('accessToken', data.token);
           localStorage.setItem('data', data)
-          console.log(localStorage.getItem('data'));
-          console.log(localStorage.getItem('accessToken'))
           // Show an alert for login success
           localStorage.setItem('userEmail', email);
           if (email === adminEmail) {
@@ -99,7 +94,6 @@ function Login() {
           }          // You can also navigate to a different page on successful login using useNavigate()
           // navigate("/dashboard");
         } else {
-          console.log('Login failed.');
           // Show an alert for login failure
           alert('Login failed. Please check your credentials and try again.');
         }

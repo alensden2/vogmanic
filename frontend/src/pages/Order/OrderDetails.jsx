@@ -1,3 +1,25 @@
+/**
+ * This component represents the Order Details page, providing a comprehensive view of an individual order's information.
+ * It retrieves and displays details such as items, total amount, delivery charges, tax, and order status.
+ * Users can also initiate a return or cancellation for the order. The page showcases a user-friendly layout with organized content.
+ *
+ * Key Features:
+ * - Retrieves and displays order details based on the provided order ID parameter.
+ * - Lists individual items in the order, including images, names, descriptions, and prices.
+ * - Calculates and presents the total amount, delivery charges, tax, and overall total for the order.
+ * - Displays the order's current status with color-coded text based on status (e.g., Placed, Shipped, Delivered, Cancelled).
+ * - Allows users to initiate a return or cancellation action, with appropriate visual cues and disabled functionality for cancelled orders.
+ * - Presents shipping address information for the order.
+ *
+ * Resources Used:
+ * - Material-UI components for structured layout, cards, list items, buttons, and typography.
+ * - Styled components for custom styling, including total amount and order status text color.
+ * - Navigation features from 'react-router-dom' to facilitate navigation to other pages.
+ * - Fetches order details from the API using the provided order ID.
+ *
+ * Note: This component assumes the availability of 'HOSTED_BASE_URL' and authentication with 'localStorage'.
+ */
+
 import {
   Avatar,
   Box,
@@ -19,6 +41,16 @@ import Footer from "../../components/footer";
 import Navbar from "../../components/navbar";
 import { HOSTED_BASE_URL } from '../../constants';
 
+/**
+ * Styled component that represents a container for a line displaying two elements with space between.
+ * It utilizes flex display to align items horizontally, ensuring proper spacing and alignment.
+ *
+ * Usage Example:
+ * <TotalLine>
+ *   <Typography>Label:</Typography>
+ *   <TotalAmount>$123.45</TotalAmount>
+ * </TotalLine>
+ */
 const TotalLine = styled('div')(({ theme }) => ({
   display: 'flex',
   justifyContent: 'space-between',
@@ -26,17 +58,41 @@ const TotalLine = styled('div')(({ theme }) => ({
   margin: theme.spacing(2, 0),
 }));
 
+/**
+ * Styled Typography component for displaying a bold and primary-colored total amount.
+ * This component is typically used within a TotalLine styled container to represent a monetary value.
+ *
+ * Usage Example:
+ * <TotalLine>
+ *   <Typography>Subtotal:</Typography>
+ *   <TotalAmount>$200.00</TotalAmount>
+ * </TotalLine>
+ */
 const TotalAmount = styled(Typography)(({ theme }) => ({
   fontWeight: 'bold',
   color: theme.palette.primary.main,
 }));
 
+/**
+ * Styled Paper component that represents a container for displaying the order status details.
+ * It provides padding, a white background, and margin at the bottom for proper spacing.
+ * The styling may vary based on the current theme.
+ *
+ */
 const OrderStatusContainer = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(2),
   backgroundColor: '#FFFFFF',
   marginBottom: theme.spacing(2),
 }));
 
+/**
+ * Styled Typography component that represents the text displaying the order status.
+ * The color and font weight of the text are customized based on the provided status.
+ * It dynamically assigns colors to different order statuses using the theme's palette.
+ * If the status is not recognized, the default text color and bold font weight are applied.
+ *
+ * @param {string} status - The current order status (e.g., 'Placed', 'Shipped', 'Delivered', 'Cancelled').
+ */
 const OrderStatusText = styled(Typography)(({ theme, status }) => {
   let color;
   switch (status) {
@@ -62,7 +118,11 @@ const OrderDetails = () => {
   const { orderId } = useParams();
   const navigate = useNavigate();
   const [orderDetails, setOrderDetails] = useState(null);
-
+  /**
+   * Fetches the details of a specific order using the provided order ID.
+   * Updates the component's state with the retrieved order details.
+   * Handles potential network errors during the fetch process.
+   */
   useEffect(() => {
     const fetchOrderDetails = async () => {
       try {
@@ -71,7 +131,7 @@ const OrderDetails = () => {
           {
             headers: {
               "content-type": "application/json",
-              "Authorization": "Bearer "+localStorage.getItem("accessToken")
+              "Authorization": "Bearer " + localStorage.getItem("accessToken")
             },
           }
         );
@@ -88,20 +148,19 @@ const OrderDetails = () => {
     fetchOrderDetails();
   }, [orderId]);
 
+  /**
+   * Navigates to the cancellation page for the specific order.
+   */
   const handleReturnCancel = () => {
     navigate(`/order/${orderId}/cancel`);
   }
-
   if (!orderDetails) return <Typography>Loading...</Typography>;
-
   const total = orderDetails.totalAmount + orderDetails.deliveryCharges + orderDetails.tax;
-
   return (
     <Box>
       <Navbar />
       <Container maxWidth="lg" sx={{ paddingTop: '82px', paddingBottom: '32px' }}>
         <Typography variant="h4" gutterBottom>Order Details for {orderDetails.orderId}</Typography>
-        
         <Grid container spacing={4}>
           <Grid item md={8}>
             <Card variant="outlined" sx={{ backgroundColor: '#FFFFFF' }}>
@@ -143,17 +202,17 @@ const OrderDetails = () => {
               </CardContent>
               <Box sx={{ display: 'flex', justifyContent: 'center', marginBottom: '16px' }}>
                 <Button
-                    sx={{
-                      color: "#ffffff",
-                      backgroundColor: "#FF4081",
-                      "&:hover": {
-                        backgroundColor: "#B22C5A"
-                      }
-                    }}
-                    disabled={orderDetails.status === 'Cancelled'}
-                    onClick={handleReturnCancel}
-                  >
-                    Return/Cancel
+                  sx={{
+                    color: "#ffffff",
+                    backgroundColor: "#FF4081",
+                    "&:hover": {
+                      backgroundColor: "#B22C5A"
+                    }
+                  }}
+                  disabled={orderDetails.status === 'Cancelled'}
+                  onClick={handleReturnCancel}
+                >
+                  Return/Cancel
                 </Button>
               </Box>
             </Card>

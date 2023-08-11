@@ -1,3 +1,11 @@
+/**
+ * This component represents the Shopping Cart page, providing an intuitive and user-friendly interface for managing cart items.
+ * Users can view, update quantities, remove items, and proceed to checkout. The page calculates total costs including shipping.
+ *
+ * Resources Used:
+ * - Paper component from Material-UI: https://mui.com/material-ui/react-paper/
+ * - Icons from Material-UI: https://mui.com/components/material-icons/
+ */
 import { Add as AddIcon, Remove as RemoveIcon } from "@mui/icons-material";
 import { Box, Button, Card, CardContent, CardMedia, Container, Divider, Grid, IconButton, MenuItem, Paper, Select, TableContainer, Typography } from "@mui/material";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
@@ -6,7 +14,9 @@ import { useNavigate } from 'react-router-dom';
 import Footer from "../../components/footer";
 import Navbar from "../../components/navbar";
 import { HOSTED_BASE_URL } from "../../constants";
-
+/**
+ * Define a custom Material-UI theme for styling the Cart page
+ */
 const theme = createTheme({
   palette: {
     primary: {
@@ -15,7 +25,6 @@ const theme = createTheme({
     secondary: {
       main: "#ff4081", 
     },
-    // Other theme configurations...
   },
   typography: {
     fontFamily: "Arial, sans-serif", 
@@ -24,14 +33,27 @@ const theme = createTheme({
 
 const Cart = () => {
   const email=localStorage.getItem("userEmail");
-
   const [cartProducts, setCartProducts] = useState([]);
   const navigate = useNavigate();
-  
   const totalPrice = cartProducts.reduce((total, product) => total + product.price * product.count, 0);
   const shippingCost = cartProducts.reduce((total, product) => total + (product.shipping_cost || 0) * product.count, 0);
   const totalCost = totalPrice + shippingCost;
 
+  /*
+    * The `useEffect` hook is utilized to fetch cart products from the server and update the local state.
+    *
+    * Cart Products Fetching:
+    * - When the component mounts, this effect is triggered due to the empty dependency array.
+    * - An asynchronous function `fetchCartProducts` is defined to fetch cart data.
+    * - A network request is made to the server's `/product/fetch_cart_db` endpoint using a POST method.
+    * - The request includes necessary headers such as content-type and authorization with a JWT token.
+    * - The server response is checked for success, and cart data is parsed from the response.
+    * - The `setCartProducts` function updates the local state with the fetched cart products.
+    * - In case of an error, an error message is logged to the console for debugging.
+    *
+    * This effect ensures that the user's cart products are fetched and displayed correctly
+    * when the `Cart` component is initially rendered.
+    */
   useEffect(() => {
     const fetchCartProducts = async () => {
       try {
@@ -49,7 +71,6 @@ const Cart = () => {
         }
 
         const cartData = await response.json();
-        console.log(cartData)
         setCartProducts(cartData);
       } catch (error) {
         console.error('Error fetching cart products:', error);
@@ -59,15 +80,29 @@ const Cart = () => {
   fetchCartProducts();
   }, []);
 
+  /*
+    * The `handleQuantityChange` function is responsible for updating the quantity of a cart product.
+    *
+    * Quantity Update:
+    * - When the user changes the quantity of a cart product, this function is called.
+    * - It updates the local `cartProducts` state to reflect the new quantity.
+    * - It uses the `setCartProducts` function along with the `map` method to update the quantity of the specific product.
+    * - The function then sends a network request to the server's `/product/update_qty_db` endpoint.
+    * - The request includes the updated quantity, product ID, and user's email for authentication.
+    * - The server response is checked for success, and the updated product data is parsed.
+    * - If the response is not ok, an error is thrown and logged to the console.
+    * - In case of an error, you might want to consider reverting the local state to the previous state.
+    *
+    * This function ensures that the user's cart product quantity is updated both locally and on the server,
+    * enhancing the shopping experience by allowing users to modify the quantities of items in their cart.
+    */
   const handleQuantityChange = async (productId, newQuantity) => {
     try{
         setCartProducts((prevCartProducts) =>
           prevCartProducts.map((product) =>
             product._id === productId ? { ...product, count: newQuantity } : product
           )
-          
         );
-        console.log(newQuantity);
         const response = await fetch(HOSTED_BASE_URL+'/product/update_qty_db', {
           method: 'POST',
           headers: {
@@ -76,22 +111,29 @@ const Cart = () => {
           },
           body: JSON.stringify({ productId, newQuantity, email: email }),
         });
-    
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
-    
         const updatedProduct = await response.json();
-        console.log('Quantity updated in the database:', updatedProduct);
       } catch (error) {
         console.error('Error updating quantity:', error);
-        // You may want to revert the local state if the API call fails
       }
     };
-
+    /*
+      * The `handleRemoveFromCart` function is responsible for removing a product from the user's cart.
+      *
+      * Remove from Cart:
+      * - When the user clicks the remove button for a cart product, this function is triggered.
+      * - It sends a network request to the server's `/product/delete_cart_item/` endpoint.
+      * - The request includes the product ID and user's email for authentication.
+      * - The server response is checked for success, and the product is removed from the local state.
+      * - If the response is not ok, an error is thrown and logged to the console.
+      *
+      * This function ensures that users can easily remove items from their cart,
+      * providing a smooth shopping experience by allowing them to manage their cart contents.
+      */
     const handleRemoveFromCart = async (productId) => {
       try {
-        // Make an API call to remove the item from the database
         const response = await fetch(HOSTED_BASE_URL+'/product/delete_cart_item/', {
           method: 'POST',
           headers: {
@@ -104,9 +146,7 @@ const Cart = () => {
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
-  
-        // Update the local state to remove the item from the cart
-        setCartProducts((prevCartProducts) =>
+          setCartProducts((prevCartProducts) =>
           prevCartProducts.filter((product) => product._id !== productId)
         );
       } catch (error) {
@@ -114,16 +154,35 @@ const Cart = () => {
       }
     };
 
+    /*
+      * The `handleContinueShopping` function is responsible for navigating the user to the products page.
+      *
+      * Continue Shopping:
+      * - When the user clicks the "Continue Shopping" button, this function is triggered.
+      * - It uses the `navigate` function from the `react-router-dom` package to redirect the user to the "/products" page.
+      *
+      * This function enhances user experience by allowing users to easily navigate back to the products page to continue shopping.
+      */
     const handleContinueShopping = () => {
      navigate("/products")
     };
   
+    /*
+      * The `handleProceedToCheckout` function is responsible for navigating the user to the checkout page.
+      *
+      * Proceed to Checkout:
+      * - When the user clicks the "Proceed to Checkout" button, this function is triggered.
+      * - It prepares the `cartProducts` data for checkout by extracting relevant details and creating a new array.
+      * - The user's email is removed from the product IDs to ensure data privacy.
+      * - The function then uses the `navigate` function to redirect the user to the "/checkout" page, passing the prepared cart data as state.
+      *
+      * This function enhances user experience by guiding users to the checkout process with their selected products.
+      */
     const handleProceedToCheckout = () => {
       const products= cartProducts.map(product=>({
           ...product,
           _id: product._id.split(localStorage.getItem("userEmail"))[0]
         }))
-     console.log(products)
       navigate("/checkout", {
         state: {
           cartProducts: products,
@@ -218,7 +277,6 @@ const Cart = () => {
               </Button>
             </Box>
             <TableContainer component={Paper} sx={{ marginLeft: 'auto', width: '30%', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
-              {/* ... (Table and TableRow code) */}
             </TableContainer>
             <br/>
             <Box sx={{ display: 'flex', justifyContent: 'flex-end', marginBottom : '32px' }}>

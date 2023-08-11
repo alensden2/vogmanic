@@ -169,6 +169,20 @@ const Navbar = ({ isOpen, onToggle }) => {
                   >
                     Orders
                   </Typography>
+                </IconButton><IconButton
+                  color="inherit"
+                  onClick={() => handleNavigation("/dashboard")}
+                >
+                  <Typography
+                    variant="body1"
+                    sx={{
+                      cursor: "pointer",
+                      color: "black",
+                      fontWeight: 500,
+                    }}
+                  >
+                    Dashboard
+                  </Typography>
                 </IconButton>
                 <IconButton
                   color="inherit"

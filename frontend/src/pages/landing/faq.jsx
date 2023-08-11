@@ -1,3 +1,17 @@
+/**
+ * This page displays a comprehensive Frequently Asked Questions (FAQ) section to address common inquiries from users.
+ * Users can easily search for specific questions using the provided search bar, enhancing their browsing experience.
+ * Each question can be expanded to reveal a detailed answer, providing users with valuable information and assistance.
+ * The FAQ section is organized into categories, such as "Order Issues," "Delivery," and "Return and Refund," making it easy for users to find relevant information.
+ * The layout is thoughtfully designed with a visually appealing background image and a user-friendly interface.
+ * This page aims to improve customer satisfaction and reduce support queries by providing quick access to essential information.
+ *
+ * Design Inspiration: The layout concept for this FAQ page draws inspiration from https://us.shein.com/faq/index.
+ * Resources Used:
+ * - Material-UI's Paper component: https://mui.com/material-ui/react-paper/
+ * - Stock images sourced from Pexels: https://www.pexels.com/
+ */
+
 import ExpandMoreIcon from "@mui/icons-material/Close";
 import CloseIcon from "@mui/icons-material/ExpandMore";
 import SearchIcon from "@mui/icons-material/Search";
@@ -7,6 +21,9 @@ import resale from "../../assets/Resale.jpeg";
 import Footer from "../../components/footer";
 import Navbar from "../../components/navbar";
 
+/**
+ * FAQ data array containing categories and their respective questions and answers
+ */
 const faqData = [
     {
         category: "Order Issues",
@@ -120,15 +137,25 @@ const faqData = [
         ],
     },
 ];
-
+// Faq Component
 const Faq = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const [expandedQuestion, setExpandedQuestion] = useState("");
 
+    /**
+     * Handles the change event for the search input field.
+     * Updates the searchTerm state with the value entered by the user.
+     * @param {object} event - The event object representing the input change.
+     */
     const handleSearchChange = (event) => {
         setSearchTerm(event.target.value);
     };
 
+    /**
+     * Handles the click event on a question.
+     * Toggles the state of expandedQuestion to expand or collapse the answer section for the clicked question.
+     * @param {string} question - The question that was clicked.
+     */
     const handleQuestionClick = (question) => {
         if (expandedQuestion === question) {
             setExpandedQuestion("");
@@ -137,6 +164,13 @@ const Faq = () => {
         }
     };
 
+    /**
+     * Filters the list of questions based on the current searchTerm.
+     * If searchTerm is empty, returns the original list of questions.
+     * If searchTerm is not empty, filters questions that include the searchTerm (case-insensitive).
+     * @param {array} questions - The list of questions to be filtered.
+     * @returns {array} - The filtered list of questions.
+     */
     const filterQuestions = (questions) => {
         if (searchTerm === "") {
             return questions;
@@ -239,9 +273,14 @@ const Faq = () => {
 
 export default Faq;
 
-
-// reference - for layout https://us.shein.com/faq/index
+// Layout inspiration: https://us.shein.com/faq/index
 /**
- * paper - https://mui.com/material-ui/react-paper/
- * image// reference https://www.pexels.com/ --for all the stock images
+ * This component implements a Frequently Asked Questions (FAQ) page with a user-friendly layout and design.
+ * It allows users to search for specific questions and expand/collapse answers for each question.
+ * The page features categorized sections for different topics related to orders, delivery, and returns.
+ * The design is enhanced with a background image and search functionality.
+ *
+ * Resources Used:
+ * - Paper component from Material-UI: https://mui.com/material-ui/react-paper/
+ * - Stock images from Pexels: https://www.pexels.com/
  */

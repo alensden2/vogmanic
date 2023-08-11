@@ -1,4 +1,14 @@
+/*
+ * InventoryPage component
+ * This component renders an inventory management page for products. It fetches
+ * the list of products from the server and allows users to view, delete, and apply
+ * promotions to products. Users can also add new products. The component uses Material-UI
+ * components for styling and includes success/failure dialogs for actions like deletion
+ * and addition of products. The component provides a responsive and user-friendly interface
+ * for managing the inventory.
+ */
 import AddIcon from "@mui/icons-material/Add";
+import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import DeleteIcon from "@mui/icons-material/Delete";
 import InfoIcon from "@mui/icons-material/Info";
 import {
@@ -27,10 +37,9 @@ import axios from "axios";
 import * as React from "react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { HOSTED_BASE_URL } from '../../../src/constants';
 import AdminNavbar from "../../components/adminbar";
-import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 
-// InventoryPage component
 const InventoryPage = () => {
     const navigate = useNavigate();
     const [isNavbarOpen, setIsNavbarOpen] = useState(false);
@@ -38,6 +47,11 @@ const InventoryPage = () => {
     const [deleteSuccess, setDeleteSuccess] = useState(false);
     const [deleteFailure, setDeleteFailure] = useState(false);
     const [deletedProductName, setDeletedProductName] = useState("");
+    const [promoDialogOpen, setPromoDialogOpen] = useState(false);
+    const [selectedProductForPromo, setSelectedProductForPromo] = useState(null);
+    const [discountedPrice, setDiscountedPrice] = useState("");
+    const [showSuccessDialog, setShowSuccessDialog] = useState(false);
+    const [showFailureDialog, setShowFailureDialog] = useState(false);
     const [isAddFormOpen, setIsAddFormOpen] = useState(false);
     const [newProduct, setNewProduct] = useState({
         name: "",
@@ -48,43 +62,71 @@ const InventoryPage = () => {
         category: "",
         image_url: "",
     });
-    // Event handler to navigate to the sales page
+
+    /*
+    * Function: onInfoClick
+    * Description: Navigates to the '/sales' route when the user clicks on the sales information button.
+    */
     const onInfoClick = () => {
         navigate('/sales');
     };
 
-    const [promoDialogOpen, setPromoDialogOpen] = useState(false);
-    const [selectedProductForPromo, setSelectedProductForPromo] = useState(null);
-    const [discountedPrice, setDiscountedPrice] = useState("");
-    // Event handler to toggle the navbar
+    /*
+    * Function: handleShowSuccessDialog
+    * Description: Sets 'showSuccessDialog' state to true, triggering the display of a success dialog.
+    * Side Effects: Updates 'showSuccessDialog' state to true.
+    */
+    const handleShowSuccessDialog = () => {
+        setShowSuccessDialog(true);
+    };
 
+    /*
+    * Function: handleShowFailureDialog
+    * Description: Sets 'showFailureDialog' state to true, triggering the display of a failure dialog.
+    * Side Effects: Updates 'showFailureDialog' state to true.
+    */
+    const handleShowFailureDialog = () => {
+        setShowFailureDialog(true);
+    };
+
+    /*
+    * Function: handleCloseDialogs
+    * Description: Closes both success and failure dialogs by setting their state values to false.
+    * Side Effects: Updates 'showSuccessDialog' and 'showFailureDialog' states to false.
+    */
+    const handleCloseDialogs = () => {
+        setShowSuccessDialog(false);
+        setShowFailureDialog(false);
+    };
+
+    /*
+    * Function: handleNavbarToggle
+    * Description: Toggles the state of the mobile navigation menu.
+    */
     const handleNavbarToggle = () => {
         setIsNavbarOpen(!isNavbarOpen);
     };
 
+    /*
+    * Function: handleSetDiscount
+    * Description: Applies a discount to a selected product by updating its price in the database and local state.
+    *              If a valid discount price and a selected product are available, the function fetches the product's
+    *              current details, updates the price, and updates the local state to reflect the change.
+    */
     const handleSetDiscount = () => {
         if (!discountedPrice || !selectedProductForPromo) {
             return;
         }
-
         const accessToken = localStorage.getItem("accessToken");
         const headers = { Authorization: `Bearer ${accessToken}` };
-
         const { productId, productName } = selectedProductForPromo;
-
         const updatedProduct = {
             name: productName,
             price: discountedPrice
         };
-
         axios
-            .put(`https://voguemanic-be.onrender.com/admin/updateProduct/${productId}`, updatedProduct, { headers })
+            .put(`${HOSTED_BASE_URL}/admin/updateProduct/${productId}`, updatedProduct, { headers })
             .then((response) => {
-                // Handle the successful update response as needed
-                console.log("Product price updated successfully:", response.data);
-
-                // You can update the local state or perform any other necessary actions
-                // For example, update the product's price in the local state
                 setProducts((prevProducts) =>
                     prevProducts.map((product) =>
                         product._id === productId ? { ...product, price: discountedPrice } : product
@@ -92,21 +134,26 @@ const InventoryPage = () => {
                 );
             })
             .catch((error) => {
-                // Handle the error
                 console.error("Error updating product:", error);
             });
-
         setPromoDialogOpen(false);
         setDiscountedPrice("");
     };
 
-    // Fetch products data from the server on component mount
+    /* 
+    * useEffect: Fetches the list of products from the server and updates the local state.
+    * Description: This effect runs once when the component mounts. It retrieves the list of products
+    * from the server using an authenticated API request with the user's access token. The retrieved
+    * product data is then used to update the local state, specifically the 'products' state variable,
+    * which holds the list of products displayed on the inventory page.
+    * Dependencies: 'localStorage', 'axios', 'setProducts', 'HOSTED_BASE_URL'
+    */
     useEffect(() => {
         const accessToken = localStorage.getItem("accessToken");
         const headers = { Authorization: `Bearer ${accessToken}` };
 
         axios
-            .get("https://voguemanic-be.onrender.com/admin/products", { headers })
+            .get(`${HOSTED_BASE_URL}/admin/products`, { headers })
             .then((response) => {
                 setProducts(response.data);
             })
@@ -114,14 +161,21 @@ const InventoryPage = () => {
                 console.error("Error fetching products:", error);
             });
     }, []);
-    // Event handler to delete a product from the server
-    const handleDeleteProduct = (productId, productName) => {
 
+    /*
+    * Function: handleDeleteProduct
+    * Description: Deletes a product from the server and updates the local state accordingly.
+    * Parameters:
+    *   - productId: The unique identifier of the product to be deleted.
+    *   - productName: The name of the product to be deleted.
+    * Side Effects: May update 'deleteSuccess', 'deleteFailure', 'deletedProductName', and 'products' state variables.
+    * Dependencies: 'localStorage', 'axios', 'setDeleteSuccess', 'setDeleteFailure', 'setDeletedProductName', 'setProducts', 'HOSTED_BASE_URL'
+    */
+    const handleDeleteProduct = (productId, productName) => {
         const accessToken = localStorage.getItem("accessToken");
         const headers = { Authorization: `Bearer ${accessToken}` };
-
         axios
-            .delete(`https://voguemanic-be.onrender.com/admin/deleteProduct/${productId}`, { headers })
+            .delete(`${HOSTED_BASE_URL}/admin/deleteProduct/${productId}`, { headers })
             .then((response) => {
                 setDeleteSuccess(true);
                 setDeleteFailure(false);
@@ -137,30 +191,41 @@ const InventoryPage = () => {
             });
     };
 
-    // Event handler to Promo a product from the server
+    /*
+    * Function: handlePromoProduct
+    * Description: Prepares the selected product for a promotion and opens the promotion dialog.
+    * Parameters:
+    *   - productId: The unique identifier of the product to be promoted.
+    *   - productName: The name of the product to be promoted.
+    * Side Effects: May update 'selectedProductForPromo' and 'promoDialogOpen' state variables.
+    */
     const handlePromoProduct = (productId, productName) => {
-
-
         setSelectedProductForPromo({ productId, productName });
-        console.log("Cliked")
-
-
         setPromoDialogOpen(true);
-
     };
-    // Event handler to close the success and failure dialogs
 
+    /*
+    * Function: handleDialogClose
+    * Description: Closes the success and failure dialogs for product deletion or other actions.
+    * Side Effects: Updates 'deleteSuccess' and 'deleteFailure' state variables.
+    */
     const handleDialogClose = () => {
         setDeleteSuccess(false);
         setDeleteFailure(false);
     };
-    // Event handler to open the add product form
-
+    /*
+    * Function: handleOpenAddForm
+    * Description: Opens the add product form by updating the 'isAddFormOpen' state.
+    * Side Effects: Updates the 'isAddFormOpen' state to true.
+    */
     const handleOpenAddForm = () => {
         setIsAddFormOpen(true);
     };
-    // Event handler to close the add product form and reset the input fields
-
+    /*
+    * Function: handleCloseAddForm
+    * Description: Closes the add product form and resets the input fields by updating state variables.
+    * Side Effects: Updates the 'isAddFormOpen' state to false, resets the 'newProduct' state with default values.
+    */
     const handleCloseAddForm = () => {
         setIsAddFormOpen(false);
         setNewProduct({
@@ -173,10 +238,12 @@ const InventoryPage = () => {
             image_url: "",
         });
     };
-    // Event handler to add a new product to the server
-
+    /*
+    * Function: handleAddProduct
+    * Description: Adds a new product to the server and updates the product list in the state.
+    * Side Effects: Makes a POST request to add the new product, updates 'products' state on success, shows success or failure dialogs.
+    */
     const handleAddProduct = () => {
-
         if (
             !newProduct.name.trim() ||
             !newProduct.description.trim() ||
@@ -188,12 +255,10 @@ const InventoryPage = () => {
             handleShowFailureDialog();
             return;
         }
-
         const accessToken = localStorage.getItem("accessToken");
         const headers = { Authorization: `Bearer ${accessToken}` };
-
         axios
-            .post("https://voguemanic-be.onrender.com/admin/addProduct", newProduct, { headers })
+            .post(`${HOSTED_BASE_URL}/admin/addProduct`, newProduct, { headers })
             .then((response) => {
                 const addedProduct = response.data;
                 setProducts((prevProducts) => [...prevProducts, addedProduct]);
@@ -208,26 +273,6 @@ const InventoryPage = () => {
                 handleShowFailureDialog();
             });
     };
-    // State variables to manage success and failure dialogs
-
-    const [showSuccessDialog, setShowSuccessDialog] = useState(false);
-    const [showFailureDialog, setShowFailureDialog] = useState(false);
-    // Event handlers to show/hide the success and failure dialogs
-
-    const handleShowSuccessDialog = () => {
-        setShowSuccessDialog(true);
-    };
-
-    const handleShowFailureDialog = () => {
-        setShowFailureDialog(true);
-    };
-
-    const handleCloseDialogs = () => {
-        setShowSuccessDialog(false);
-        setShowFailureDialog(false);
-    };
-    // Return the JSX for rendering the InventoryPage component
-
     return (
         <>
             <AdminNavbar isOpen={isNavbarOpen} onToggle={handleNavbarToggle} />
@@ -446,8 +491,6 @@ const InventoryPage = () => {
                             helperText={(newProduct.rating < 1 || newProduct.rating > 5) ? "Rating must be between 1 and 5" : ""}
                         />
                     </FormControl>
-
-
                     <FormControl fullWidth margin="normal">
                         <InputLabel>Category</InputLabel>
                         <Select

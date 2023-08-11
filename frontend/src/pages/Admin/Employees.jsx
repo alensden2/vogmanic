@@ -31,9 +31,9 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { HOSTED_BASE_URL } from '../../../src/constants';
 import AdminBar from "../../components/adminbar";
 import Footer from "../../components/footer";
-import { HOSTED_BASE_URL } from '../../../src/constants';
 
 /**
  * Dialog Box Component
@@ -117,7 +117,7 @@ const Employees = () => {
    *
    * @param {string} email - The email address to be validated.
    * @returns {boolean} - `true` if the email is valid, otherwise `false`.
-   */ 
+   */
   const isValidEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
@@ -134,7 +134,7 @@ const Employees = () => {
    *
    * @param {string} phone - The phone number to be validated.
    * @returns {boolean} - `true` if the phone number is valid, otherwise `false`.
-   */  
+   */
   const isValidPhoneNumber = (phone) => {
     const phoneRegex = /^\d{3}[-.\s]?\d{3}[-.\s]?\d{4}$/;
     return phoneRegex.test(phone);
@@ -218,12 +218,19 @@ const Employees = () => {
       phone: newEmployee.phone,
       address: newEmployee.address,
     };
+    /**
+     * Adds a New Employee
+     *
+     * This function sends a POST request to add a new employee using the provided employee data and access token.
+     * It handles success and failure scenarios by updating the employee list and showing appropriate dialogs.
+     *
+     * @param {Object} employeeData - The data of the new employee to be added.
+     */
     const accessToken = localStorage.getItem("accessToken");
     const headers = { Authorization: `Bearer ${accessToken}` };
     axios
       .post(`${HOSTED_BASE_URL}/admin/addEmployee`, employeeData, { headers })
       .then((response) => {
-        console.log("Employee added successfully:", response.data);
         axios
           .get(`${HOSTED_BASE_URL}/admin/employees`, { headers })
           .then((response) => {
@@ -240,8 +247,14 @@ const Employees = () => {
         setIsFailureOpen(true);
       });
   };
-  // Event handler to delete an employee from the server
-
+  /**
+   * Delete Employee
+   *
+   * This function sends a DELETE request to remove an employee with the specified ID.
+   * It updates the employee list upon successful deletion and shows a success dialog with the deleted employee's name.
+   *
+   * @param {string} employeeId - The ID of the employee to be deleted.
+   */
   const handleDeleteEmployee = (employeeId) => {
     const accessToken = localStorage.getItem("accessToken");
     const headers = { Authorization: `Bearer ${accessToken}` };

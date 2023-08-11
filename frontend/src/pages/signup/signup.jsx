@@ -109,7 +109,7 @@ function SignUp() {
         } else {
           console.log('Signup failed.');
           // Show an alert for signup failure
-          alert('Signup failed. Please check your input and try again.');
+          alert('Signup failed. User already exists');
         }
       } catch (error) {
         console.error('Error during signup:', error);
@@ -122,9 +122,16 @@ function SignUp() {
   const isWideScreen = useMediaQuery('(min-width:768px)');
 
   const handleBirthdateChange = (date) => {
-    setBirthdate(date);
-    setBirthdateError(false);
-  };
+    const today = new Date();
+    
+    if (date > today) {
+      setBirthdateError(true); // Set birthdate error
+      alert("Birthday date is invalid")
+    } else {
+      setBirthdate(date);
+      setBirthdateError(false);
+    }
+};
 
   return (
     <>
