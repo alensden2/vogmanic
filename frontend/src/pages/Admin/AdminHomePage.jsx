@@ -1,9 +1,21 @@
+/**
+ * Admin Home Page Component
+ *
+ * This component represents the admin dashboard home page of the VogueManic website.
+ * It displays an overview of various statistics such as total sales, items sold, and orders.
+ * The component also provides sales insights, including average sale per order, average items per order,
+ * and a predefined profit value.
+ *
+ * @returns {React Component} - The rendered admin home page component.
+ */
+
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
 import React, { useEffect, useState } from 'react';
 import AdminBar from '../../components/adminbar';
 import Footer from '../../components/footer';
+import { HOSTED_BASE_URL } from '../../../src/constants';
 
 export default function AdminHomePage() {
   const [isNavbarOpen, setIsNavbarOpen] = useState(false);
@@ -13,41 +25,53 @@ export default function AdminHomePage() {
   const [averageSalePerOrder, setAverageSalePerOrder] = useState(null);
   const [averageItemsPerOrder, setAverageItemsPerOrder] = useState(null);
   const profit = 4500;
-
+  /**
+   * Toggles the Navbar
+   *
+   * Function to toggle the visibility of the admin navigation bar.
+   */
   const handleNavbarToggle = () => {
     setIsNavbarOpen(!isNavbarOpen);
   };
 
-  // Fetch data from the server when the component mounts
+  /**
+   * Fetches Admin Dashboard Data
+   *
+   * This effect fetches various data related to the admin dashboard, such as total sales, total items sold,
+   * and total orders. It uses the access token stored in local storage for authorization.
+   */
   useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
     const headers = {
       "Content-Type": "application/json",
       Authorization: `Bearer ${accessToken}`,
     };
-
-    fetch("https://voguemanic-be.onrender.com/admin/totalSaleAllOrders", { headers })
+    fetch(`${HOSTED_BASE_URL}/admin/totalSaleAllOrders`, { headers })
       .then((response) => response.json())
       .then((data) => setTotalSales(data.totalSales))
       .catch((error) => console.error("Error fetching total sales:", error));
-
-    fetch("https://voguemanic-be.onrender.com/admin/totalItemsSold", { headers })
+    fetch(`${HOSTED_BASE_URL}/admin/totalItemsSold`, { headers })
       .then((response) => response.json())
       .then((data) => setTotalItemsSold(data.totalItemsSold))
       .catch((error) => console.error("Error fetching total items sold:", error));
-
-    fetch("https://voguemanic-be.onrender.com/admin/totalOrders", { headers })
+    fetch(`${HOSTED_BASE_URL}/admin/totalOrders`, { headers })
       .then((response) => response.json())
       .then((data) => setTotalOrders(data.TotalOrders))
       .catch((error) => console.error("Error fetching total orders:", error));
   }, []);
 
+  /**
+   * Calculate Average Sale and Items per Order
+   *
+   * This effect calculates and sets the average sale per order and average items per order based on
+   * the fetched total sales, total items sold, and total orders. It performs the calculations only when
+   * all required data is available and updates whenever any of the relevant data changes.
+   */
   useEffect(() => {
     if (totalSales !== null && totalOrders !== null) {
       const avgSalePerOrder = totalSales / totalOrders;
       setAverageSalePerOrder(avgSalePerOrder.toFixed(2));
     }
-
     if (totalItemsSold !== null && totalOrders !== null) {
       const avgItemsPerOrder = totalItemsSold / totalOrders;
       setAverageItemsPerOrder(avgItemsPerOrder.toFixed(2));
@@ -57,7 +81,6 @@ export default function AdminHomePage() {
   return (
     <div>
       <AdminBar isOpen={isNavbarOpen} onToggle={handleNavbarToggle} />
-
       <div style={styles.container}>
         <h2 style={styles.heading}>Overview</h2>
 
@@ -68,7 +91,6 @@ export default function AdminHomePage() {
             <h5>Quicksight</h5>
           </div>
         </div>
-
         <div style={styles.quickInfoContainer}>
           <div style={styles.quickInfoBox}>
             <MonetizationOnIcon style={styles.quickInfoIcon} />
@@ -76,14 +98,12 @@ export default function AdminHomePage() {
               {totalSales === null ? 'Total Sales: Loading...' : `$${totalSales}`}
             </div>
           </div>
-
           <div style={styles.quickInfoBox}>
             <ShoppingBagIcon style={styles.quickInfoIcon} />
             <div style={styles.quickInfoText}>
               {totalItemsSold === null ? 'Items Sold: Loading...' : `Items Sold: ${totalItemsSold}`}
             </div>
           </div>
-
           <div style={styles.quickInfoBox}>
             <LocalShippingIcon style={styles.quickInfoIcon} />
             <div style={styles.quickInfoText}>
@@ -91,7 +111,6 @@ export default function AdminHomePage() {
             </div>
           </div>
         </div>
-
         <div style={styles.quicksightBox}>
           <div style={styles.quicksightText}>
             <h5>Sales Insights</h5>
@@ -119,6 +138,18 @@ export default function AdminHomePage() {
   );
 }
 
+/**
+ * Styles for Admin Home Page
+ *
+ * This JavaScript object defines a set of styles used to structure and style
+ * the components and sections of the Admin Home Page. It includes responsive design
+ * considerations with media queries to ensure consistent and visually pleasing layout
+ * across different screen sizes. The styles cover various elements such as headings,
+ * boxes, quick info sections, sales insights, and more.
+ *
+ * @constant {Object} styles - An object containing styling rules for different components
+ * and sections of the Admin Home Page.
+ */
 const styles = {
   container: {
     display: 'flex',

@@ -1,3 +1,17 @@
+/**
+ * Sidebar Component
+ *
+ * This component represents the sidebar with category filters.
+ * Users can select categories to filter products.
+ *
+ * @param {Array} categories - List of available categories.
+ * @param {string} selectedCategory - Currently selected category.
+ * @param {Function} handleCategorySelect - Function to handle category selection.
+ * @param {boolean} isDrawerOpen - Indicates whether the sidebar is open.
+ * @param {Function} handleDrawerToggle - Function to toggle the sidebar.
+ * @returns {React Component} - The rendered sidebar component.
+ */
+
 import { Drawer, List, ListItem, ListItemText } from "@mui/material";
 import React from 'react';
 

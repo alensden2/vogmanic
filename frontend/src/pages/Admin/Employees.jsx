@@ -1,3 +1,16 @@
+/**
+ * Employees Management Component
+ *
+ * This component provides a user interface for managing employees in the admin dashboard.
+ * It allows administrators to view, add, and delete employee information. The component
+ * fetches employee data from the server and displays it in a table format. Admins can also
+ * add new employees by filling out a form, and delete existing employees by clicking a
+ * delete button. Custom dialog components are used to display messages and notifications
+ * for various actions such as invalid input, successful addition, and successful deletion
+ * of employees. The component includes form input validation for email and phone number.
+ *
+ * @returns {React Component} - The rendered employees management component.
+ */
 import { Add as AddIcon, Delete as DeleteIcon } from "@mui/icons-material";
 import {
   Button,
@@ -20,8 +33,22 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import AdminBar from "../../components/adminbar";
 import Footer from "../../components/footer";
+import { HOSTED_BASE_URL } from '../../../src/constants';
 
-// Custom dialog component for displaying messages
+/**
+ * Dialog Box Component
+ *
+ * This component renders a customizable dialog box with a title, content, and an "OK" button.
+ * It is designed to display messages and notifications to users. The dialog can be opened or
+ * closed based on the `isOpen` prop. The `onClose` prop is used to handle the dialog's close
+ * action when the "OK" button is clicked.
+ *
+ * @param {boolean} isOpen - Indicates whether the dialog is open.
+ * @param {Function} onClose - Callback function to handle dialog close action.
+ * @param {string} title - The title of the dialog.
+ * @param {string|ReactNode} content - The content to be displayed in the dialog.
+ * @returns {React Component} - The rendered dialog box component.
+ */
 const DialogBox = ({ isOpen, onClose, title, content }) => {
   return (
     <Dialog open={isOpen} onClose={onClose}>
@@ -34,7 +61,20 @@ const DialogBox = ({ isOpen, onClose, title, content }) => {
   );
 };
 
-// Custom dialog component for displaying success message after employee deletion
+/**
+ * Success Delete Dialog Box Component
+ *
+ * This component renders a dialog box to inform the user that an employee has been successfully deleted.
+ * It displays a message with the name of the deleted employee and provides an "OK" button to acknowledge
+ * the message and close the dialog. The `isOpen` prop determines whether the dialog is open, the `onClose`
+ * prop handles the dialog close action, and the `employeeName` prop is used to dynamically include the
+ * employee's name in the dialog content.
+ *
+ * @param {boolean} isOpen - Indicates whether the dialog is open.
+ * @param {Function} onClose - Callback function to handle dialog close action.
+ * @param {string} employeeName - The name of the deleted employee.
+ * @returns {React Component} - The rendered success delete dialog box component.
+ */
 const SuccessDeleteDialogBox = ({ isOpen, onClose, employeeName }) => {
   return (
     <Dialog open={isOpen} onClose={onClose}>
@@ -48,7 +88,6 @@ const SuccessDeleteDialogBox = ({ isOpen, onClose, employeeName }) => {
 };
 
 const Employees = () => {
-  // State variables to manage component behavior
   const [isNavbarOpen, setIsNavbarOpen] = useState(false);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [newEmployee, setNewEmployee] = useState({
@@ -68,23 +107,51 @@ const Employees = () => {
   const [isSuccessDeleteOpen, setIsSuccessDeleteOpen] = useState(false);
   const [deletedEmployeeName, setDeletedEmployeeName] = useState("");
 
-  // Helper functions to validate email and phone inputs using regular expressions
+  /**
+   * Email Validation Utility
+   *
+   * This function validates an email address using a regular expression.
+   * It checks if the provided email address matches the pattern of a valid email.
+   * The regular expression ensures that the email address follows the common format
+   * of "username@domain.extension" with no leading or trailing whitespace.
+   *
+   * @param {string} email - The email address to be validated.
+   * @returns {boolean} - `true` if the email is valid, otherwise `false`.
+   */ 
   const isValidEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   };
 
+  /**
+   * Phone Number Validation Utility
+   *
+   * This function validates a phone number using a regular expression.
+   * It checks if the provided phone number matches the pattern of a valid phone number.
+   * The regular expression allows phone numbers in the formats XXX-XXX-XXXX,
+   * XXX.XXX.XXXX, or XXX XXX XXXX, where X represents a digit (0-9).
+   * The phone number may include optional dashes, dots, or spaces between digits.
+   *
+   * @param {string} phone - The phone number to be validated.
+   * @returns {boolean} - `true` if the phone number is valid, otherwise `false`.
+   */  
   const isValidPhoneNumber = (phone) => {
     const phoneRegex = /^\d{3}[-.\s]?\d{3}[-.\s]?\d{4}$/;
     return phoneRegex.test(phone);
   };
-  // Fetch employees data from the server on component mount
+
+  /**
+   * Fetches Employee Data and Handles Dialogs
+   *
+   * This effect fetches employee data from the backend using the provided access token.
+   * It also includes event handlers for toggling the navbar, opening the add employee dialog,
+   * and closing the add employee dialog while resetting the input fields.
+   */
   useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
     const headers = { Authorization: `Bearer ${accessToken}` };
-
     axios
-      .get("https://voguemanic-be.onrender.com/admin/employees", { headers })
+      .get(`${HOSTED_BASE_URL}/admin/employees`, { headers })
       .then((response) => {
         setEmployees(response.data);
         setIsLoading(false);
@@ -103,7 +170,6 @@ const Employees = () => {
     setIsAddDialogOpen(true);
   };
   // Event handler to close the add employee dialog and reset the input fields
-
   const handleDialogClose = () => {
     setIsAddDialogOpen(false);
     setNewEmployee({
@@ -116,7 +182,6 @@ const Employees = () => {
     });
   };
   // Event handler to update the new employee state when input fields change
-
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     setNewEmployee({
@@ -125,7 +190,6 @@ const Employees = () => {
     });
   };
   // Event handler to add a new employee to the server
-
   const handleAddEmployee = () => {
     if (
       !newEmployee.employeeNo ||
@@ -138,17 +202,14 @@ const Employees = () => {
       alert("Please fill in all required fields.");
       return;
     }
-
     if (!isValidEmail(newEmployee.email)) {
       setIsEmailErrorOpen(true);
       return;
     }
-
     if (!isValidPhoneNumber(newEmployee.phone)) {
       setIsPhoneErrorOpen(true);
       return;
     }
-
     const employeeData = {
       employeeId: newEmployee.employeeNo,
       firstName: newEmployee.firstName,
@@ -157,17 +218,14 @@ const Employees = () => {
       phone: newEmployee.phone,
       address: newEmployee.address,
     };
-
     const accessToken = localStorage.getItem("accessToken");
     const headers = { Authorization: `Bearer ${accessToken}` };
-
     axios
-      .post("https://voguemanic-be.onrender.com/admin/addEmployee", employeeData, { headers })
+      .post(`${HOSTED_BASE_URL}/admin/addEmployee`, employeeData, { headers })
       .then((response) => {
         console.log("Employee added successfully:", response.data);
-
         axios
-          .get("https://voguemanic-be.onrender.com/admin/employees", { headers })
+          .get(`${HOSTED_BASE_URL}/admin/employees`, { headers })
           .then((response) => {
             setEmployees(response.data);
             setIsSuccessOpen(true);
@@ -189,7 +247,7 @@ const Employees = () => {
     const headers = { Authorization: `Bearer ${accessToken}` };
 
     axios
-      .delete(`https://voguemanic-be.onrender.com/admin/deleteEmployee/${employeeId}`, { headers })
+      .delete(`${HOSTED_BASE_URL}/admin/deleteEmployee/${employeeId}`, { headers })
       .then((response) => {
         setEmployees((prevEmployees) =>
           prevEmployees.filter((employee) => employee._id !== employeeId)
