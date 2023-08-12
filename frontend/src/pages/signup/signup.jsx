@@ -18,7 +18,7 @@
  * - Handles form submission and communicates with the backend server.
  * - Offers a seamless navigation experience with links to the login page.
  */
-import { Box, Button, Container, Grid, TextField, Typography, useMediaQuery } from '@mui/material';
+import { Box, Button, Container, Grid, TextField, Typography, useMediaQuery, CircularProgress } from '@mui/material';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import React, { useState } from 'react';
@@ -36,6 +36,7 @@ function SignUp() {
   const [passwordError, setPasswordError] = useState(false);
   const [confirmPasswordError, setConfirmPasswordError] = useState(false);
   const [birthdateError, setBirthdateError] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [passwordStrength, setPasswordStrength] = useState([]);
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
@@ -158,6 +159,7 @@ function SignUp() {
 
     if (isValid) {
       try {
+        setIsLoading(true);
         const response = await fetch(`${HOSTED_BASE_URL}/users/signup`, {
           method: 'POST',
           headers: {
@@ -172,13 +174,16 @@ function SignUp() {
         });
 
         if (response.ok) {
+          setIsLoading(false);
           // Show an alert for signup success
           navigate("/login")
         } else {
+          setIsLoading(false);
           // Show an alert for signup failure
           alert('Signup failed. User already exists');
         }
       } catch (error) {
+        setIsLoading(false);
         console.error('Error during signup:', error);
         // Show an alert for any unexpected errors
         alert('An error occurred during signup. Please try again later.');
@@ -212,7 +217,6 @@ function SignUp() {
       setBirthdateError(false);
     }
   };
-
   return (
     <>
       <Navbar />
@@ -240,66 +244,71 @@ function SignUp() {
           ) : null}
           <Grid item xs={12} sm={isWideScreen ? 6 : 12}>
             <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '100%', bgcolor: 'beige', padding: 3 }}>
-              <form style={{ display: 'flex', flexDirection: 'column', width: '100%' }} onSubmit={handleSubmit}>
-                <Typography variant="h3" style={{ alignSelf: 'center' }} gutterBottom>
-                  Sign Up
-                </Typography>
-                <TextField
-                  helperText="Please enter your email"
-                  fullWidth
-                  required
-                  id="outlined-required"
-                  label="Email"
-                  margin="dense"
-                  type="email"
-                  value={email}
-                  onChange={handleEmailChange}
-                  error={emailError}
-                />
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DatePicker
-                    label="Birthday"
-                    slotProps={{ textField: { helperText: 'Please enter your birthday as MM/DD/YYYY', fullWidth: true } }}
-                    value={birthdate}
-                    onChange={handleBirthdateChange}
-                    error={birthdateError}
-                  />
-                </LocalizationProvider>
-                <TextField
-                  helperText="Please enter your password (min 8 characters with at least one number, one special character, and one capital letter)"
-                  fullWidth
-                  required
-                  id="outlined-password-input"
-                  label="Password"
-                  type="password"
-                  autoComplete="new-password"
-                  margin="dense"
-                  value={password}
-                  onChange={handlePasswordChange}
-                  error={passwordError}
-                />
-                <TextField
-                  helperText="Please re-enter your password to confirm password"
-                  fullWidth
-                  required
-                  id="outlined-password-input-confirm"
-                  label="Confirm Password"
-                  type="password"
-                  autoComplete="new-password"
-                  margin="dense"
-                  value={confirmPassword}
-                  onChange={handleConfirmPasswordChange}
-                  error={confirmPasswordError}
-                />
-                {passwordStrength.length > 0 && (
-                  <Typography variant="body1" gutterBottom style={{ color: 'red' }}>
-                    {passwordStrength.join(', ')}
+              {/* Conditional rendering for the loader */}
+              {isLoading ? (
+                <CircularProgress color="primary" /> // Display the loader (loading spinner)
+              ) : (
+                <form style={{ display: 'flex', flexDirection: 'column', width: '100%' }} onSubmit={handleSubmit}>
+                  <Typography variant="h3" style={{ alignSelf: 'center' }} gutterBottom>
+                    Sign Up
                   </Typography>
-                )}
-                <Button variant="outlined" style={{ alignSelf: 'center', backgroundColor: 'black', color: 'beige', borderColor: 'beige', fontWeight: 'bold', marginTop: 10 }} fullWidth type="submit">
-                  Submit
-                </Button>
-              </form>
+                  <TextField
+                    helperText="Please enter your email"
+                    fullWidth
+                    required
+                    id="outlined-required"
+                    label="Email"
+                    margin="dense"
+                    type="email"
+                    value={email}
+                    onChange={handleEmailChange}
+                    error={emailError}
+                  />
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DatePicker
+                      label="Birthday"
+                      slotProps={{ textField: { helperText: 'Please enter your birthday as MM/DD/YYYY', fullWidth: true } }}
+                      value={birthdate}
+                      onChange={handleBirthdateChange}
+                      error={birthdateError}
+                    />
+                  </LocalizationProvider>
+                  <TextField
+                    helperText="Please enter your password (min 8 characters with at least one number, one special character, and one capital letter)"
+                    fullWidth
+                    required
+                    id="outlined-password-input"
+                    label="Password"
+                    type="password"
+                    autoComplete="new-password"
+                    margin="dense"
+                    value={password}
+                    onChange={handlePasswordChange}
+                    error={passwordError}
+                  />
+                  <TextField
+                    helperText="Please re-enter your password to confirm password"
+                    fullWidth
+                    required
+                    id="outlined-password-input-confirm"
+                    label="Confirm Password"
+                    type="password"
+                    autoComplete="new-password"
+                    margin="dense"
+                    value={confirmPassword}
+                    onChange={handleConfirmPasswordChange}
+                    error={confirmPasswordError}
+                  />
+                  {passwordStrength.length > 0 && (
+                    <Typography variant="body1" gutterBottom style={{ color: 'red' }}>
+                      {passwordStrength.join(', ')}
+                    </Typography>
+                  )}
+                  <Button variant="outlined" style={{ alignSelf: 'center', backgroundColor: 'black', color: 'beige', borderColor: 'beige', fontWeight: 'bold', marginTop: 10 }} fullWidth type="submit">
+                    Submit
+                  </Button>
+                </form>
+              )}
             </Box>
           </Grid>
         </Grid>

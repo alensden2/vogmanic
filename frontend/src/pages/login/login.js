@@ -25,7 +25,7 @@
  * - Alerts are displayed for successful login, login failure, and unexpected errors.
  */
 
-import { Box, Button, Container, Grid, TextField, Typography, useMediaQuery } from '@mui/material';
+import { Box, Button, Container, Grid, TextField, Typography, useMediaQuery, CircularProgress } from '@mui/material';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Footer from '../../components/footer';
@@ -34,6 +34,7 @@ import { HOSTED_BASE_URL } from '../../constants';
 
 function Login() {
   const [email, setEmail] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const [password, setPassword] = useState('');
   const [emailError, setEmailError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
@@ -150,6 +151,7 @@ function Login() {
 
     if (isValid) {
       try {
+        setIsLoading(true);
         const response = await fetch(HOSTED_BASE_URL + '/users/login', {
           method: 'POST',
           headers: {
@@ -162,6 +164,7 @@ function Login() {
         });
 
         if (response.ok) {
+          setIsLoading(false);
           const data = await response.json();
           localStorage.setItem('accessToken', data.token);
           localStorage.setItem('data', data)
@@ -175,10 +178,12 @@ function Login() {
           }          // You can also navigate to a different page on successful login using useNavigate()
           // navigate("/dashboard");
         } else {
+          setIsLoading(false);
           // Show an alert for login failure
           alert('Login failed. Please check your credentials and try again.');
         }
       } catch (error) {
+        setIsLoading(false);
         console.error('Error during login:', error);
         // Show an alert for any unexpected errors
         alert('An error occurred during login. Please try again later.');
@@ -256,9 +261,13 @@ function Login() {
                       {passwordStrength.join(', ')}
                     </Typography>
                   )}
-                  <Button variant="outlined" style={{ alignSelf: 'center', backgroundColor: 'black', color: 'beige', borderColor: 'beige', fontWeight: 'bold', marginTop: '3vh' }} fullWidth type="submit">
-                    Submit
-                  </Button>
+                  {isLoading ? (
+                    <CircularProgress style={{ alignSelf: 'center', marginTop: '1rem' }} />
+                  ) : (
+                    <Button variant="outlined" style={{ alignSelf: 'center', backgroundColor: 'black', color: 'beige', borderColor: 'beige', fontWeight: 'bold', marginTop: '3vh' }} fullWidth type="submit">
+                      Submit
+                    </Button>
+                  )}
                 </Box>
               </form>
             </Box>
