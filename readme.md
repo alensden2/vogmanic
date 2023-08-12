@@ -1,7 +1,6 @@
 <!--- The following README.md sample file was adapted from https://gist.github.com/PurpleBooth/109311bb0361f32d87a2#file-readme-template-md by Gabriella Mosquera for academic use ---> 
 
-# CSCI 5709 - Assignment 3
-
+# CSCI 5709 - Report Web Application
 Vogue Manic focuses on providing trendy and aesthetically appealing fashion options for
 enthusiasts. It caters to a wide variety of individuals, from those on a tight budget to those
 seeking the best in fashion. Additionally, Vogue Manic believes in climate change and strives
