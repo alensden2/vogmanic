@@ -1,3 +1,8 @@
+/** 
+ * Checkout component for handling order placement and payment.
+ * This component displays a form for users to provide their shipping information,
+ * select payment method (PayPal), and review their order details before confirming the order.
+ */
 import { Button, Container, Grid, TextField } from "@mui/material";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
@@ -16,11 +21,14 @@ function Checkout() {
   const [confirmed, isConfirmed] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
-  console.log("location: " + location.state)
   const [products, setProduct] = useState(location.state.cartProducts);
-  console.log(products);
-
   const [payment, setPayment] = useState(false);
+  const [formErrors, setFormErrors] = useState({});
+  const [disabled, setDisabled] = useState(false);
+  /**
+   * Calculate the total amount of the products in the cart based on their prices and quantities.
+   * @returns {number} Total amount of the products in the cart.
+   */
   const calculateTotalAmount = () => {
     return products.reduce(
       (total, element) => total + element.price * element.count,
@@ -28,6 +36,10 @@ function Checkout() {
     );
   };
 
+  /**
+   * State object that holds the form data for the user's checkout information.
+   * Includes fields for first name, last name, email, state, city, pincode, and phone number.
+   */
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -37,16 +49,28 @@ function Checkout() {
     pincode: "",
     phoneNo: "",
   });
-  const [formErrors, setFormErrors] = useState({});
 
+  /**
+   * Event handler function that updates the formData state based on user input changes.
+   * It uses object destructuring to extract the 'name' and 'value' properties from the event target.
+   * The function then updates the state using the spread operator to maintain existing form data and update the specific field.
+   * @param {Event} event - The event object triggered by the user input change.
+   */
   const handleChange = (event) => {
     const { name, value } = event.target;
     setFormData({ ...formData, [name]: value });
   };
 
+  /**
+   * Function that validates the form data by checking for any empty or missing fields.
+   * It iterates through each key in the formData state object and checks if the value is falsy (empty or undefined).
+   * If a field is missing or empty, it sets an error message for that field in the formErrors state object.
+   * After checking all fields, it updates the formErrors state with the error messages.
+   * Finally, it returns a boolean indicating whether the form is valid (true) or has errors (false).
+   * @returns {boolean} - True if the form is valid, false if there are errors.
+   */
   const validateForm = () => {
     const errors = {};
-    // Check for required fields
     Object.keys(formData).forEach((key) => {
       if (!formData[key]) {
         errors[key] = "This field is required";
@@ -56,24 +80,26 @@ function Checkout() {
     return Object.keys(errors).length === 0;
   };
 
+  /**
+   * Function that handles the form submission when the user clicks the "Confirm Order" button.
+   * It prevents the default form submission behavior to handle form submission manually.
+   * Validates the form data using the validateForm function.
+   * If the form is valid and the payment is successful (payment variable is true):
+   * - Creates an order object with order details including products, shipping address, and user email.
+   * - Sends a POST request to the backend API to place the order in the database.
+   * - If the order placement is successful, marks the order as confirmed (isConfirmed state is set to true).
+   * @param {Event} e - The form submission event.
+   */
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Perform form validation
     const isFormValid = validateForm();
-    console.log(payment);
     if (isFormValid && payment) {
-      // Submit form logic here
-      console.log("Form submitted successfully");
-      console.log(e);
-      //make post request to backend to add order to mongodb
-      //   const user=JSON.parse(localStorage.getItem("user"));
       const order = {
         orderId: localStorage.getItem("userEmail") + Math.random(),
         items: products,
         shippingAddress: formData.city + ", " + formData.state + ", " + formData.pincode,
         userEmail: localStorage.getItem("userEmail")
       };
-      console.log(order);
       const response = fetch(HOSTED_BASE_URL + "/order/place", {
         method: "POST",
         body: JSON.stringify(order),
@@ -84,21 +110,23 @@ function Checkout() {
       })
         .then((res) => res.json())
         .then((res) => {
-          console.log(res);
           if (res.message == "Order placed successfully") {
-            //update inventory
             isConfirmed(true)
           }
         });
     }
   };
 
-  const [disabled, setDisabled] = useState(false);
-
   const totalAmount = calculateTotalAmount();
 
+  /**
+   * useEffect hook that runs when the `confirmed` state changes.
+   * If the `confirmed` state is true (i.e., the order has been confirmed),
+   * the hook sends a POST request to the backend API to delete the user's cart items.
+   * After that, it navigates the user to the home page ("/").
+   * This effect helps in cleaning up the user's cart after a successful order placement.
+   */
   useEffect(() => {
-
     if (confirmed) {
       fetch(HOSTED_BASE_URL + "/product/deleteCart", {
         method: "POST",
@@ -108,12 +136,10 @@ function Checkout() {
           "Authorization": "Bearer " + localStorage.getItem("accessToken")
         },
       })
-      navigate("/");
-      console.log("order placed");
+      navigate("/order");
     }
 
   }, [confirmed])
-
   return (
     <div className="body">
       <Navbar />
@@ -218,7 +244,6 @@ function Checkout() {
                     }}
                     onApprove={function (data, actions) {
                       return actions.order.capture().then(function (details) {
-                        console.log(details);
                         if (details.status == "COMPLETED") {
                           setDisabled(true);
                           setPayment(true);
